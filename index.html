@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antara Heritage Library | अन्तरा ग्रन्थागार — Classical Sanskrit & Vedic Texts</title>
+  <meta name="description" content="A scholarly digital library for classical Indian heritage texts including the Bhagavad Gita, Rigveda Samhita, and Principal Upanishads with interlinear translations, audio recitation, and Vedic Tanpura drone.">
+  
+  <!-- Classical Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Serif+Devanagari:wght@400;600;700&family=Marcellus&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-root">
+    
+    <!-- Top Header Navigation -->
+    <header class="app-header" id="appHeader">
+      <div class="header-left">
+        <button class="icon-btn sidebar-toggle" id="sidebarToggle" aria-label="Toggle Navigation Drawer" title="Toggle Navigation">
+          <span class="nav-glyph">☰</span>
+        </button>
+        
+        <div class="brand-container" id="brandHomeBtn" role="button" tabindex="0" title="Return to Overview">
+          <div class="brand-insignia">
+            <span class="sacred-glyph">ॐ</span>
+          </div>
+          <div class="brand-titles">
+            <h1 class="brand-title">ANTARA <span class="brand-sub">LIBRARY</span></h1>
+            <span class="brand-sanskrit">अन्तरा ग्रन्थागार</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <!-- Quick Search Trigger -->
+        <div class="search-trigger-box" id="searchTrigger" role="button" tabindex="0" title="Search Verses (Ctrl + K)">
+          <span class="search-glyph">⌕</span>
+          <span class="search-placeholder">Search shloka, keyword, or citation...</span>
+          <kbd class="search-kbd">⌘K</kbd>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Text Quick Selector -->
+        <div class="select-wrapper">
+          <select class="book-quick-select" id="bookQuickSelect" aria-label="Select Heritage Scripture">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <!-- View Controls: Interlinear toggles -->
+        <button class="action-btn" id="viewOptionsBtn" aria-label="Layer Options" title="Display Layers & Typography">
+          <span class="btn-glyph">◈</span>
+          <span class="btn-text">Layers</span>
+        </button>
+
+        <!-- Bookmarks Trigger -->
+        <button class="icon-btn" id="savedVersesBtn" aria-label="Saved Verses" title="Bookmarked Shlokas">
+          <span class="btn-glyph">✦</span>
+          <span class="bookmark-badge-count" id="bookmarkCount" style="display:none;">0</span>
+        </button>
+
+        <!-- Light / Dark Theme Switcher (Zero Emojis - Clean Glyphs) -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Theme Mode" title="Toggle Midnight / Heritage Cream Theme">
+          <span class="theme-glyph-icon" id="themeGlyph">☾</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- App Body Layout: Sidebar + Reader Pane -->
+    <div class="app-layout" id="appLayout">
+      
+      <!-- Left Sidebar Navigation -->
+      <aside class="app-sidebar" id="appSidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-tabs">
+            <button class="sidebar-tab active" id="tabCatalog" data-tab="catalog">
+              <span class="tab-glyph">❖</span>
+              <span>Canon</span>
+            </button>
+            <button class="sidebar-tab" id="tabBookmarks" data-tab="bookmarks">
+              <span class="tab-glyph">✦</span>
+              <span>Saved</span>
+            </button>
+            <button class="sidebar-tab" id="tabDhyana" data-tab="dhyana" title="Dhyana Sanctuary">
+              <span class="tab-glyph">⚖</span>
+              <span>Dhyana</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Catalog Tab Content -->
+        <div class="sidebar-content" id="catalogTabPane">
+          <div class="sidebar-search-container">
+            <input type="text" class="sidebar-filter-input" id="sidebarFilter" placeholder="Filter manuscripts, chapters..." autocomplete="off">
+            <span class="filter-clear-glyph" id="clearFilterBtn" style="display:none;">✕</span>
+          </div>
+
+          <!-- Category Filter Bar -->
+          <div class="sidebar-category-chips" id="sidebarCategoryChips">
+            <button class="cat-chip active" data-category="all" title="All Categories">All Canon</button>
+            <button class="cat-chip" data-category="vedas_upanishads" title="Vedas & Upanishads">Vedas</button>
+            <button class="cat-chip" data-category="epics_itihasa" title="Epics & Itihasa">Epics</button>
+            <button class="cat-chip" data-category="philosophy_darshana" title="Philosophical Treatises">Philosophy</button>
+            <button class="cat-chip" data-category="classical_shastras" title="Classical Manuscripts">Shastras</button>
+          </div>
+
+          <nav class="canon-tree-view" id="canonTreeView" aria-label="Scripture Navigation Tree">
+            <!-- Dynamic tree injected by app.js -->
+          </nav>
+        </div>
+
+        <!-- Bookmarks Tab Content -->
+        <div class="sidebar-content" id="bookmarksTabPane" style="display: none;">
+          <div class="bookmarks-header">
+            <span class="bookmarks-title">Bookmarked Verses</span>
+            <button class="text-btn" id="clearAllBookmarksBtn" title="Clear all saved verses">Clear All</button>
+          </div>
+          <div class="bookmarks-list" id="bookmarksList">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+
+        <!-- Dhyana Sanctuary Tab Content -->
+        <div class="sidebar-content" id="dhyanaTabPane" style="display: none;">
+          <div class="dhyana-header">
+            <span class="dhyana-title">Dhyana Sanctuary</span>
+            <span class="dhyana-subtitle">अन्तरा ध्यान साधना</span>
+          </div>
+
+          <!-- Meditation Timer Widget -->
+          <div class="dhyana-timer-box">
+            <div class="dhyana-box-label-row">
+              <span class="dhyana-timer-label">Meditation Timer</span>
+              <span class="dhyana-timer-status" id="timerStatusLabel">Idle</span>
+            </div>
+            <div class="timer-controls">
+              <button class="timer-btn" data-minutes="5">5 Min</button>
+              <button class="timer-btn" data-minutes="10">10 Min</button>
+              <button class="timer-btn" data-minutes="20">20 Min</button>
+              <button class="timer-btn" data-minutes="30">30 Min</button>
+              <button class="timer-btn" id="customTimerBtn">Custom</button>
+            </div>
+            <div class="timer-display-row" id="timerDisplayRow" style="display: none;">
+              <span class="timer-countdown" id="timerCountdown">10:00</span>
+              <button class="timer-cancel-btn" id="cancelTimerBtn">Stop Timer</button>
+            </div>
+          </div>
+
+          <!-- Soundscape Cards Grid -->
+          <div class="dhyana-grid">
+            
+            <!-- Card 1: 136.1 Hz Vedic Tanpura -->
+            <div class="dhyana-card" id="cardDhyanaTanpura">
+              <div class="dhyana-card-header">
+                <span class="dhyana-card-glyph">◈</span>
+                <div class="dhyana-card-meta">
+                  <span class="dhyana-card-title">Vedic Tanpura</span>
+                  <span class="dhyana-card-desc">136.1 Hz Cosmic Sa-Pa</span>
+                </div>
+                <button class="dhyana-play-btn" id="btnPlayTanpura">Play</button>
+              </div>
+              <div class="dhyana-volume-slider-box">
+                <span class="slider-icon">☵</span>
+                <input type="range" class="dhyana-volume-slider" id="sliderVolTanpura" min="0" max="1" step="0.05" value="0.7">
+              </div>
+            </div>
+
+            <!-- Card 2: Deep Cosmic OM -->
+            <div class="dhyana-card" id="cardDhyanaOm">
+              <div class="dhyana-card-header">
+                <span class="dhyana-card-glyph">✦</span>
+                <div class="dhyana-card-meta">
+                  <span class="dhyana-card-title">Cosmic OM</span>
+                  <span class="dhyana-card-desc">Vocal resonant hum</span>
+                </div>
+                <button class="dhyana-play-btn" id="btnPlayOm">Play</button>
+              </div>
+              <div class="dhyana-volume-slider-box">
+                <span class="slider-icon">☵</span>
+                <input type="range" class="dhyana-volume-slider" id="sliderVolOm" min="0" max="1" step="0.05" value="0.6">
+              </div>
+            </div>
+
+            <!-- Card 3: Himalayan Temple Bells -->
+            <div class="dhyana-card" id="cardDhyanaBells">
+              <div class="dhyana-card-header">
+                <span class="dhyana-card-glyph">☉</span>
+                <div class="dhyana-card-meta">
+                  <span class="dhyana-card-title">Temple Bells</span>
+                  <span class="dhyana-card-desc">Periodic singing chimes</span>
+                </div>
+                <button class="dhyana-play-btn" id="btnPlayBells">Play</button>
+              </div>
+              <div class="dhyana-volume-slider-box">
+                <span class="slider-icon">☵</span>
+                <input type="range" class="dhyana-volume-slider" id="sliderVolBells" min="0" max="1" step="0.05" value="0.5">
+              </div>
+            </div>
+
+            <!-- Card 4: Ganges River & Wind Flute -->
+            <div class="dhyana-card" id="cardDhyanaFlute">
+              <div class="dhyana-card-header">
+                <span class="dhyana-card-glyph">⟡</span>
+                <div class="dhyana-card-meta">
+                  <span class="dhyana-card-title">River Flute</span>
+                  <span class="dhyana-card-desc">Water flow & bansuri</span>
+                </div>
+                <button class="dhyana-play-btn" id="btnPlayFlute">Play</button>
+              </div>
+              <div class="dhyana-volume-slider-box">
+                <span class="slider-icon">☵</span>
+                <input type="range" class="dhyana-volume-slider" id="sliderVolFlute" min="0" max="1" step="0.05" value="0.5">
+              </div>
+            </div>
+
+            <!-- Card 5: Tibetan Singing Bowls -->
+            <div class="dhyana-card" id="cardDhyanaBowls">
+              <div class="dhyana-card-header">
+                <span class="dhyana-card-glyph">◈</span>
+                <div class="dhyana-card-meta">
+                  <span class="dhyana-card-title">Singing Bowls</span>
+                  <span class="dhyana-card-desc">Tibetan resonant overtones</span>
+                </div>
+                <button class="dhyana-play-btn" id="btnPlayBowls">Play</button>
+              </div>
+              <div class="dhyana-volume-slider-box">
+                <span class="slider-icon">☵</span>
+                <input type="range" class="dhyana-volume-slider" id="sliderVolBowls" min="0" max="1" step="0.05" value="0.5">
+              </div>
+            </div>
+
+            <!-- Card 6: Monsoon Rain -->
+            <div class="dhyana-card" id="cardDhyanaRain">
+              <div class="dhyana-card-header">
+                <span class="dhyana-card-glyph">✦</span>
+                <div class="dhyana-card-meta">
+                  <span class="dhyana-card-title">Monsoon Rain</span>
+                  <span class="dhyana-card-desc">Soothing shower & thunder</span>
+                </div>
+                <button class="dhyana-play-btn" id="btnPlayRain">Play</button>
+              </div>
+              <div class="dhyana-volume-slider-box">
+                <span class="slider-icon">☵</span>
+                <input type="range" class="dhyana-volume-slider" id="sliderVolRain" min="0" max="1" step="0.05" value="0.5">
+              </div>
+            </div>
+
+            <!-- Card 7: Subtle Japa Hum -->
+            <div class="dhyana-card" id="cardDhyanaJapa">
+              <div class="dhyana-card-header">
+                <span class="dhyana-card-glyph">☉</span>
+                <div class="dhyana-card-meta">
+                  <span class="dhyana-card-title">Subtle Japa Hum</span>
+                  <span class="dhyana-card-desc">Repetitive mantra resonance</span>
+                </div>
+                <button class="dhyana-play-btn" id="btnPlayJapa">Play</button>
+              </div>
+              <div class="dhyana-volume-slider-box">
+                <span class="slider-icon">☵</span>
+                <input type="range" class="dhyana-volume-slider" id="sliderVolJapa" min="0" max="1" step="0.05" value="0.5">
+              </div>
+            </div>
+
+            <!-- Card 8: Morning Raga Flute -->
+            <div class="dhyana-card" id="cardDhyanaRaga">
+              <div class="dhyana-card-header">
+                <span class="dhyana-card-glyph">⟡</span>
+                <div class="dhyana-card-meta">
+                  <span class="dhyana-card-title">Morning Raga Flute</span>
+                  <span class="dhyana-card-desc">Self-generating bansuri Bilawal</span>
+                </div>
+                <button class="dhyana-play-btn" id="btnPlayRaga">Play</button>
+              </div>
+              <div class="dhyana-volume-slider-box">
+                <span class="slider-icon">☵</span>
+                <input type="range" class="dhyana-volume-slider" id="sliderVolRaga" min="0" max="1" step="0.05" value="0.5">
+              </div>
+            </div>
+
+            <!-- Card 9: Ashram Night -->
+            <div class="dhyana-card" id="cardDhyanaNight">
+              <div class="dhyana-card-header">
+                <span class="dhyana-card-glyph">⚖</span>
+                <div class="dhyana-card-meta">
+                  <span class="dhyana-card-title">Ashram Night</span>
+                  <span class="dhyana-card-desc">Crickets & gentle breeze</span>
+                </div>
+                <button class="dhyana-play-btn" id="btnPlayNight">Play</button>
+              </div>
+              <div class="dhyana-volume-slider-box">
+                <span class="slider-icon">☵</span>
+                <input type="range" class="dhyana-volume-slider" id="sliderVolNight" min="0" max="1" step="0.05" value="0.5">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+          <div class="audio-ambient-toggle-box">
+            <div class="ambient-label-group">
+              <span class="ambient-glyph">☉</span>
+              <div class="ambient-texts">
+                <span class="ambient-title">Vedic Tanpura Drone</span>
+                <span class="ambient-sub">136.1 Hz Cosmic Sa-Pa</span>
+              </div>
+            </div>
+            <button class="drone-toggle-btn" id="tanpuraToggleBtn" title="Toggle background Tanpura resonance">
+              <span class="drone-status-glyph">△</span>
+              <span id="tanpuraBtnLabel">Off</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Reader Pane -->
+      <main class="reader-main" id="readerMain">
+        
+        <!-- Chapter / Text Header Hero -->
+        <section class="reader-hero" id="readerHero">
+          <div class="hero-backdrop"></div>
+          <div class="hero-content">
+            <div class="hero-meta-row">
+              <span class="hero-category-tag" id="heroCategory">Epics & Itihasa</span>
+              <span class="hero-divider">◈</span>
+              <span class="hero-book-title" id="heroBookTitle">Bhagavad Gita</span>
+              <span class="hero-divider">◈</span>
+              <span class="hero-chapter-num" id="heroChapterNum">Chapter 2</span>
+            </div>
+
+            <!-- Extended Scholarly Meta Pill Row -->
+            <div class="hero-scholarly-meta-bar" id="heroScholarlyMeta">
+              <span class="scholarly-meta-item" id="heroAuthorTag" title="Sage / Author">
+                <span class="meta-icon">⟡</span>
+                <span id="heroAuthorText">Maharshi Veda Vyasa</span>
+              </span>
+              <span class="scholarly-meta-item" id="heroTraditionTag" title="Tradition / Darshana">
+                <span class="meta-icon">❖</span>
+                <span id="heroTraditionText">Itihasa / Smriti</span>
+              </span>
+              <span class="scholarly-meta-item" id="heroEraTag" title="Historical Era">
+                <span class="meta-icon">☉</span>
+                <span id="heroEraText">c. 500–200 BCE</span>
+              </span>
+            </div>
+            
+            <h2 class="hero-sanskrit-heading" id="heroSanskritTitle">साङ्ख्ययोग</h2>
+            <h3 class="hero-translit-heading" id="heroTranslitTitle">Sāṅkhya Yoga</h3>
+            
+            <p class="hero-summary" id="heroSummary">The Yoga of Analytical Knowledge...</p>
+            
+            <div class="hero-controls-bar">
+              <div class="hero-actions-left">
+                <button class="hero-action-btn" id="playAllChapterBtn" title="Listen to entire chapter">
+                  <span class="action-glyph">▶</span>
+                  <span>Chant All Verses</span>
+                </button>
+                <button class="hero-action-btn" id="focusModeBtn" title="Toggle Focused Chanting Mode">
+                  <span class="action-glyph">⟡</span>
+                  <span>Focus Mode</span>
+                </button>
+              </div>
+
+              <!-- Quick Language Switcher for Translation Cards -->
+              <div class="lang-switch-group" role="group" aria-label="Translation Language">
+                <button class="lang-pill active" data-lang="dual" id="langDualBtn" title="Show English & Hindi side-by-side or stacked">Dual (Eng + Hin)</button>
+                <button class="lang-pill" data-lang="en" id="langEnBtn" title="Show English Only">English</button>
+                <button class="lang-pill" data-lang="hi" id="langHiBtn" title="Show Hindi Only">हिन्दी</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Epigraph Banner (if book top view) -->
+        <div class="epigraph-card" id="epigraphCard" style="display:none;">
+          <div class="epigraph-ornament-top">❖ ❖ ❖</div>
+          <p class="epigraph-sanskrit" id="epigraphSanskrit"></p>
+          <p class="epigraph-translation" id="epigraphTrans"></p>
+        </div>
+
+        <!-- Verses Container -->
+        <section class="verses-stream-container" id="versesContainer">
+          <!-- Verses rendered by app.js -->
+        </section>
+
+        <!-- Chapter Navigation Bottom Footer -->
+        <footer class="reader-nav-footer" id="readerNavFooter">
+          <button class="chapter-nav-btn prev" id="prevChapterBtn" title="Previous Chapter">
+            <span class="nav-arrow">←</span>
+            <div class="nav-text-col">
+              <span class="nav-label">Previous Section</span>
+              <span class="nav-title" id="prevChapterTitle">—</span>
+            </div>
+          </button>
+          <div class="nav-ornament">✦ ◈ ✦</div>
+          <button class="chapter-nav-btn next" id="nextChapterBtn" title="Next Chapter">
+            <div class="nav-text-col">
+              <span class="nav-label">Next Section</span>
+              <span class="nav-title" id="nextChapterTitle">—</span>
+            </div>
+            <span class="nav-arrow">→</span>
+          </button>
+        </footer>
+
+      </main>
+
+    </div>
+
+    <!-- Sticky Bottom Audio Recitation Bar -->
+    <div class="sticky-audio-bar" id="audioBar">
+      <div class="audio-bar-wrapper">
+        
+        <!-- Active Verse Info & Visualizer -->
+        <div class="audio-meta-col">
+          <div class="audio-visualizer-canvas-box">
+            <canvas id="visualizerCanvas" width="48" height="28"></canvas>
+          </div>
+          <div class="audio-text-info">
+            <div class="audio-verse-citation" id="audioCitation">Bhagavad Gita 2.47</div>
+            <div class="audio-verse-snippet" id="audioSnippet">कर्मण्येवाधिकारस्ते मा फलेषु कदाचन...</div>
+          </div>
+        </div>
+
+        <!-- Main Audio Transport Controls -->
+        <div class="audio-controls-center">
+          <div class="audio-buttons-row">
+            <!-- Japa / Repeat Loop Mode -->
+            <button class="audio-icon-btn" id="audioLoopBtn" aria-label="Toggle Repetition Mode" title="Japa / Repeat Mode (1x, 3x, 9x, 21x, 108x, ∞)">
+              <span class="ctrl-glyph">↺</span>
+              <span class="loop-badge" id="loopBadge">1×</span>
+            </button>
+
+            <!-- Previous Verse -->
+            <button class="audio-icon-btn" id="audioPrevBtn" aria-label="Previous Verse" title="Previous Verse">
+              <span class="ctrl-glyph">|◀</span>
+            </button>
+
+            <!-- Play / Pause Main Recitation -->
+            <button class="audio-play-main" id="audioPlayPauseBtn" aria-label="Play / Pause Recitation" title="Play / Pause Recitation">
+              <span class="play-glyph" id="mainPlayGlyph">▶</span>
+            </button>
+
+            <!-- Next Verse -->
+            <button class="audio-icon-btn" id="audioNextBtn" aria-label="Next Verse" title="Next Verse">
+              <span class="ctrl-glyph">▶|</span>
+            </button>
+
+            <!-- Speed Controller -->
+            <button class="audio-speed-btn" id="audioSpeedBtn" aria-label="Playback Speed" title="Cycle playback speed (0.75x, 1.0x, 1.25x, 1.5x)">
+              <span id="speedLabel">1.0×</span>
+            </button>
+          </div>
+
+          <!-- Timeline scrubber & duration -->
+          <div class="audio-timeline-row">
+            <span class="time-label" id="audioCurrentTime">0:00</span>
+            <div class="progress-bar-container" id="progressBarContainer">
+              <div class="progress-bar-fill" id="progressBarFill"></div>
+              <div class="progress-scrubber-handle" id="progressHandle"></div>
+            </div>
+            <span class="time-label" id="audioTotalTime">0:00</span>
+          </div>
+        </div>
+
+        <!-- Right Sound Settings & Voice Selection -->
+        <div class="audio-settings-right">
+          <!-- Voice selector for Speech Synthesis / Recitation -->
+          <div class="voice-selector-box">
+            <span class="voice-glyph" title="Voice Language">◎</span>
+            <select class="voice-select" id="voiceSelect" aria-label="Select Voice Engine">
+              <option value="sa_hi">Sanskrit / Hindi Reciter</option>
+              <option value="en">English Translation Voice</option>
+              <option value="auto">Auto (Text Language)</option>
+            </select>
+          </div>
+
+          <!-- Volume Slider -->
+          <div class="volume-box">
+            <button class="volume-btn" id="volumeMuteBtn" title="Mute / Unmute">
+              <span class="vol-glyph" id="volGlyph">☵</span>
+            </button>
+            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="0.9" aria-label="Volume">
+          </div>
+
+          <!-- Close Audio Bar Button -->
+          <button class="icon-btn audio-close-btn" id="audioCloseBtn" title="Stop & Dismiss Audio Bar">
+            <span class="ctrl-glyph">✕</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Hidden HTML5 Audio Element for Local/Remote MP3s -->
+    <audio id="htmlAudioPlayer" preload="none"></audio>
+
+    <!-- Layer Display & Font Settings Modal -->
+    <div class="modal-overlay" id="layersModal" role="dialog" aria-modal="true" aria-labelledby="layersModalTitle" style="display:none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title" id="layersModalTitle">
+            <span class="modal-glyph">◈</span>
+            Reader Customization & Layers
+          </h3>
+          <button class="modal-close-btn" id="closeLayersModalBtn" aria-label="Close modal">✕</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="setting-section">
+            <label class="setting-header-label">Visible Text Layers</label>
+            <div class="toggle-list">
+              <label class="toggle-row">
+                <span>Devanagari Sanskrit Script</span>
+                <input type="checkbox" id="layerDevanagari" checked>
+              </label>
+              <label class="toggle-row">
+                <span>IAST Roman Transliteration</span>
+                <input type="checkbox" id="layerIast" checked>
+              </label>
+              <label class="toggle-row">
+                <span>Word-by-Word Breakdown (Anvaya)</span>
+                <input type="checkbox" id="layerWordMeanings" checked>
+              </label>
+              <label class="toggle-row">
+                <span>English Philosophical Translation</span>
+                <input type="checkbox" id="layerEnglish" checked>
+              </label>
+              <label class="toggle-row">
+                <span>Hindi Translation (हिन्दी अनुवाद)</span>
+                <input type="checkbox" id="layerHindi" checked>
+              </label>
+              <label class="toggle-row">
+                <span>Commentary & Purport</span>
+                <input type="checkbox" id="layerCommentary" checked>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-section">
+            <label class="setting-header-label">Sanskrit Typography Scale</label>
+            <div class="font-scale-row">
+              <button class="font-scale-btn" id="fontScaleDown" title="Decrease font size">A -</button>
+              <span class="font-scale-value" id="fontScaleDisplay">100%</span>
+              <button class="font-scale-btn" id="fontScaleUp" title="Increase font size">A +</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="action-btn-primary" id="applyLayersBtn">Save Preferences</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Full-Text Search Modal -->
+    <div class="modal-overlay" id="searchModal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle" style="display:none;">
+      <div class="modal-card search-modal-card">
+        <div class="search-input-header">
+          <span class="search-modal-glyph">⌕</span>
+          <input type="text" class="search-full-input" id="globalSearchInput" placeholder="Search verses in Sanskrit, IAST, English, or Hindi..." autocomplete="off">
+          <button class="search-modal-close" id="closeSearchModalBtn" aria-label="Close search">ESC</button>
+        </div>
+        
+        <div class="search-filters-bar">
+          <button class="search-filter-tag active" data-filter="all">All Corpora</button>
+          <button class="search-filter-tag" data-filter="vedas_upanishads">Vedas & Upanishads</button>
+          <button class="search-filter-tag" data-filter="epics_itihasa">Epics & Itihasa</button>
+          <button class="search-filter-tag" data-filter="philosophy_darshana">Philosophy</button>
+          <button class="search-filter-tag" data-filter="classical_shastras">Shastras</button>
+        </div>
+
+        <div class="search-results-list" id="searchResultsList">
+          <div class="search-empty-prompt">
+            <span class="empty-glyph">✧</span>
+            <p>Type keywords such as <em>"karma"</em>, <em>"Agni"</em>, <em>"Brahman"</em>, <em>"2.47"</em>, or <em>"सत्यम्"</em></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toastBox">
+      <span class="toast-glyph" id="toastGlyph">✦</span>
+      <span class="toast-message" id="toastMsg">Verse copied to clipboard</span>
+    </div>
+
+  </div>
+
+  <!-- Embedded Data Layer (Bypasses file:// CORS) -->
+  <script src="texts_data.js"></script>
+  <!-- App Engine Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
