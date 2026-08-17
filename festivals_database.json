@@ -1,0 +1,261 @@
+[
+  {
+    "id": "fest-01",
+    "name": "Ambubachi Mela",
+    "state": "Assam",
+    "month": "JUN",
+    "all_months": [
+      "JUN"
+    ],
+    "timing": "June (Monsoon season, usually 22nd-26th)",
+    "location": "Kamakhya Temple, Guwahati",
+    "coordinates": "26.1674°N 91.7056°E",
+    "history": "An ancient Hindu mela celebrating the annual menstruation course of the presiding Goddess, Kamakhya. The temple is one of the 51 Shakti Peethas and represents the divine female creative power. Historically, it has been a major center for Tantric worship.",
+    "culture_and_rituals": "During these days, the temple remains closed as it is believed the mother earth becomes unclean. On the fourth day, the temple doors are opened to grand festivities. Thousands of Tantric ascetics, sadhus, and devotees gather, performing unique spiritual rituals and chanting.",
+    "how_to_join": "Free public entry, but extreme crowding. Special Darshan tickets can normally be booked online via the temple portal to bypass the massive queues after the doors open.",
+    "local_language": "Assamese, Hindi, Bengali",
+    "uniqueness": "A rare festival openly celebrating the divine feminine menstruation, drawing secretive Tantric sadhus from across the Himalayas.",
+    "image_placeholder": "images/festivals/ambubachi_mela.jpg"
+  },
+  {
+    "id": "fest-02",
+    "name": "Rongali Bihu (Bohag Bihu)",
+    "state": "Assam",
+    "month": "APR",
+    "all_months": [
+      "APR"
+    ],
+    "timing": "Mid-April",
+    "location": "Statewide (Major events in Guwahati and Sivasagar)",
+    "coordinates": "26.1445°N 91.7362°E",
+    "history": "Bihu is the indigenous harvest festival of Assam, rooted in ancient agrarian traditions. Rongali Bihu marks the Assamese New Year and the onset of the agricultural season, with historical patronage from the mighty Ahom Kings.",
+    "culture_and_rituals": "Celebrated with immense joy, featuring the energetic Bihu dance by young men and women in traditional Muga silk attire. The festival involves playing traditional instruments like the dhol, pepa (buffalo horn), and gagana, along with grand community feasts.",
+    "how_to_join": "Open air stages (Bihu Sanilanis) are set up across towns and cities where public can join for free. Some premium cultural venues offer ticketed seating for specialized dance performances.",
+    "local_language": "Assamese",
+    "uniqueness": "The infectious energy of the Bihu dance, the distinct sound of the Pepa (buffalo horn pipe), and traditional Assamese feasts.",
+    "image_placeholder": "images/festivals/rongali_bihu_bohag_bihu.jpg"
+  },
+  {
+    "id": "fest-03",
+    "name": "Bastar Dussehra",
+    "state": "Chhattisgarh",
+    "month": "AUG",
+    "all_months": [
+      "AUG",
+      "OCT"
+    ],
+    "timing": "August to October (Spans 75 Days)",
+    "location": "Danteshwari Temple, Jagdalpur, Bastar",
+    "coordinates": "19.0720°N 82.0323°E",
+    "history": "Initiated in the 13th century by the Kakatiya ruler King Purushottam Deo. Unlike the rest of India, this Dussehra has nothing to do with Lord Rama's victory. Instead, it is a grand congregation of tribes to pay homage to the local presiding deity, Goddess Danteshwari.",
+    "culture_and_rituals": "Involves elaborate indigenous rituals like 'Pata Jatra' (worship of wood) and massive chariot pulling. It brings together numerous local tribes, each assigned specific traditional duties for the festival, showcasing incredible communal harmony.",
+    "how_to_join": "Free public entry. The grand chariot procession in October is the main highlight. Travelers should book homestays or state tourism hotels months in advance due to massive tribal influx.",
+    "local_language": "Halbi, Gondi, Chhattisgarhi",
+    "uniqueness": "The longest festival in the world (75 days), massive 8-wheeled wooden chariot made entirely by tribal artisans.",
+    "image_placeholder": "images/festivals/bastar_dussehra.jpg"
+  },
+  {
+    "id": "fest-04",
+    "name": "Rann Utsav",
+    "state": "Gujarat",
+    "month": "FEB",
+    "all_months": [
+      "FEB",
+      "NOV"
+    ],
+    "timing": "November to February",
+    "location": "The Great Rann of Kutch (Dhordo Village)",
+    "coordinates": "23.8344°N 69.5783°E",
+    "history": "Conceptualized by the Gujarat Tourism Department to promote the unique ecology and rich culture of the Kutch region. It transformed a barren, inhospitable white salt desert into a globally recognized cultural tourism hotspot.",
+    "culture_and_rituals": "A carnival of music, dance, and natural beauty. It highlights the intricate local Kutchi handicrafts, mirror-work textiles, folk music, and traditional Kathiawari cuisine against the surreal backdrop of the white salt desert under the full moon.",
+    "how_to_join": "Requires advance booking of tents/cottages through the official Rann Utsav portal. Day passes for non-residents are also available for booking to access the cultural fair and desert viewing areas.",
+    "local_language": "Gujarati, Kutchi, Hindi",
+    "uniqueness": "A massive luxury tent city built on a vast, blindingly white salt flat, coming alive with vibrant local colors and folk arts.",
+    "image_placeholder": "images/festivals/rann_utsav.jpg"
+  },
+  {
+    "id": "fest-05",
+    "name": "International Kite Festival (Uttarayan)",
+    "state": "Gujarat",
+    "month": "JAN",
+    "all_months": [
+      "JAN"
+    ],
+    "timing": "January 14th (Makar Sankranti)",
+    "location": "Sabarmati Riverfront, Ahmedabad",
+    "coordinates": "23.0225°N 72.5714°E",
+    "history": "A historically significant celebration of the winter solstice and the transition of the sun into the zodiac of Capricorn. The kite flying tradition in Gujarat was heavily influenced by Muslim traders from Persia and has now become a massive international event.",
+    "culture_and_rituals": "The entire sky of Ahmedabad fills with thousands of kites of every imaginable shape and size. Rooftops become party zones with loud music and traditional foods like Undhiyu and Chikki. Master kite makers from across the globe gather to showcase their creations.",
+    "how_to_join": "Free to watch from anywhere in the city. The main official event at the Sabarmati Riverfront requires standard entry tickets, which can be booked on site or via local event platforms.",
+    "local_language": "Gujarati, Hindi",
+    "uniqueness": "The intense rooftop kite-fighting battles (using glass-coated manja) and the incredible spectacle of millions of kites blacking out the sky.",
+    "image_placeholder": "images/festivals/international_kite_festival_uttarayan.jpg"
+  },
+  {
+    "id": "fest-06",
+    "name": "Mysuru Dasara (Mysore Dasara)",
+    "state": "Karnataka",
+    "month": "SEP",
+    "all_months": [
+      "SEP",
+      "OCT"
+    ],
+    "timing": "September / October (Navaratri - 10 Days)",
+    "location": "Mysore Palace and City",
+    "coordinates": "12.3052°N 76.6552°E",
+    "history": "A 400-year-old tradition started by the Wadiyar Kings of Mysore in 1610 to celebrate the victory of Goddess Chamundeshwari over the buffalo demon Mahishasura. It is the Nadahabba (state festival) of Karnataka, carrying deep royal legacy.",
+    "culture_and_rituals": "The majestic Mysore Palace is illuminated daily with exactly 97,000 bulbs. The festival features classical music and dance concerts, traditional wrestling (Vajramushti Kalaga), and culminates in the Jumboo Savari—a massive procession of decorated elephants carrying the golden howdah.",
+    "how_to_join": "The street procession is free to view from the sidewalks. Premium VIP seating inside the palace grounds (for the start of the parade) requires highly sought-after tickets booked exclusively via the district administration portal.",
+    "local_language": "Kannada, English",
+    "uniqueness": "The unmatched royal grandeur of the illuminated Mysore Palace and the massive elephant procession carrying a 750kg golden shrine.",
+    "image_placeholder": "images/festivals/mysuru_dasara_mysore_dasara.jpg"
+  },
+  {
+    "id": "fest-07",
+    "name": "Ellora-Ajanta International Festival",
+    "state": "Maharashtra",
+    "month": "JAN",
+    "all_months": [
+      "JAN",
+      "FEB"
+    ],
+    "timing": "January / February",
+    "location": "Soneri Mahal, Chhatrapati Sambhajinagar",
+    "coordinates": "19.8973°N 75.3155°E",
+    "history": "Started to spotlight the magnificent rock-cut architecture of the region through the medium of classical Indian arts. Moved to the historic Soneri Mahal to protect the fragile cave structures from acoustic damage.",
+    "culture_and_rituals": "A profound celebration of India's classical heritage. The festival brings together the greatest maestros of Indian classical music and dance for mesmerizing evening performances celebrating historical art forms.",
+    "how_to_join": "Tickets are required for premium seating, available online via MTDC. Standard entry is sometimes subsidized. Best combined with daytime cave tours.",
+    "local_language": "Marathi, Hindi, English",
+    "uniqueness": "A rare gathering of India's top classical artists performing in a historic 17th-century palace setting.",
+    "image_placeholder": "images/festivals/ellora_ajanta_international_festival.jpg"
+  },
+  {
+    "id": "fest-08",
+    "name": "Rath Yatra",
+    "state": "Odisha",
+    "month": "JUN",
+    "all_months": [
+      "JUN",
+      "JUL"
+    ],
+    "timing": "June / July (Ashadha Shukla Dwitiya)",
+    "location": "Jagannath Temple to Gundicha Temple, Puri",
+    "coordinates": "19.8049°N 85.8179°E",
+    "history": "One of the oldest recorded chariot festivals in the world. It commemorates Lord Jagannath's annual visit to his aunt's temple (Gundicha) along with his siblings, Balabhadra and Subhadra.",
+    "culture_and_rituals": "Millions of devotees gather to pull three towering, newly constructed wooden chariots down the Grand Road. It is a time of immense spiritual fervor, where the caste system is suspended, and anyone can touch the holy ropes.",
+    "how_to_join": "Free public street festival. Millions attend, requiring massive crowd management. VIP viewing galleries or rooftops along the Grand Road can be booked through operators or local platforms.",
+    "local_language": "Odia, Hindi",
+    "uniqueness": "The only major Hindu festival where the principal deities are taken out of the sanctum sanctorum for the public to see, on massive wooden chariots built without nails.",
+    "image_placeholder": "images/festivals/rath_yatra.jpg"
+  },
+  {
+    "id": "fest-09",
+    "name": "Hola Mohalla",
+    "state": "Punjab",
+    "month": "MAR",
+    "all_months": [
+      "MAR"
+    ],
+    "timing": "March (Day after Holi)",
+    "location": "Takht Sri Keshgarh Sahib, Anandpur Sahib",
+    "coordinates": "31.2346°N 76.5165°E",
+    "history": "Founded by the tenth Sikh Guru, Guru Gobind Singh, in 1701. Instead of throwing colors, it was instituted as a gathering of Sikhs for military exercises and mock battles to keep the community prepared and martial.",
+    "culture_and_rituals": "An extraordinary display of the martial arts of the Nihang Sikhs (the warrior order). They wear traditional blue robes and giant turbans, showcasing breathtaking swordsmanship, tent-pegging, bareback horse-riding, and gatka (Sikh martial arts) alongside massive langars (community kitchens).",
+    "how_to_join": "Free public access. Millions of pilgrims visit, camping in the surrounding hills. Photography groups and travelers often book specialized local guides to secure safe vantage points for the horse-riding displays.",
+    "local_language": "Punjabi, Hindi",
+    "uniqueness": "A high-octane martial arts festival featuring the fierce Nihang warriors, incredible equestrian skills, and unparalleled community service (Langar).",
+    "image_placeholder": "images/festivals/hola_mohalla.jpg"
+  },
+  {
+    "id": "fest-10",
+    "name": "Pushkar Camel Fair",
+    "state": "Rajasthan",
+    "month": "NOV",
+    "all_months": [
+      "NOV"
+    ],
+    "timing": "November (Karthik Purnima)",
+    "location": "Pushkar Lake and surrounding dunes",
+    "coordinates": "26.4862°N 74.5552°E",
+    "history": "Historically an annual gathering where local Rajasthani farmers and traders brought their livestock (camels, horses, cattle) to buy and sell. Over time, it merged with the religious pilgrimage to the holy Pushkar Lake on Karthik Purnima.",
+    "culture_and_rituals": "A spectacular riot of colors in the desert. Tens of thousands of camels are decorated, shaved with artistic patterns, and paraded. The fair includes mustache competitions, tug-of-war, local folk music, and deeply spiritual bathing rituals in the sacred lake.",
+    "how_to_join": "The grounds are free to enter. Specialized activities (hot air ballooning, premium cultural evening shows, luxury desert camping) require advance ticketing through platforms or Rajasthan Tourism.",
+    "local_language": "Rajasthani, Hindi",
+    "uniqueness": "One of the world's largest traditional camel and livestock fairs combined with deeply sacred Hindu bathing rituals.",
+    "image_placeholder": "images/festivals/pushkar_camel_fair.jpg"
+  },
+  {
+    "id": "fest-11",
+    "name": "Bathukamma",
+    "state": "Telangana",
+    "month": "SEP",
+    "all_months": [
+      "SEP",
+      "OCT"
+    ],
+    "timing": "September / October (During Navaratri)",
+    "location": "Statewide (Major events in Hyderabad and Warangal)",
+    "coordinates": "17.3850°N 78.4867°E",
+    "history": "A beautiful, deeply rooted floral festival that celebrates the inherent relationship between earth, water, and human beings. It honors the 'life-giver' Goddess Maha Gauri. It became a prominent cultural symbol during the Telangana statehood movement.",
+    "culture_and_rituals": "Women create elaborate, cone-shaped floral stacks (Bathukammas) using unique seasonal, medicinal flowers. They gather in large circles in public squares, singing traditional folk songs in unison, clapping, and dancing before immersing the flowers in local water bodies.",
+    "how_to_join": "A community-driven public festival. Travelers can join the evening gatherings in any major public square or temple tank in Hyderabad (like Tank Bund) for free.",
+    "local_language": "Telugu",
+    "uniqueness": "A completely eco-friendly, flower-based festival led entirely by women, featuring distinct, rhythmic local folk singing.",
+    "image_placeholder": "images/festivals/bathukamma.jpg"
+  },
+  {
+    "id": "fest-12",
+    "name": "Dev Deepawali",
+    "state": "Uttar Pradesh",
+    "month": "NOV",
+    "all_months": [
+      "NOV"
+    ],
+    "timing": "November (Kartik Purnima, 15 days after Diwali)",
+    "location": "Ghats of Varanasi (Kashi)",
+    "coordinates": "25.3176°N 83.0062°E",
+    "history": "According to Hindu mythology, this is the day the Gods descend to Earth to bathe in the holy Ganges River to celebrate Lord Shiva's victory over the demon Tripurasura. The tradition of lighting the ghats was started by the royal family of Kashi.",
+    "culture_and_rituals": "The entire crescent-shaped stretch of the Varanasi ghats is illuminated with over a million earthen lamps (diyas). The evening features an exceptionally grand Ganga Aarti, chanting of Vedic hymns, and a deeply spiritual atmosphere as the river is filled with floating lamps.",
+    "how_to_join": "The ghats are open to the public for free but become unimaginably crowded. The best way to view the spectacle is by booking a boat on the Ganges well in advance through local booking platforms.",
+    "local_language": "Hindi, Bhojpuri",
+    "uniqueness": "The visual majesty of over a million flickering oil lamps illuminating ancient stone steps and palaces along the sacred Ganges river.",
+    "image_placeholder": "images/festivals/dev_deepawali.jpg"
+  },
+  {
+    "id": "fest-13",
+    "name": "Lathmar Holi",
+    "state": "Uttar Pradesh",
+    "month": "MAR",
+    "all_months": [
+      "MAR"
+    ],
+    "timing": "March (Days leading up to Holi)",
+    "location": "Barsana and Nandgaon, Mathura",
+    "coordinates": "27.6468°N 77.3739°E",
+    "history": "Rooted in the playful legends of Lord Krishna and Radha. Legend says Krishna visited Radha's village (Barsana) and teased her friends, who chased him away with sticks. The towns heavily recreate this mythology every year.",
+    "culture_and_rituals": "A highly unique and aggressive form of Holi. Men from Nandgaon visit Barsana, and the women of Barsana playfully beat them with large wooden sticks (lathis) while the men protect themselves with shields. The air is thick with colored powder (gulaal), bhang, and folk songs.",
+    "how_to_join": "Free public street event. The Radha Rani temple is the epicenter. Photographers and tourists often book rooftops or specific balconies from locals via guides for a safe, elevated view away from the chaotic beating and color throwing.",
+    "local_language": "Braj Bhasha, Hindi",
+    "uniqueness": "A rare, culturally accepted role-reversal where women playfully beat men with sticks amid clouds of vibrant colors.",
+    "image_placeholder": "images/festivals/lathmar_holi.jpg"
+  },
+  {
+    "id": "fest-14",
+    "name": "Durga Puja",
+    "state": "West Bengal",
+    "month": "SEP",
+    "all_months": [
+      "SEP",
+      "OCT"
+    ],
+    "timing": "September / October",
+    "location": "Kolkata (Citywide)",
+    "coordinates": "22.5726°N 88.3639°E",
+    "history": "Celebrates the victory of the ten-armed Goddess Durga over the buffalo demon Mahishasura. Originally patronized by wealthy Zamindars (landlords) in the 18th century, it evolved into a massive, community-funded public street festival.",
+    "culture_and_rituals": "Kolkata turns into an open-air art gallery. Thousands of massive, creatively themed temporary shrines (Pandals) are erected across the city housing exquisite clay idols. The festival involves pandal-hopping all night, cultural performances, traditional Dhunuchi dancing with incense, and street food.",
+    "how_to_join": "Free public access to all pandals. To avoid the massive queues (which can be hours long), tourists often buy 'VIP Pandal Passes' sold by local tourism boards or event apps for priority entry.",
+    "local_language": "Bengali, Hindi, English",
+    "uniqueness": "An unmatched combination of extreme religious devotion, world-class temporary installation art, and a massive city-wide carnival atmosphere.",
+    "image_placeholder": "images/festivals/durga_puja.jpg"
+  }
+]

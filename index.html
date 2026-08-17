@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antara | Cultural Heritage Grid</title>
+  
+  <style>
+    /* Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;600&display=swap');
+
+    :root {
+      --bg-deep: #070509;
+      --text-main: #e2dfeb;
+      --text-muted: #a39eb8;
+      --gold-light: #fcf6ba;
+      --gold-mid: #dfb743;
+      --gold-dark: #bf953f;
+      --font-display: 'Cinzel', serif;
+      --font-serif: 'Cormorant Garamond', serif;
+      --font-sans: 'Montserrat', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body, html {
+      margin: 0; padding: 0;
+      width: 100vw; height: 100vh;
+      background: var(--bg-deep) url('./images/temple.png') center/cover no-repeat fixed;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      overflow: hidden; 
+    }
+
+    /* Ambient Overlay */
+    .bg-overlay {
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(7, 5, 9, 0.85) 0%, rgba(7, 5, 9, 0.98) 100%);
+      z-index: 1;
+    }
+
+    /* Architecture */
+    .split-layout {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 40% Left Panel */
+    .panel-left {
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(223, 183, 67, 0.15);
+      background: rgba(7, 5, 9, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .temporal-header {
+      padding: 3rem 2.5rem 1.5rem;
+    }
+    .temporal-header h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3vw, 2.8rem);
+      background: linear-gradient(to right, var(--gold-light), var(--gold-dark));
+      -webkit-background-clip: text;
+      color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+    }
+    .temporal-header p {
+      color: var(--gold-mid);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* Calendar Grid */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding: 0 2.5rem;
+      flex-shrink: 0;
+    }
+
+    .month-node {
+      background: rgba(18, 13, 26, 0.7);
+      border: 1px solid rgba(223, 183, 67, 0.2);
+      padding: 1.2rem 0;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+      font-family: var(--font-display);
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+    .month-node:hover {
+      background: rgba(223, 183, 67, 0.1);
+      border-color: rgba(223, 183, 67, 0.5);
+      color: var(--gold-light);
+    }
+    .month-node.active {
+      background: rgba(223, 183, 67, 0.2);
+      border-color: var(--gold-light);
+      color: var(--gold-light);
+      box-shadow: 0 0 20px rgba(223, 183, 67, 0.2), inset 0 0 15px rgba(223, 183, 67, 0.1);
+    }
+    
+    /* Festival Indicator */
+    .festival-indicator {
+      position: absolute;
+      top: 6px; right: 8px;
+      font-size: 0.75rem;
+      color: var(--gold-mid);
+      text-shadow: 0 0 5px var(--gold-light);
+    }
+
+    /* Carousel */
+    .carousel-container {
+      flex-grow: 1;
+      margin: 2.5rem;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(223, 183, 67, 0.3);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+    .carousel-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+    .carousel-img.active {
+      opacity: 1;
+    }
+
+    /* 60% Right Panel */
+    .panel-right {
+      width: 60%;
+      padding: 4rem 5rem;
+      overflow-y: auto;
+      background: rgba(7, 5, 9, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: relative;
+    }
+    
+    /* Scrollbar */
+    .panel-right::-webkit-scrollbar { width: 6px; }
+    .panel-right::-webkit-scrollbar-track { background: transparent; }
+    .panel-right::-webkit-scrollbar-thumb { background: rgba(223, 183, 67, 0.3); border-radius: 3px; }
+
+    /* Content Area with Transition */
+    .content-layer {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .content-layer.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Festival Hero Image */
+    .festival-hero-img-container {
+      width: 100%;
+      height: 280px;
+      margin-bottom: 2.5rem;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(223, 183, 67, 0.4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .festival-hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .empty-state {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--gold-mid);
+      opacity: 0.6;
+      font-family: var(--font-display);
+    }
+    .empty-state .symbol { font-size: 3rem; margin-bottom: 1rem; }
+
+    .heritage-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      margin: 0 0 1rem;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: 2px;
+    }
+
+    .heritage-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold-mid);
+    }
+    .meta-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--gold-light);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 3rem 0 1.5rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .section-title::before { content: '◈'; font-size: 1rem; }
+    .section-title::after {
+      content: '';
+      flex-grow: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(223, 183, 67, 0.4), transparent);
+    }
+
+    .heritage-text {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      line-height: 1.8;
+      color: var(--text-main);
+      margin-bottom: 2rem;
+    }
+
+    .action-container {
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px dashed rgba(223, 183, 67, 0.2);
+    }
+
+    .plan-trip-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: linear-gradient(135deg, rgba(18, 13, 26, 0.9), rgba(7, 5, 9, 0.9));
+      border: 1px solid var(--gold-mid);
+      color: var(--gold-light);
+      padding: 1.2rem 3rem;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(223, 183, 67, 0.1);
+      transition: all 0.3s ease;
+    }
+    .plan-trip-btn:hover {
+      background: rgba(223, 183, 67, 0.15);
+      border-color: var(--gold-light);
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(223, 183, 67, 0.4);
+    }
+    
+    .list-picker {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .state-group {
+      margin-bottom: 2rem;
+    }
+    .state-group-header {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--gold-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .state-group-header::after {
+      content: '';
+      flex-grow: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(223, 183, 67, 0.3), transparent);
+    }
+    
+    .event-card {
+      background: rgba(18, 13, 26, 0.6);
+      border: 1px solid rgba(223, 183, 67, 0.25);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    .event-card:hover {
+      border-color: var(--gold-mid);
+      background: rgba(223, 183, 67, 0.08);
+      transform: translateX(4px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+    .event-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .event-name {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--text-main);
+      letter-spacing: 1px;
+    }
+    .event-meta-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      font-size: 0.85rem;
+      color: var(--gold-mid);
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .explore-btn {
+      background: linear-gradient(135deg, rgba(18, 13, 26, 0.9), rgba(7, 5, 9, 0.9));
+      border: 1px solid var(--gold-mid);
+      color: var(--gold-light);
+      padding: 0.6rem 1.4rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      margin-left: 1rem;
+    }
+    .explore-btn:hover {
+      background: rgba(223, 183, 67, 0.2);
+      border-color: var(--gold-light);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(223, 183, 67, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .split-layout { flex-direction: column; height: auto; min-height: 100vh; overflow: auto; }
+      body, html { overflow: auto; }
+      .panel-left, .panel-right { width: 100%; border: none; }
+      .panel-left { border-bottom: 1px solid rgba(223, 183, 67, 0.2); }
+      .carousel-container { height: 300px; }
+      .panel-right { padding: 3rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-overlay"></div>
+  
+  <div class="split-layout">
+    
+    <!-- LEFT PANEL: Temporal Core -->
+    <div class="panel-left">
+      <div class="temporal-header">
+        <h1>Antara</h1>
+        <p>The Temporal Grid</p>
+      </div>
+      
+      <!-- Calendar Grid -->
+      <div class="calendar-grid" id="calendar">
+        <!-- Generated by JS -->
+      </div>
+      
+      <!-- Rotating Carousel -->
+      <div class="carousel-container" id="carousel">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+    
+    <!-- RIGHT PANEL: Heritage Details -->
+    <div class="panel-right" id="heritage-panel">
+      
+      <div class="empty-state" id="empty-state">
+        <div class="symbol">❖</div>
+        <div>Select a temporal node to reveal its cultural heritage</div>
+      </div>
+
+      <div class="content-layer" id="content-layer" style="display: none;">
+        <!-- Injected dynamically -->
+      </div>
+      
+    </div>
+  </div>
+
+  <script>
+    // --- State & Config ---
+    let allFestivals = [];
+    let currentCarouselIndex = 0;
+    let carouselInterval;
+    
+    const months = [
+      { code: "JAN", name: "January" },
+      { code: "FEB", name: "February" },
+      { code: "MAR", name: "March" },
+      { code: "APR", name: "April" },
+      { code: "MAY", name: "May" },
+      { code: "JUN", name: "June" },
+      { code: "JUL", name: "July" },
+      { code: "AUG", name: "August" },
+      { code: "SEP", name: "September" },
+      { code: "OCT", name: "October" },
+      { code: "NOV", name: "November" },
+      { code: "DEC", name: "December" }
+    ];
+
+    // --- Initialization ---
+    async function init() {
+      try {
+        const response = await fetch('festivals_database.json');
+        if (!response.ok) throw new Error("Fetch failed");
+        allFestivals = await response.json();
+        
+        buildCalendar();
+        initCarousel();
+      } catch (err) {
+        console.error("Failed to load heritage data:", err);
+      }
+    }
+
+    // --- Build Left Panel (Grid) ---
+    function buildCalendar() {
+      const grid = document.getElementById('calendar');
+      grid.innerHTML = '';
+      
+      months.forEach((monthData) => {
+        // Find festivals that occur in this month
+        const festsInMonth = allFestivals.filter(f => f.all_months && f.all_months.includes(monthData.code));
+        
+        const node = document.createElement('div');
+        node.className = 'month-node';
+        node.innerText = monthData.code;
+        
+        // Mark if festivals exist
+        if (festsInMonth.length > 0) {
+          const indicator = document.createElement('div');
+          indicator.className = 'festival-indicator';
+          indicator.innerText = '✦';
+          node.appendChild(indicator);
+        }
+        
+        node.addEventListener('click', () => {
+          // Highlight active node
+          document.querySelectorAll('.month-node').forEach(n => n.classList.remove('active'));
+          node.classList.add('active');
+          
+          handleMonthSelection(monthData, festsInMonth);
+        });
+        
+        grid.appendChild(node);
+      });
+    }
+
+    // --- Carousel Logic ---
+    function initCarousel() {
+      const carousel = document.getElementById('carousel');
+      
+      // Extract all valid images
+      const images = allFestivals
+        .map(f => f.image_placeholder)
+        .filter(src => src && src.trim() !== "");
+        
+      if (images.length === 0) return;
+
+      images.forEach((src, idx) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.className = 'carousel-img';
+        // Fallback for missing local assets during dev
+        img.onerror = () => { img.style.display = 'none'; }; 
+        if (idx === 0) img.classList.add('active');
+        carousel.appendChild(img);
+      });
+
+      carouselInterval = setInterval(() => {
+        const imgs = document.querySelectorAll('.carousel-img');
+        if (imgs.length <= 1) return;
+        
+        imgs[currentCarouselIndex].classList.remove('active');
+        currentCarouselIndex = (currentCarouselIndex + 1) % imgs.length;
+        imgs[currentCarouselIndex].classList.add('active');
+      }, 5000);
+    }
+
+    // --- Right Panel Logic ---
+    function handleMonthSelection(monthData, festsInMonth) {
+      const emptyState = document.getElementById('empty-state');
+      const contentLayer = document.getElementById('content-layer');
+      
+      // Transition out
+      contentLayer.classList.remove('visible');
+      
+      setTimeout(() => {
+        emptyState.style.display = 'none';
+        contentLayer.style.display = 'block';
+        
+        if (festsInMonth.length === 0) {
+          contentLayer.innerHTML = `
+            <div style="text-align:center; padding: 4rem 0;">
+              <div style="font-size: 2rem; color: var(--gold-mid); margin-bottom: 1rem;">△</div>
+              <h2 style="font-family: var(--font-display); color: var(--text-muted); font-weight: normal;">No cultural events mapped for ${monthData.name}.</h2>
+            </div>
+          `;
+        } else if (festsInMonth.length === 1) {
+          renderDetails(festsInMonth[0]);
+        } else {
+          // Multi-festival month -> group state-wise
+          const stateGroups = {};
+          festsInMonth.forEach(fest => {
+            const state = fest.state || 'Regional Highlights';
+            if (!stateGroups[state]) stateGroups[state] = [];
+            stateGroups[state].push(fest);
+          });
+
+          let pickerHtml = `
+            <h2 class="heritage-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">${monthData.name.toUpperCase()} EVENTS</h2>
+            <div style="display: flex; align-items: center; gap: 0.8rem; color: var(--gold-mid); margin-bottom: 2rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px;">
+              <span>❖ Regional Directory</span>
+              <span style="opacity: 0.4;">|</span>
+              <span>${festsInMonth.length} Events Scheduled</span>
+            </div>
+            <div class="list-picker">
+          `;
+
+          Object.keys(stateGroups).sort().forEach(state => {
+            pickerHtml += `
+              <div class="state-group">
+                <div class="state-group-header">❖ ${state}</div>
+            `;
+            stateGroups[state].forEach(fest => {
+              pickerHtml += `
+                <div class="event-card">
+                  <div class="event-info">
+                    <div class="event-name">${fest.name}</div>
+                    <div class="event-meta-tags">
+                      <span>◈ ${fest.timing}</span>
+                      <span>✦ ${fest.location}</span>
+                    </div>
+                  </div>
+                  <button class="explore-btn" onclick="triggerFestivalLoad('${fest.id}')">
+                    Explore ◈
+                  </button>
+                </div>
+              `;
+            });
+            pickerHtml += `</div>`;
+          });
+
+          pickerHtml += `</div>`;
+          contentLayer.innerHTML = pickerHtml;
+        }
+        
+        // Transition in
+        // Small delay to ensure display:block has taken effect
+        requestAnimationFrame(() => {
+          contentLayer.classList.add('visible');
+        });
+      }, 400); // Wait for fade out
+    }
+    
+    // Global hook for inline onclick from the picker
+    window.triggerFestivalLoad = function(festId) {
+      const contentLayer = document.getElementById('content-layer');
+      contentLayer.classList.remove('visible');
+      
+      setTimeout(() => {
+        const fest = allFestivals.find(f => f.id === festId);
+        if (fest) renderDetails(fest);
+        
+        requestAnimationFrame(() => {
+          contentLayer.classList.add('visible');
+        });
+      }, 400);
+    };
+
+    function renderDetails(fest) {
+      const contentLayer = document.getElementById('content-layer');
+      const cuisineFallback = "Traditional regional sweets, ceremonial harvest grains, and indigenous local delicacies.";
+      const cuisineContent = fest.cuisine || cuisineFallback;
+      
+      contentLayer.innerHTML = `
+        <div class="festival-hero-img-container">
+          <img src="${fest.image_placeholder}" alt="${fest.name}" class="festival-hero-img" onerror="this.style.display='none'; this.parentElement.style.display='none';" />
+        </div>
+        
+        <h1 class="heritage-title">${fest.name}</h1>
+        
+        <div class="heritage-meta">
+          <span class="meta-tag">✦ ${fest.location}</span>
+          <span class="meta-tag">◈ ${fest.timing}</span>
+          <span class="meta-tag">❖ ${fest.local_language}</span>
+        </div>
+
+        <div class="section-title">Historical Overview</div>
+        <p class="heritage-text">${fest.history}</p>
+
+        <div class="section-title">Cultural Highlights</div>
+        <p class="heritage-text">${fest.culture_and_rituals}</p>
+
+        <div class="section-title">Culinary Heritage</div>
+        <p class="heritage-text">${cuisineContent}</p>
+
+        <div class="action-container">
+          <a href="https://t.me/AntaraV1bot?start=${fest.id}" target="_blank" rel="noopener noreferrer" class="plan-trip-btn">
+            ◈ Plan a trip
+          </a>
+        </div>
+      `;
+      
+      // Ensure scrolling is reset to top
+      document.getElementById('heritage-panel').scrollTop = 0;
+    }
+
+    // --- Boot ---
+    init();
+
+  </script>
+</body>
+</html>
