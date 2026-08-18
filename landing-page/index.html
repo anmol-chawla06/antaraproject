@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antara | Digital Heritage Platform</title>
+    <meta name="description" content="Antara connects place, history, culture, and travel in India.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <a href="#" class="logo">ANTARA</a>
+            </div>
+            <div class="nav-links">
+                <a href="#map-section">Explore</a>
+                <a href="#knowledge-section">Knowledge</a>
+                <a href="#travel-section">Travel</a>
+                <a href="#festival-section">Festivals</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggleBtn" aria-label="Toggle Theme">☀</button>
+                <button class="nav-btn-heritage" id="heritageAiNavBtn">Heritage AI</button>
+            </div>
+            
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-nav">
+        <a href="#map-section">Explore</a>
+        <a href="#knowledge-section">Knowledge</a>
+        <a href="#travel-section">Travel</a>
+        <a href="#festival-section">Festivals</a>
+    </div>
+
+    <header class="hero-section" id="hero">
+        <div class="hero-bg" style="background-image: url('assets/images/hero_bg.png');"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content reveal-on-scroll">
+            <h1 class="hero-title">स्मृतिषु संस्कृतिः, स्थलेषु इतिहासः।</h1>
+            <p class="hero-desc">In memories, culture; in places, history. Antara is a digital heritage archive and exploration platform connecting India's living traditions with the places that shaped them.</p>
+            <div class="hero-actions">
+                <a href="#map-section" class="btn btn-primary">Enter the Archive</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="section map-section" id="map-section">
+        <div class="section-container">
+            <div class="section-header reveal-on-scroll">
+                <h2 class="section-title">India, in every direction.</h2>
+            </div>
+            
+            <div class="map-controls reveal-on-scroll">
+                <button class="map-filter active">All Sites</button>
+                <button class="map-filter">UNESCO</button>
+                <button class="map-filter">Temples</button>
+                <button class="map-filter">Forts</button>
+                <button class="map-filter">Stepwells</button>
+            </div>
+
+            <div class="map-container reveal-on-scroll">
+                <div class="map-visual" style="background-image: url('assets/images/map_bg.png');">
+                    <div class="map-overlay"></div>
+                    <div class="map-marker" style="top: 35%; left: 42%;"></div>
+                    <div class="map-marker" style="top: 55%; left: 35%;"></div>
+                    <div class="map-marker" style="top: 60%; left: 60%;"></div>
+                </div>
+            </div>
+
+            <div class="section-actions mt-md reveal-on-scroll">
+                <a href="/explore" class="btn btn-primary" id="btnExploreMap">Explore the Map &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section knowledge-section" id="knowledge-section">
+        <div class="section-container editorial-split reveal-on-scroll">
+            <div class="editorial-content">
+                <h2 class="section-title">Listen to what endured.</h2>
+                <p class="editorial-text">Ancient manuscripts were meant to be spoken, heard, and deeply understood. The archive bridges original texts with modern narration.</p>
+                
+                <div class="manuscript-reader mt-lg">
+                    <h3 class="manuscript-name">भगवद्गीता</h3>
+                    
+                    <div class="language-controls">
+                        <button class="lang-btn active">Sanskrit</button>
+                        <button class="lang-btn">English</button>
+                        <button class="lang-btn">Hindi</button>
+                    </div>
+                    
+                    <div class="manuscript-text-display">
+                        <p class="sanskrit-text">कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।<br>मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥</p>
+                    </div>
+
+                    <div class="audio-player">
+                        <button class="play-btn" aria-label="Play Narration">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                        <div class="player-timeline">
+                            <div class="timeline-progress"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-md">
+                        <a href="/knowledge" class="btn btn-primary" id="btnExploreArchive">Explore the Archive &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="editorial-image">
+                <div class="image-wrapper">
+                    <img src="assets/images/manuscript_bg.png" alt="Ancient palm leaf manuscript">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="quote-section">
+        <div class="quote-container reveal-on-scroll">
+            <p class="quote-text">अतीतं केवलं स्मरणीयं न, अनुभवनीयमपि।</p>
+            <p class="quote-subtext">The past is not merely to be remembered, but to be experienced.</p>
+        </div>
+    </section>
+
+    <section class="section travel-section" id="travel-section">
+        <div class="section-container">
+            <div class="section-header reveal-on-scroll">
+                <h2 class="section-title">From discovery to journey.</h2>
+            </div>
+
+            <div class="travel-editorial reveal-on-scroll">
+                <div class="travel-main">
+                    <div class="image-wrapper landscape">
+                        <img src="assets/images/travel_bg.png" alt="Chand Baori Stepwell">
+                    </div>
+                    <div class="travel-details mt-sm">
+                        <span class="metadata">Abhaneri, Rajasthan</span>
+                        <h3>Chand Baori</h3>
+                        <p class="editorial-text">An architectural marvel from the 9th century, designed to conserve water in the arid desert. Its geometric precision reflects a profound understanding of space and environment.</p>
+                    </div>
+                </div>
+                
+                <div class="travel-secondary">
+                    <div class="travel-item">
+                        <span class="metadata">Uttarakhand</span>
+                        <h4>Kedarnath</h4>
+                    </div>
+                    <div class="travel-item">
+                        <span class="metadata">Maharashtra</span>
+                        <h4>Ajanta Caves</h4>
+                    </div>
+                    <div class="travel-item">
+                        <span class="metadata">Karnataka</span>
+                        <h4>Hampi Ruins</h4>
+                    </div>
+                    
+                    <a href="/travel" class="btn btn-primary mt-md" id="btnPlanVisit">Plan Your Visit &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section festival-section" id="festival-section">
+        <div class="section-container">
+            <div class="section-header reveal-on-scroll">
+                <h2 class="section-title">Heritage is still alive.</h2>
+            </div>
+
+            <div class="festival-editorial reveal-on-scroll">
+                <div class="festival-content">
+                    <h3>The Light of Devotion</h3>
+                    <span class="metadata">Varanasi, Uttar Pradesh</span>
+                    <p class="editorial-text mt-sm">Dev Deepawali transforms the ancient ghats of the Ganges into a glowing expanse. It is a continuing tradition where community, spirituality, and geography converge seamlessly.</p>
+                    <div class="festival-tags mt-md">
+                        <span class="tag">Tradition</span>
+                        <span class="tag">Music</span>
+                        <span class="tag">Community</span>
+                    </div>
+                    <div class="mt-md">
+                        <a href="/festivals" class="btn btn-primary" id="btnFestivalCalendar">Explore Festivals &rarr;</a>
+                    </div>
+                </div>
+                
+                <div class="festival-image">
+                    <div class="image-wrapper portrait">
+                        <img src="assets/images/festival_bg.png" alt="Dev Deepawali in Varanasi">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2>ANTARA</h2>
+            </div>
+            <div class="footer-links">
+                <a href="#map-section">Explore</a>
+                <a href="#knowledge-section">Knowledge</a>
+                <a href="#travel-section">Journey</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Antara Digital Heritage Archive.</p>
+        </div>
+    </footer>
+
+    <button class="heritage-ai-btn" id="heritageAiBtn" aria-label="Open Heritage AI">
+        Heritage AI
+    </button>
+
+    <div class="heritage-ai-panel" id="heritageAiPanel">
+        <div class="ai-panel-header">
+            <div class="ai-title">
+                <h4>Heritage AI</h4>
+            </div>
+            <button class="close-ai-btn" id="closeAiBtn">&times;</button>
+        </div>
+        <div class="ai-panel-body" id="aiChatHistory">
+            <div class="ai-message assistant">
+                Namaste. What would you like to discover?
+            </div>
+        </div>
+        <div class="ai-suggestions" id="aiSuggestions">
+            <button class="ai-chip">Tell me the story of this place.</button>
+            <button class="ai-chip">Which sites should I explore?</button>
+            <button class="ai-chip">Explain this manuscript.</button>
+        </div>
+        <div class="ai-panel-footer">
+            <input type="text" id="aiChatInput" placeholder="Ask a question..." class="ai-input">
+            <button class="ai-send-btn" id="aiSendBtn">Send</button>
+        </div>
+    </div>
+
+    <script src="js/chatService.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
