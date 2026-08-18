@@ -21,8 +21,8 @@ const fs = require('fs');
 const path = require('path');
 
 // 1. Bot & AI Configuration
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || 'REMOVED-REVOKED-TELEGRAM-TOKEN';
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AQ.Ab8RN6K2aqkiSleu0RLTUIhIVd8cx3tZgh4a4a0Bpvu2F_998w';
+const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const AI_MODELS = ['gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-3.1-flash-lite'];
 const AI_TIMEOUT_MS = 6000; // 6-second timeout per model attempt
 
