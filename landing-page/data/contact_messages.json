@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "msg_1787088011921_292",
+    "name": "QA Tester",
+    "email": "qa@example.com",
+    "subject": "No Subject",
+    "message": "This is a test message from QA.",
+    "status": "read",
+    "created_at": "2026-08-18T21:20:11.921Z"
+  }
+]
