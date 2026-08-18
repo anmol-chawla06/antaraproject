@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Antara — Explore India, by Map</title>
+<meta name="description" content="An interactive cartographic guide to India's heritage — explore states, discover UNESCO sites and historic destinations, and plan your journey.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="app.css?v=4">
+</head>
+<body>
+
+<!-- ============================== LOADER ============================== -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader-mark"><span class="mark">&#9673;</span> ANTARA</div>
+  <div class="loader-bar"><i></i></div>
+</div>
+
+<!-- ============================== CURSOR =============================== -->
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<!-- ============================== NAV ================================== -->
+<nav class="nav" id="nav">
+  <button class="nav-brand" id="nav-brand" aria-label="Antara — home">
+    <span class="mark">&#9673;</span> ANTARA <span class="tag">India</span>
+  </button>
+  <div class="nav-links">
+    <button class="nav-link is-active" data-scrollto="">Explore</button>
+    <button class="nav-link" id="nav-heritage">Heritage</button>
+    <button class="nav-link" id="nav-states">States</button>
+    <button class="nav-link" id="nav-about">About</button>
+  </div>
+  <div class="nav-actions">
+    <button class="icon-btn" id="search-btn" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </button>
+    <button class="icon-btn" id="fav-btn" aria-label="My Journey / Favorites" style="position:relative;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-9.5-8.5C.5 8 2.5 4.5 6.2 4.5c2 0 3.4 1 5.8 3.5 2.4-2.5 3.8-3.5 5.8-3.5 3.7 0 5.7 3.5 3.7 8C19 16.65 12 21 12 21z"/></svg>
+      <span class="count" id="fav-count" style="display:none;"></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ============================== MAP STAGE ============================= -->
+<main class="stage" id="stage">
+
+  <div class="stage-breadcrumb" id="stage-breadcrumb"></div>
+
+  <div class="stage-intro" id="stage-intro">
+    <div class="eyebrow">A cartographic guide to India</div>
+    <h1 class="display-l">Explore<br>India.</h1>
+    <p>Hover a state to preview its heritage. Click to zoom in, and follow the map into a landmark's full story.</p>
+  </div>
+
+  <div class="map-shell">
+    <svg id="map-svg" xmlns="http://www.w3.org/2000/svg">
+      <g class="map-viewport" id="map-viewport">
+        <g id="states-layer"></g>
+        <g id="labels-layer"></g>
+        <g id="markers-layer"></g>
+      </g>
+    </svg>
+  </div>
+
+  <button class="back-to-india" id="back-to-india">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+    Explore India
+  </button>
+
+  <div class="state-panel" id="state-panel"></div>
+
+  <div class="filter-bar" id="filter-bar"></div>
+
+  <div class="preview-card" id="preview-card"></div>
+</main>
+
+<!-- ============================== SEARCH OVERLAY ========================= -->
+<div class="search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="search-input" placeholder="Search destinations, cities, states…" autocomplete="off" spellcheck="false">
+      <span class="search-esc">ESC</span>
+    </div>
+    <div class="search-results" id="search-results"></div>
+  </div>
+</div>
+
+<!-- ============================== FAVORITES DRAWER ======================= -->
+<div class="drawer-scrim" id="drawer-scrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2>My Journey</h2>
+    <button class="icon-btn" id="drawer-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
+<!-- ============================== MOBILE BOTTOM SHEET ==================== -->
+<div class="sheet-scrim" id="sheet-scrim"></div>
+<div class="bottom-sheet" id="bottom-sheet"></div>
+
+<!-- ============================== DESTINATION PAGE ======================== -->
+<div class="dest-page" id="dest-page"></div>
+
+<!-- ============================== TOAST =================================== -->
+<div class="toast" id="toast"></div>
+
+<script src="map-data.js?v=5"></script>
+<script src="data.js?v=5"></script>
+<script src="app.js?v=5"></script>
+</body>
+</html>
