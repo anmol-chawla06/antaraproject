@@ -179,4 +179,116 @@ document.addEventListener('DOMContentLoaded', () => {
         if(mapSection) contextObserver.observe(mapSection);
         if(manuscriptSection) contextObserver.observe(manuscriptSection);
     }
+
+    // Contact Modal & Form Logic
+    const btnOpenContact = document.getElementById('btnOpenContact');
+    const contactModal = document.getElementById('contactModal');
+    const closeContactBtn = document.getElementById('closeContactBtn');
+    const contactForm = document.getElementById('contactForm');
+    const stateLoading = document.getElementById('contactLoadingState');
+    const stateSuccess = document.getElementById('contactSuccessState');
+    const stateError = document.getElementById('contactErrorState');
+    const btnRetryContact = document.getElementById('btnRetryContact');
+
+    const openContactModal = () => {
+        if(contactModal) contactModal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    };
+
+    const closeContactModal = () => {
+        if(contactModal) {
+            contactModal.classList.remove('active');
+            // Reset form state after closing
+            setTimeout(() => {
+                contactForm.style.display = 'block';
+                stateLoading.style.display = 'none';
+                stateSuccess.style.display = 'none';
+                stateError.style.display = 'none';
+                contactForm.reset();
+                document.querySelectorAll('.form-group').forEach(g => g.classList.remove('invalid'));
+            }, 300);
+        }
+        document.body.style.overflow = '';
+    };
+
+    if(btnOpenContact) btnOpenContact.addEventListener('click', openContactModal);
+    if(closeContactBtn) closeContactBtn.addEventListener('click', closeContactModal);
+    
+    // Close on overlay click
+    if(contactModal) {
+        contactModal.addEventListener('click', (e) => {
+            if(e.target === contactModal) closeContactModal();
+        });
+    }
+
+    // Escape key
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && contactModal && contactModal.classList.contains('active')) {
+            closeContactModal();
+        }
+    });
+
+    // Form Validation & Submission
+    const isValidEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    if(contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let isValid = true;
+            
+            const nameInput = document.getElementById('contactName');
+            const emailInput = document.getElementById('contactEmail');
+            const messageInput = document.getElementById('contactMessage');
+
+            // Validate Name
+            if(!nameInput.value.trim()) {
+                nameInput.parentElement.classList.add('invalid');
+                isValid = false;
+            } else {
+                nameInput.parentElement.classList.remove('invalid');
+            }
+
+            // Validate Email
+            if(!emailInput.value.trim() || !isValidEmail(emailInput.value.trim())) {
+                emailInput.parentElement.classList.add('invalid');
+                isValid = false;
+            } else {
+                emailInput.parentElement.classList.remove('invalid');
+            }
+
+            // Validate Message
+            if(!messageInput.value.trim()) {
+                messageInput.parentElement.classList.add('invalid');
+                isValid = false;
+            } else {
+                messageInput.parentElement.classList.remove('invalid');
+            }
+
+            if(isValid) {
+                // Mock Submission
+                contactForm.style.display = 'none';
+                stateLoading.style.display = 'block';
+
+                // Simulate API Call POST /api/contact
+                setTimeout(() => {
+                    stateLoading.style.display = 'none';
+                    // 90% success rate mock
+                    if (Math.random() > 0.1) {
+                        stateSuccess.style.display = 'block';
+                    } else {
+                        stateError.style.display = 'block';
+                    }
+                }, 1500);
+            }
+        });
+    }
+
+    if(btnRetryContact) {
+        btnRetryContact.addEventListener('click', () => {
+            stateError.style.display = 'none';
+            contactForm.style.display = 'block';
+        });
+    }
 });
