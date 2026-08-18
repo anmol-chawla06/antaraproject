@@ -267,20 +267,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if(isValid) {
-                // Mock Submission
                 contactForm.style.display = 'none';
                 stateLoading.style.display = 'block';
 
-                // Simulate API Call POST /api/contact
-                setTimeout(() => {
+                fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: nameInput.value.trim(),
+                        email: emailInput.value.trim(),
+                        message: messageInput.value.trim()
+                    })
+                })
+                .then(res => res.json().then(data => ({ status: res.status, body: data })))
+                .then(({ status, body }) => {
                     stateLoading.style.display = 'none';
-                    // 90% success rate mock
-                    if (Math.random() > 0.1) {
+                    if (status === 200 && body.success) {
                         stateSuccess.style.display = 'block';
                     } else {
                         stateError.style.display = 'block';
                     }
-                }, 1500);
+                })
+                .catch(err => {
+                    console.error('Contact submit error:', err);
+                    stateLoading.style.display = 'none';
+                    stateError.style.display = 'block';
+                });
             }
         });
     }
