@@ -790,6 +790,7 @@ button {
     color: var(--clr-text-secondary);
     font-size: 0.8rem;
     transition: var(--transition-smooth);
+    border-radius: 20px;
 }
 .ai-chip:hover {
     color: var(--clr-text-primary);
@@ -814,6 +815,125 @@ button {
     color: var(--clr-accent-sandstone);
     font-size: 0.9rem;
 }
+
+/* ==========================================================================
+   Contact Section & Modal
+   ========================================================================== */
+.contact-section {
+    background-color: var(--clr-bg-primary);
+}
+.contact-quote {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.contact-quote .quote-text {
+    font-size: 1.5rem;
+    font-style: italic;
+    color: var(--clr-accent-sandstone);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(17, 17, 17, 0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition-smooth);
+}
+[data-theme='light'] .modal-overlay {
+    background: rgba(247, 245, 240, 0.8);
+}
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-content {
+    background: var(--clr-bg-surface);
+    border: 1px solid var(--clr-border);
+    width: 100%;
+    max-width: 500px;
+    border-radius: 4px;
+    box-shadow: var(--shadow-elevated);
+    transform: translateY(20px);
+    transition: var(--transition-smooth);
+    padding: 2.5rem;
+}
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--clr-text-primary);
+}
+.close-modal-btn {
+    font-size: 1.5rem;
+    color: var(--clr-text-secondary);
+}
+.close-modal-btn:hover {
+    color: var(--clr-text-primary);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--clr-text-secondary);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.form-group input, .form-group textarea {
+    width: 100%;
+    background: var(--clr-bg-primary);
+    border: 1px solid var(--clr-border);
+    padding: 0.8rem 1rem;
+    color: var(--clr-text-primary);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    border-radius: 2px;
+    transition: var(--transition-smooth);
+}
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--clr-accent-sandstone);
+}
+.form-group.invalid input, .form-group.invalid textarea {
+    border-color: var(--clr-accent-terracotta);
+}
+
+.error-msg {
+    display: none;
+    color: var(--clr-accent-terracotta);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+.form-group.invalid .error-msg {
+    display: block;
+}
+
+.w-100 { width: 100%; }
+.mb-sm { margin-bottom: 0.5rem; }
+.text-error { color: var(--clr-accent-terracotta); }
+.form-state { text-align: center; padding: 2rem 0; }
 
 /* ==========================================================================
    Reveal Animations

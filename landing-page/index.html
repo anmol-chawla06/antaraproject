@@ -23,6 +23,7 @@
                 <a href="#knowledge-section">Knowledge</a>
                 <a href="#travel-section">Travel</a>
                 <a href="#festival-section">Festivals</a>
+                <a href="#contact-section">Contact</a>
             </div>
             <div class="nav-actions">
                 <button class="theme-toggle" id="themeToggleBtn" aria-label="Toggle Theme">☀</button>
@@ -41,6 +42,7 @@
         <a href="#knowledge-section">Knowledge</a>
         <a href="#travel-section">Travel</a>
         <a href="#festival-section">Festivals</a>
+        <a href="#contact-section">Contact</a>
     </div>
 
     <header class="hero-section" id="hero">
@@ -201,6 +203,22 @@
         </div>
     </section>
 
+    <section class="section contact-section" id="contact-section">
+        <div class="section-container editorial-split reveal-on-scroll">
+            <div class="editorial-content">
+                <h2 class="section-title">Have a story to share?</h2>
+                <p class="editorial-text mt-sm">Questions, suggestions, corrections, or a heritage story you'd like to share? We'd love to hear from you.</p>
+                <div class="mt-md">
+                    <button class="btn btn-primary" id="btnOpenContact">Contact Antara &rarr;</button>
+                </div>
+                <p class="metadata mt-sm">Prefer email? <a href="mailto:hello@antara.in" class="btn-link">hello@antara.in</a></p>
+            </div>
+            <div class="contact-quote">
+                <p class="quote-text">Preserve what matters. Discover what remains.</p>
+            </div>
+        </div>
+    </section>
+
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-brand">
@@ -241,6 +259,50 @@
         <div class="ai-panel-footer">
             <input type="text" id="aiChatInput" placeholder="Ask a question..." class="ai-input">
             <button class="ai-send-btn" id="aiSendBtn">Send</button>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Contact Antara</h3>
+                <button class="close-modal-btn" id="closeContactBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm" novalidate>
+                    <div class="form-group">
+                        <label for="contactName">Name</label>
+                        <input type="text" id="contactName" required placeholder="Your name">
+                        <span class="error-msg">Please enter your name.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" required placeholder="hello@example.com">
+                        <span class="error-msg">Please enter a valid email address.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" rows="5" required placeholder="How can we help?"></textarea>
+                        <span class="error-msg">Please enter a message.</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" id="contactSubmitBtn">Send Message</button>
+                </form>
+                
+                <div class="form-state" id="contactLoadingState" style="display: none;">
+                    <p class="editorial-text">Sending message...</p>
+                </div>
+                
+                <div class="form-state" id="contactSuccessState" style="display: none;">
+                    <h4 class="manuscript-name mb-sm">Thank You</h4>
+                    <p class="editorial-text">Your message has been received. We will be in touch soon.</p>
+                </div>
+                
+                <div class="form-state" id="contactErrorState" style="display: none;">
+                    <p class="editorial-text text-error">Unable to send message. Please try again or email us directly.</p>
+                    <button class="btn btn-link mt-sm" id="btnRetryContact">Retry</button>
+                </div>
+            </div>
         </div>
     </div>
 
