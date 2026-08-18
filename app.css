@@ -1059,6 +1059,27 @@ button {
 .photo-art-wrap:hover .photo-img {
   transform: scale(1.04);
 }
+.photo-art-wrap.contain-mode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.photo-blur-bg {
+  position: absolute;
+  inset: -20px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px) brightness(0.5);
+  z-index: 1;
+  pointer-events: none;
+}
+.photo-art-wrap .photo-img.contain {
+  position: relative;
+  z-index: 2;
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
 .view-toggle-btn {
   position: absolute;
   top: 32px;
@@ -1395,6 +1416,7 @@ button {
   width: 120px;
   height: 80px;
   border-radius: 8px;
+  overflow: hidden;
   background-size: cover;
   background-position: center;
   background-color: var(--ink-10);

@@ -177,7 +177,7 @@ window.STATES_META = {
 window.DESTINATIONS = [
   {
     "id": "taj-mahal",
-    "image": "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/tajmahal/Taj_Mahal,_Agra,_India_edit3.jpg",
     "slug": "taj-mahal",
     "name": "Taj Mahal",
     "city": "Agra",
@@ -237,16 +237,19 @@ window.DESTINATIONS = [
     "explore": [
       {
         "name": "The Main Mausoleum",
+        "image": "photos sites/tajmahal/Taj_Mahal,_Agra,_India_edit3.jpg",
         "text": "The white marble tomb containing the cenotaphs of Mumtaz Mahal and Shah Jahan.",
         "notice": "Shoe covers required inside."
       },
       {
         "name": "Charbagh Gardens",
+        "image": "photos sites/tajmahal/Taj_Mahal_Gardens.jpg",
         "text": "The classic Mughal garden divided into four quarters by water channels.",
         "notice": "Great for photography."
       },
       {
         "name": "The Mosque and Jawab",
+        "image": "photos sites/tajmahal/Taj_Mahal_Mosque.jpg",
         "text": "Two identical red sandstone buildings flanking the tomb for perfect symmetry.",
         "notice": ""
       }
@@ -254,18 +257,22 @@ window.DESTINATIONS = [
     "dontMiss": [
       {
         "title": "The Calligraphy",
+        "image": "photos sites/tajmahal/Taj_Mahal_Calligraphy_Example.jpg",
         "text": "Verses from the Quran inlaid with black marble on the grand pishtaq entrances."
       },
       {
         "title": "The Dome",
+        "image": "photos sites/tajmahal/Taj_Mahal_Dome.jpg",
         "text": "The massive marble dome that surmounts the tomb, topped by a lotus finial."
       },
       {
         "title": "The Cenotaphs",
+        "image": "photos sites/tajmahal/Cenotaph_of_Shah_Jahan.jpg",
         "text": "The intricately carved false tombs in the main chamber (real graves are at a lower level)."
       }
     ],
     "lookCloser": {
+      "image": "photos sites/tajmahal/Taj_Mahal,_Agra,_India_edit3.jpg",
       "intro": "The Taj Mahal is adorned with exquisite decorative elements that require a closer look to fully appreciate.",
       "hotspots": [
         {
@@ -351,7 +358,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "qutub-minar",
-    "image": "https://images.unsplash.com/photo-1588080896129-a73ded88ac5f?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_7_licensed-image.jpg",
     "slug": "qutub-minar",
     "name": "Qutub Minar",
     "city": "Delhi",
@@ -520,7 +527,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "humayuns-tomb",
-    "image": "https://images.unsplash.com/photo-1586906973920-d5c409b20b11?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_8_licensed-image.jpg",
     "slug": "humayuns-tomb",
     "name": "Humayun's Tomb",
     "city": "Delhi",
@@ -690,7 +697,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "red-fort",
-    "image": "https://images.unsplash.com/photo-1586186697201-4b8abb4e3b2a?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_9_licensed-image.jpg",
     "slug": "red-fort",
     "name": "Red Fort",
     "city": "Delhi",
@@ -1177,7 +1184,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "amber-fort",
-    "image": "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/amberfort/Amer_Fort_-_Jaipur_India.jpg",
     "slug": "amber-fort",
     "name": "Amber Fort",
     "city": "Jaipur",
@@ -1232,21 +1239,25 @@ window.DESTINATIONS = [
     "explore": [
       {
         "name": "Suraj Pol",
+        "image": "photos sites/amberfort/Amber_Fort_-_Suraj_pol.jpg",
         "text": "The Sun Gate, the main entrance leading to the first courtyard.",
         "notice": ""
       },
       {
         "name": "Diwan-i-Am",
+        "image": "photos sites/amberfort/Amber_Palace-Diwan_I_Am-20131017.jpg",
         "text": "The Hall of Public Audience, a pillared pavilion.",
         "notice": ""
       },
       {
         "name": "Sheesh Mahal",
+        "image": "photos sites/amberfort/SHEESH_MAHAL_AMBER_PALACE-JAIPUR-RAJASTHAN-08.jpg",
         "text": "The Palace of Mirrors in the third courtyard.",
         "notice": "You cannot enter the room, but you can view it closely."
       },
       {
         "name": "Zenana",
+        "image": "photos sites/amberfort/Le_Zenana_(Fort_d'Amber)_(8490839142).jpg",
         "text": "The women's quarters in the fourth courtyard.",
         "notice": ""
       }
@@ -1254,18 +1265,22 @@ window.DESTINATIONS = [
     "dontMiss": [
       {
         "title": "Ganesh Pol",
+        "image": "photos sites/amberfort/Amber_Fort_-_Paintings_on_the_walls_of_Zenana_Deorhi_2.jpg",
         "text": "The beautifully painted gateway leading to the private palaces."
       },
       {
         "title": "Magic Flower",
+        "image": "photos sites/amberfort/flowers_7.jpg",
         "text": "A carved marble panel at the base of a pillar near the Sheesh Mahal featuring seven different designs."
       },
       {
         "title": "Sukh Niwas",
+        "image": "photos sites/amberfort/sukh niwass.jpg",
         "text": "The Hall of Pleasure, featuring an ancient air conditioning system using cascading water."
       }
     ],
     "lookCloser": {
+      "image": "photos sites/amberfort/SHEESH_MAHAL_AMBER_PALACE-JAIPUR-RAJASTHAN-08.jpg",
       "intro": "The fort blends rough exterior defenses with incredibly refined interior artwork.",
       "hotspots": [
         {
@@ -1830,7 +1845,8 @@ window.DESTINATIONS = [
   },
   {
     "id": "ajanta-caves",
-    "image": "https://images.unsplash.com/photo-1514222134-b57cbb8ce073?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/ajantaeloracavescover.jpg",
+    "imageFit": "contain",
     "slug": "ajanta-caves",
     "name": "Ajanta Caves",
     "city": "Aurangabad",
@@ -1885,16 +1901,19 @@ window.DESTINATIONS = [
     "explore": [
       {
         "name": "Cave 1",
+        "image": "photos sites/Ajanta_Cave_1.jpg",
         "text": "A magnificent vihara (monastery) featuring the famous Padmapani painting.",
         "notice": "Usually crowded, but essential."
       },
       {
         "name": "Cave 16",
+        "image": "photos sites/_Ajanta_Cave_16.jpg",
         "text": "Features a beautiful sculpture of the dying princess.",
         "notice": ""
       },
       {
         "name": "Cave 26",
+        "image": "photos sites/Ajanta_Cave_No._26.JPG",
         "text": "A chaitya (prayer hall) with a massive carved reclining Buddha.",
         "notice": ""
       }
@@ -1902,18 +1921,22 @@ window.DESTINATIONS = [
     "dontMiss": [
       {
         "title": "Bodhisattva Padmapani",
+        "image": "photos sites/Ajanta_Cave_1_Padmapani_and_attendants.jpg",
         "text": "The serene, world-famous painting in Cave 1."
       },
       {
         "title": "The Jataka Tales",
+        "image": "photos sites/Ajanta_Cave_1_Mahajanaka_Jataka_mural_detail.jpg",
         "text": "Murals narrating the previous lives of the Buddha across various caves."
       },
       {
         "title": "Viewpoint",
+        "image": "photos sites/Ajanta_viewpoint.jpg",
         "text": "The spot across the gorge where John Smith first spotted the caves."
       }
     ],
     "lookCloser": {
+      "image": "photos sites/ajantalookcloser01-AM.jpg",
       "intro": "The paintings at Ajanta use a technique often incorrectly called fresco; it is actually tempera.",
       "hotspots": [
         {
@@ -2155,7 +2178,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "fatehpur-sikri",
-    "image": "https://images.unsplash.com/photo-1555671100-87d69c6ba3f4?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_6_licensed-image.jpg",
     "slug": "fatehpur-sikri",
     "name": "Fatehpur Sikri",
     "city": "Agra",
@@ -2329,7 +2352,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "brihadeeswara-temple",
-    "image": "https://images.unsplash.com/photo-1597735449895-37e2bada1e38?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_11_licensed-image.jpg",
     "slug": "brihadeeswara-temple",
     "name": "Brihadeeswara Temple",
     "city": "Thanjavur",
@@ -2491,7 +2514,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "agra-fort",
-    "image": "https://images.unsplash.com/photo-1585378341604-8cabe4a11319?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_5_licensed-image.jpg",
     "slug": "agra-fort",
     "name": "Agra Fort",
     "city": "Agra",
@@ -2664,7 +2687,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "rani-ki-vav",
-    "image": "https://images.unsplash.com/photo-1543721530-d2c3201371e7?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_12_licensed-image.jpg",
     "slug": "rani-ki-vav",
     "name": "Rani ki Vav",
     "city": "Patan",
@@ -2790,7 +2813,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "modhera-sun-temple",
-    "image": "https://images.unsplash.com/photo-1586189317135-5d54c9b1b463?auto=format&fit=crop&w=1200&q=80",
+    "image": "https://images.unsplash.com/photo-1627894483216-2138af692e32?auto=format&fit=crop&w=1200&q=80",
     "slug": "modhera-sun-temple",
     "name": "Modhera Sun Temple",
     "city": "Modhera",
@@ -2887,12 +2910,11 @@ window.DESTINATIONS = [
         "label": "ASI",
         "url": "https://asi.nic.in/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1627894483216-2138af692e32?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "khajuraho-monuments",
-    "image": "https://images.unsplash.com/photo-1586189317135-5d54c9b1b463?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_13_licensed-image.jpg",
     "slug": "khajuraho-monuments",
     "name": "Khajuraho Group of Monuments",
     "city": "Khajuraho",
@@ -2994,12 +3016,11 @@ window.DESTINATIONS = [
         "label": "UNESCO",
         "url": "https://whc.unesco.org/en/list/240"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1609946850438-e69d799f92d4?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "sanchi-stupa",
-    "image": "https://images.unsplash.com/photo-1564221233679-a58d8dc5cb4a?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_14_licensed-image.jpg",
     "slug": "sanchi-stupa",
     "name": "Great Stupa at Sanchi",
     "city": "Sanchi",
@@ -3102,8 +3123,7 @@ window.DESTINATIONS = [
         "label": "UNESCO",
         "url": "https://whc.unesco.org/en/list/524"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "gwalior-fort",
@@ -3206,12 +3226,11 @@ window.DESTINATIONS = [
         "label": "MP Tourism",
         "url": "https://www.mptourism.com/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "padmanabhaswamy-temple",
-    "image": "https://images.unsplash.com/photo-1584422604127-a4739e28c46d?auto=format&fit=crop&w=1200&q=80",
+    "image": "https://images.unsplash.com/photo-1609946850438-e69d799f92d4?auto=format&fit=crop&w=1200&q=80",
     "slug": "padmanabhaswamy-temple",
     "name": "Sree Padmanabhaswamy Temple",
     "city": "Thiruvananthapuram",
@@ -3304,8 +3323,7 @@ window.DESTINATIONS = [
         "label": "Temple Trust",
         "url": "https://spst.in/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1609946850438-e69d799f92d4?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "mattancherry-palace",
@@ -3411,8 +3429,7 @@ window.DESTINATIONS = [
         "label": "ASI",
         "url": "https://asi.nic.in/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1600100397608-f090742f400b?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "victoria-memorial",
@@ -3523,7 +3540,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "darjeeling-railway",
-    "image": "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_15_licensed-image.jpg",
     "slug": "darjeeling-railway",
     "name": "Darjeeling Himalayan Railway",
     "city": "Darjeeling",
@@ -3843,8 +3860,7 @@ window.DESTINATIONS = [
         "label": "ASI",
         "url": "https://asi.nic.in/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "golden-temple",
@@ -3964,7 +3980,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "jallianwala-bagh",
-    "image": "https://images.unsplash.com/photo-1593642531955-b62e17bdaa6d?auto=format&fit=crop&w=1200&q=80",
+    "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80",
     "slug": "jallianwala-bagh",
     "name": "Jallianwala Bagh National Memorial",
     "city": "Amritsar",
@@ -4066,12 +4082,11 @@ window.DESTINATIONS = [
         "label": "Punjab Tourism",
         "url": "https://punjabtourism.punjab.gov.in/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "kamakhya-temple",
-    "image": "https://images.unsplash.com/photo-1597835474457-583b6d4c9f6c?auto=format&fit=crop&w=1200&q=80",
+    "image": "https://images.unsplash.com/photo-1621831971375-47000b037db3?auto=format&fit=crop&w=1200&q=80",
     "slug": "kamakhya-temple",
     "name": "Kamakhya Temple",
     "city": "Guwahati",
@@ -4164,12 +4179,11 @@ window.DESTINATIONS = [
         "label": "Official Site",
         "url": "https://kamakhyatemple.org/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1621831971375-47000b037db3?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "rang-ghar",
-    "image": "https://images.unsplash.com/photo-1569163139992-d5462e6b019d?auto=format&fit=crop&w=1200&q=80",
+    "image": "https://images.unsplash.com/photo-1600100397608-f090742f400b?auto=format&fit=crop&w=1200&q=80",
     "slug": "rang-ghar",
     "name": "Rang Ghar",
     "city": "Sivasagar",
@@ -4267,12 +4281,11 @@ window.DESTINATIONS = [
         "label": "ASI",
         "url": "https://asi.nic.in/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1600100397608-f090742f400b?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "kedarnath-temple",
-    "image": "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?auto=format&fit=crop&w=1200&q=80",
+    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80",
     "slug": "kedarnath-temple",
     "name": "Kedarnath Temple",
     "city": "Kedarnath",
@@ -4374,12 +4387,11 @@ window.DESTINATIONS = [
         "label": "Shrine Board",
         "url": "https://badrinath-kedarnath.gov.in/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "hadimba-temple",
-    "image": "https://images.unsplash.com/photo-1584422604127-a4739e28c46d?auto=format&fit=crop&w=1200&q=80",
+    "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80",
     "slug": "hadimba-temple",
     "name": "Hadimba Devi Temple",
     "city": "Manali",
@@ -4472,12 +4484,11 @@ window.DESTINATIONS = [
         "label": "HP Tourism",
         "url": "https://himachaltourism.gov.in/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "basilica-of-bom-jesus",
-    "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_16_licensed-image.jpg",
     "slug": "basilica-of-bom-jesus",
     "name": "Basilica of Bom Jesus",
     "city": "Old Goa",
@@ -4591,7 +4602,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "mahabodhi-temple",
-    "image": "https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_17_licensed-image.jpg",
     "slug": "mahabodhi-temple",
     "name": "Mahabodhi Temple Complex",
     "city": "Bodh Gaya",
@@ -4701,12 +4712,11 @@ window.DESTINATIONS = [
         "label": "UNESCO",
         "url": "https://whc.unesco.org/en/list/1056"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "nalanda-ruins",
-    "image": "https://images.unsplash.com/photo-1596178065887-9f4ff4b83d53?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_18_licensed-image.jpg",
     "slug": "nalanda-ruins",
     "name": "Nalanda Mahavihara Ruins",
     "city": "Nalanda",
@@ -4821,12 +4831,11 @@ window.DESTINATIONS = [
         "label": "UNESCO",
         "url": "https://whc.unesco.org/en/list/1502"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1627894483216-2138af692e32?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "shalimar-bagh",
-    "image": "https://images.unsplash.com/photo-1597735449895-37e2bada1e38?auto=format&fit=crop&w=1200&q=80",
+    "image": "https://images.unsplash.com/photo-1597040663342-45b6af8d8a7c?auto=format&fit=crop&w=1200&q=80",
     "slug": "shalimar-bagh",
     "name": "Shalimar Bagh Mughal Garden",
     "city": "Srinagar",
@@ -4934,8 +4943,7 @@ window.DESTINATIONS = [
         "label": "JK Tourism",
         "url": "https://jktdc.co.in/"
       }
-    ],
-    "image": "https://images.unsplash.com/photo-1597040663342-45b6af8d8a7c?auto=format&fit=crop&w=1200&q=80"
+    ]
   },
   {
     "id": "mahant-ghasidas-memorial-museum",

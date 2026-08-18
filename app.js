@@ -249,8 +249,18 @@ function artSVG(motif, accent, caption){
 function photoOrArt(dest, captionOverride, extraClass){
   if(!dest) return '';
   const cap = captionOverride !== undefined ? captionOverride : (dest.city || dest.state);
-  // Temporarily hide all destination photos while the app remains in artwork-only mode.
-  // Re-enable the photo block later by restoring the dest.image condition when manual images are ready.
+  if(dest.image){
+    const cls = extraClass ? ` ${extraClass}` : '';
+    if(dest.imageFit === 'contain'){
+      return `<div class="photo-art-wrap contain-mode${cls}">
+        <div class="photo-blur-bg" style="background-image: url('${dest.image}');"></div>
+        <img src="${dest.image}" class="photo-img contain" alt="${dest.name}" loading="lazy">
+      </div>`;
+    }
+    return `<div class="photo-art-wrap${cls}">
+      <img src="${dest.image}" class="photo-img" alt="${dest.name}" loading="lazy">
+    </div>`;
+  }
   return artSVG(dest.motif, dest.accent, cap);
 }
 function artFor(dest, captionOverride){
@@ -673,14 +683,14 @@ function renderDestination(dest){
       <section class="dest-section" id="sec-explore">
         <div class="section-head"><span class="section-num">04</span><h2>Explore</h2></div>
         <div class="explore-grid">
-          ${dest.explore.map(x=>`<div class="explore-card reveal"><div class="art">${artSVG(dest.motif, dest.accent, '')}</div><h3>${x.name}</h3><p>${x.text}</p><div class="notice">${x.notice}</div></div>`).join('')}
+          ${dest.explore.map(x=>`<div class="explore-card reveal"><div class="art">${x.image ? `<div class="photo-art-wrap"><img src="${x.image}" class="photo-img" alt="${x.name}" loading="lazy"></div>` : artSVG(dest.motif, dest.accent, '')}</div><h3>${x.name}</h3><p>${x.text}</p><div class="notice">${x.notice}</div></div>`).join('')}
         </div>
       </section>
 
       <section class="dest-section" id="sec-miss">
         <div class="section-head"><span class="section-num">05</span><h2>Don't Miss</h2></div>
         <div class="miss-list">
-          ${dest.dontMiss.map((m,i)=>`<div class="miss-item reveal"><span class="n">0${i+1}</span><div class="art">${artSVG(dest.motif, dest.accent,'')}</div><div><h3>${m.title}</h3><p>${m.text}</p></div></div>`).join('')}
+          ${dest.dontMiss.map((m,i)=>`<div class="miss-item reveal"><span class="n">0${i+1}</span><div class="art">${m.image ? `<div class="photo-art-wrap"><img src="${m.image}" class="photo-img" alt="${m.title}" loading="lazy"></div>` : artSVG(dest.motif, dest.accent,'')}</div><div><h3>${m.title}</h3><p>${m.text}</p></div></div>`).join('')}
         </div>
       </section>
 
@@ -688,7 +698,7 @@ function renderDestination(dest){
         <div class="section-head"><span class="section-num">06</span><h2>Look Closer</h2></div>
         <p class="section-lede reveal">${dest.lookCloser.intro}</p>
         <div class="closer-wrap reveal">
-          <div class="art">${artSVG(dest.motif, dest.accent, dest.name)}</div>
+          <div class="art">${dest.lookCloser.image ? `<div class="photo-art-wrap"><img src="${dest.lookCloser.image}" class="photo-img" alt="${dest.name}"></div>` : artSVG(dest.motif, dest.accent, dest.name)}</div>
           ${dest.lookCloser.hotspots.map((h,i)=>`<button class="hotspot" data-i="${i}" style="left:${h.x}%;top:${h.y}%" aria-label="${h.title}"></button>`).join('')}
           ${dest.lookCloser.hotspots.map((h,i)=>`<div class="hotspot-card" data-i="${i}" style="left:${Math.min(h.x+4,68)}%;top:${Math.max(h.y-6,4)}%"><div class="k">${h.title}</div><p>${h.text}</p></div>`).join('')}
         </div>
