@@ -14,6 +14,7 @@
  * - Interactive Inline Keyboards ([ ◈ Reserve Heritage Pass ], [ ☸ Plan Heritage Trip ], prompt chips)
  */
 
+require('dotenv').config();
 const TelegramBotPackage = require('node-telegram-bot-api');
 const TelegramBot = TelegramBotPackage.TelegramBot || TelegramBotPackage.default || TelegramBotPackage;
 const { GoogleGenerativeAI } = require('@google/generative-ai');

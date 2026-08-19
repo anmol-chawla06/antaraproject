@@ -31,8 +31,25 @@ const requireAdmin = (req, res, next) => {
 // Serve static admin files behind dummy auth
 app.use('/admin', requireAdmin, express.static(path.join(__dirname, 'admin')));
 
-// Serve static frontend files
+// Never expose the raw contact-message store over HTTP (was previously
+// reachable at /data/contact_messages.json via the static middleware below)
+app.use('/data', (req, res) => res.status(404).end());
+
+// The repo root hosts three sibling apps (festival portal, map, library)
+// that the landing page links out to.
+const ROOT_DIR = path.join(__dirname, '..');
+
+// Both the landing page and the festival portal ship a file named
+// index.html. The landing page owns bare "/"; any explicit request for
+// "/index.html" (e.g. the "../index.html" links from the landing page)
+// should always resolve to the festival portal at the repo root.
+app.get('/index.html', (req, res) => res.sendFile(path.join(ROOT_DIR, 'index.html')));
+
+// Serve static frontend files (landing page markup/css/js, and "/" itself)
 app.use(express.static(__dirname));
+
+// Serve the sibling apps: map.html, library.html, and their data/images
+app.use(express.static(ROOT_DIR, { dotfiles: 'ignore' }));
 
 // ==========================================================================
 // Contact Service & Storage
