@@ -1,5 +1,5 @@
-﻿/**
- * ANTARA HERITAGE LIBRARY (αñàαñ¿αÑìαññαñ░αñ╛ αñùαÑìαñ░αñ¿αÑìαñÑαñ╛αñùαñ╛αñ░)
+/**
+ * ANTARA HERITAGE LIBRARY (अन्तरा ग्रन्थागार)
  * Classical Indian Heritage Interactivity & Dual-Mode Audio Engine
  */
 
@@ -282,7 +282,7 @@
       btn.classList.add('playing');
     }
 
-    showToast('Vedic Tanpura Drone (136.1 Hz) Activated', 'Γÿë');
+    showToast('Vedic Tanpura Drone (136.1 Hz) Activated', '☉');
   }
 
   function stopTanpuraDrone() {
@@ -313,7 +313,7 @@
       btn.classList.remove('playing');
     }
 
-    showToast('Vedic Tanpura Drone Silenced', 'Γÿë');
+    showToast('Vedic Tanpura Drone Silenced', '☉');
   }
 
   function toggleTanpura() {
@@ -413,7 +413,7 @@
       btn.textContent = 'Stop';
       btn.classList.add('playing');
     }
-    showToast('Deep Cosmic OM Drone (136.1 Hz) Activated', 'Γ£ª');
+    showToast('Deep Cosmic OM Drone (136.1 Hz) Activated', '✦');
   }
 
   function stopOmDrone() {
@@ -439,7 +439,7 @@
       btn.textContent = 'Play';
       btn.classList.remove('playing');
     }
-    showToast('Cosmic OM Drone Silenced', 'Γ£ª');
+    showToast('Cosmic OM Drone Silenced', '✦');
   }
 
   function triggerBellChime() {
@@ -496,7 +496,7 @@
       btn.textContent = 'Stop';
       btn.classList.add('playing');
     }
-    showToast('Himalayan Temple Bells Activated (15s intervals)', 'Γÿë');
+    showToast('Himalayan Temple Bells Activated (15s intervals)', '☉');
   }
 
   function stopBellsAmbient() {
@@ -510,7 +510,7 @@
       btn.textContent = 'Play';
       btn.classList.remove('playing');
     }
-    showToast('Temple Bells Deactivated', 'Γÿë');
+    showToast('Temple Bells Deactivated', '☉');
   }
 
   function startFluteAmbient() {
@@ -605,7 +605,7 @@
       btn.textContent = 'Stop';
       btn.classList.add('playing');
     }
-    showToast('Ganges River & Wind Flute Activated', 'Γƒí');
+    showToast('Ganges River & Wind Flute Activated', '⟡');
   }
 
   function stopFluteAmbient() {
@@ -631,7 +631,7 @@
       btn.textContent = 'Play';
       btn.classList.remove('playing');
     }
-    showToast('Flute & River Sounds Stopped', 'Γƒí');
+    showToast('Flute & River Sounds Stopped', '⟡');
   }
 
   function startBowlsAmbient() {
@@ -708,7 +708,7 @@
       btn.textContent = 'Stop';
       btn.classList.add('playing');
     }
-    showToast('Tibetan Singing Bowls Activated', 'Γùê');
+    showToast('Tibetan Singing Bowls Activated', '◈');
   }
 
   function stopBowlsAmbient() {
@@ -734,7 +734,7 @@
       btn.textContent = 'Play';
       btn.classList.remove('playing');
     }
-    showToast('Singing Bowls Silenced', 'Γùê');
+    showToast('Singing Bowls Silenced', '◈');
   }
 
   function triggerThunderRumble() {
@@ -822,7 +822,7 @@
     if (rainThunderTimeout) clearTimeout(rainThunderTimeout);
     rainThunderTimeout = setTimeout(triggerThunderRumble, 12000); // First rumble after 12s
 
-    showToast('Monsoon Rain Soundscape Activated', 'Γ£ª');
+    showToast('Monsoon Rain Soundscape Activated', '✦');
   }
 
   function stopRainAmbient() {
@@ -852,7 +852,7 @@
       btn.textContent = 'Play';
       btn.classList.remove('playing');
     }
-    showToast('Rain Soundscape Stopped', 'Γ£ª');
+    showToast('Rain Soundscape Stopped', '✦');
   }
 
   function startJapaAmbient() {
@@ -932,7 +932,7 @@
       btn.textContent = 'Stop';
       btn.classList.add('playing');
     }
-    showToast('Subtle Japa Chant Activated (108 Hz)', 'Γÿë');
+    showToast('Subtle Japa Chant Activated (108 Hz)', '☉');
   }
 
   function stopJapaAmbient() {
@@ -958,7 +958,7 @@
       btn.textContent = 'Play';
       btn.classList.remove('playing');
     }
-    showToast('Japa Chant Silenced', 'Γÿë');
+    showToast('Japa Chant Silenced', '☉');
   }
 
   function triggerRagaNote() {
@@ -1072,7 +1072,7 @@
     if (ragaNoteIntervalId) clearInterval(ragaNoteIntervalId);
     ragaNoteIntervalId = setInterval(triggerRagaNote, 3000);
 
-    showToast('Morning Raga Flute Activated (Bilawal Scale)', 'Γƒí');
+    showToast('Morning Raga Flute Activated (Bilawal Scale)', '⟡');
   }
 
   function stopRagaAmbient() {
@@ -1102,7 +1102,7 @@
       btn.textContent = 'Play';
       btn.classList.remove('playing');
     }
-    showToast('Morning Flute Silenced', 'Γƒí');
+    showToast('Morning Flute Silenced', '⟡');
   }
 
   function startNightAmbient() {
@@ -1185,7 +1185,7 @@
       btn.textContent = 'Stop';
       btn.classList.add('playing');
     }
-    showToast('Ashram Night Soundscape Activated', 'ΓÜû');
+    showToast('Ashram Night Soundscape Activated', '⚖');
   }
 
   function stopNightAmbient() {
@@ -1211,7 +1211,7 @@
       btn.textContent = 'Play';
       btn.classList.remove('playing');
     }
-    showToast('Ashram Night Soundscape Silenced', 'ΓÜû');
+    showToast('Ashram Night Soundscape Silenced', '⚖');
   }
 
   function adjustDhyanaVolume(soundId, value) {
@@ -1275,7 +1275,7 @@
       }
     }, 1000);
 
-    showToast(`Meditation timer set for ${minutes} minutes`, 'ΓÜû');
+    showToast(`Meditation timer set for ${minutes} minutes`, '⚖');
   }
 
   function stopDhyanaTimer() {
@@ -1287,7 +1287,7 @@
     document.getElementById('timerDisplayRow').style.display = 'none';
     
     document.querySelectorAll('.timer-btn').forEach(btn => btn.classList.remove('active'));
-    showToast('Meditation timer cancelled', 'ΓÜû');
+    showToast('Meditation timer cancelled', '⚖');
   }
 
   function updateTimerDisplay() {
@@ -1312,7 +1312,7 @@
     document.getElementById('timerDisplayRow').style.display = 'none';
     document.querySelectorAll('.timer-btn').forEach(btn => btn.classList.remove('active'));
 
-    showToast('Dhyana complete. αÑÉ αñ╢αñ╛αñ¿αÑìαññαñ┐αñâ αñ╢αñ╛αñ¿αÑìαññαñ┐αñâ αñ╢αñ╛αñ¿αÑìαññαñ┐αñâαÑñ', 'ΓÜû');
+    showToast('Dhyana complete. ॐ शान्तिः शान्तिः शान्तिः।', '⚖');
 
     // Soft chime notification using 528Hz healing pitch
     if (AudioCtx) {
@@ -1425,7 +1425,7 @@
 
     } catch (err) {
       console.error('Failed to load heritage database:', err);
-      showToast('Error loading heritage corpus', 'Γ£ò');
+      showToast('Error loading heritage corpus', '✕');
     }
   }
 
@@ -1438,10 +1438,10 @@
     localStorage.setItem('antara_theme', theme);
 
     if (theme === 'dark') {
-      DOM.themeGlyph.textContent = 'Γÿ╛';
+      DOM.themeGlyph.textContent = '☾';
       DOM.themeToggleBtn.setAttribute('title', 'Switch to Heritage Cream Light Theme');
     } else {
-      DOM.themeGlyph.textContent = 'ΓÿÇ';
+      DOM.themeGlyph.textContent = '☀';
       DOM.themeToggleBtn.setAttribute('title', 'Switch to Midnight Obsidian Dark Theme');
     }
   }
@@ -1449,7 +1449,7 @@
   function toggleTheme() {
     const newTheme = AppState.theme === 'dark' ? 'light' : 'dark';
     applyTheme(newTheme);
-    showToast(`${newTheme === 'dark' ? 'Midnight Theme' : 'Heritage Cream Theme'} active`, 'Γùê');
+    showToast(`${newTheme === 'dark' ? 'Midnight Theme' : 'Heritage Cream Theme'} active`, '◈');
   }
 
   function applySanskritScale(scale) {
@@ -1510,7 +1510,7 @@
         catBooks.forEach(book => {
           const opt = document.createElement('option');
           opt.value = book.id;
-          opt.textContent = `${book.title} ΓÇö ${book.sanskrit_title}`;
+          opt.textContent = `${book.title} — ${book.sanskrit_title}`;
           group.appendChild(opt);
         });
         DOM.bookQuickSelect.appendChild(group);
@@ -1561,7 +1561,7 @@
       // Category Section Header
       const catHeader = document.createElement('div');
       catHeader.className = 'category-section-divider';
-      catHeader.innerHTML = `<span>Γ¥û</span> <span>${cat.name}</span>`;
+      catHeader.innerHTML = `<span>❖</span> <span>${cat.name}</span>`;
       DOM.canonTreeView.appendChild(catHeader);
 
       matchingBooks.forEach(book => {
@@ -1592,7 +1592,7 @@
         header.innerHTML = `
           <div class="book-header-left">
             <div class="book-header-title-row">
-              <span class="tree-expander-chevron">Γû╛</span>
+              <span class="tree-expander-chevron">▾</span>
               <span class="book-header-title">${book.title}</span>
             </div>
             <span class="book-header-sanskrit">${book.sanskrit_title}</span>
@@ -1802,16 +1802,16 @@
           </div>
           <div class="verse-actions-group">
             <button class="verse-action-btn play-verse-btn" title="Chant Verse" data-verse-id="${verse.id}">
-              <span>Γû╢</span>
+              <span>▶</span>
             </button>
             <button class="verse-action-btn loop-verse-btn" title="Chant in Loop (Japa)" data-verse-id="${verse.id}">
-              <span>Γå║</span>
+              <span>↺</span>
             </button>
             <button class="verse-action-btn bookmark-verse-btn ${isBookmarked ? 'bookmarked' : ''}" title="${isBookmarked ? 'Remove Bookmark' : 'Bookmark Verse'}" data-verse-id="${verse.id}">
-              <span>Γ£ª</span>
+              <span>✦</span>
             </button>
             <button class="verse-action-btn copy-verse-btn" title="Copy Verse Citation" data-verse-id="${verse.id}">
-              <span>ΓÄÿ</span>
+              <span>⎘</span>
             </button>
           </div>
         </div>
@@ -1830,8 +1830,8 @@
         ${verse.word_meanings && verse.word_meanings.length > 0 ? `
           <div class="verse-anvaya-block" style="display: ${AppState.visibleLayers.anvaya ? 'block' : 'none'};">
             <div class="anvaya-toggle-header">
-              <span>Γùê</span>
-              <span>Word-by-Word Breakdown (αñ¬αñªαñÜαÑìαñ¢αÑçαñª αñÅαñ╡αñé αñàαñ¿αÑìαñ╡αñ»)</span>
+              <span>◈</span>
+              <span>Word-by-Word Breakdown (पदच्छेद एवं अन्वय)</span>
             </div>
             <div class="anvaya-pill-grid">
               ${verse.word_meanings.map(w => `
@@ -1853,7 +1853,7 @@
           </div>
 
           <div class="translation-box hi" style="display: ${(AppState.langPreference !== 'en' && AppState.visibleLayers.hindi) ? 'block' : 'none'};">
-            <span class="trans-lang-tag">αñ╣αñ┐αñ¿αÑìαñªαÑÇ αñàαñ¿αÑüαñ╡αñ╛αñª</span>
+            <span class="trans-lang-tag">हिन्दी अनुवाद</span>
             <p class="trans-text-hi">${verse.hindi}</p>
           </div>
         </div>
@@ -1861,7 +1861,7 @@
         <!-- Commentary / Context Layer -->
         ${verse.commentary ? `
           <div class="verse-commentary-block" style="display: ${AppState.visibleLayers.commentary ? 'block' : 'none'};">
-            <div class="commentary-label">Γ¥û Philosophical Purport & Insight</div>
+            <div class="commentary-label">❖ Philosophical Purport & Insight</div>
             <p class="commentary-text">${verse.commentary}</p>
           </div>
         ` : ''}
@@ -1878,7 +1878,7 @@
         AppState.audio.loopMode = 108; // Set to Japa 108 loop
         updateLoopBadge();
         playSingleVerse(verse);
-        showToast('Japa Chanting Mode (108x) Activated', 'Γå║');
+        showToast('Japa Chanting Mode (108x) Activated', '↺');
       });
 
       const bmBtn = card.querySelector('.bookmark-verse-btn');
@@ -1897,8 +1897,8 @@
 
   function formatDandas(sanskritText) {
     return sanskritText
-      .replace(/αÑÑ/g, '<span class="danda-glyph">αÑÑ</span>')
-      .replace(/αÑñ/g, '<span class="danda-glyph">αÑñ</span>');
+      .replace(/॥/g, '<span class="danda-glyph">॥</span>')
+      .replace(/।/g, '<span class="danda-glyph">।</span>');
   }
 
   // -------------------------------------------------------------------------
@@ -1908,7 +1908,7 @@
     const idx = AppState.bookmarks.findIndex(b => b.id === verse.id);
     if (idx >= 0) {
       AppState.bookmarks.splice(idx, 1);
-      showToast(`Removed ${verse.citation} from Saved`, 'Γ£ª');
+      showToast(`Removed ${verse.citation} from Saved`, '✦');
     } else {
       AppState.bookmarks.push({
         id: verse.id,
@@ -1917,7 +1917,7 @@
         chapterId: AppState.activeChapterId,
         sanskritSnippet: verse.sanskrit.split('\n')[0]
       });
-      showToast(`Saved ${verse.citation} to Bookmarks`, 'Γ£ª');
+      showToast(`Saved ${verse.citation} to Bookmarks`, '✦');
     }
 
     localStorage.setItem('antara_bookmarks', JSON.stringify(AppState.bookmarks));
@@ -1944,8 +1944,8 @@
     if (count === 0) {
       DOM.bookmarksList.innerHTML = `
         <div style="text-align:center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.82rem;">
-          <span style="font-size: 1.5rem; display:block; margin-bottom:0.4rem; color: var(--accent-gold);">Γ£ª</span>
-          No saved verses yet. Click the Γ£ª icon on any verse to bookmark.
+          <span style="font-size: 1.5rem; display:block; margin-bottom:0.4rem; color: var(--accent-gold);">✦</span>
+          No saved verses yet. Click the ✦ icon on any verse to bookmark.
         </div>
       `;
       return;
@@ -1957,7 +1957,7 @@
       item.innerHTML = `
         <div class="bm-meta-row">
           <span class="bm-citation">${bm.citation}</span>
-          <span class="bm-remove-btn" title="Remove bookmark" data-bm-id="${bm.id}">Γ£ò</span>
+          <span class="bm-remove-btn" title="Remove bookmark" data-bm-id="${bm.id}">✕</span>
         </div>
         <span class="bm-snippet">${bm.sanskritSnippet}</span>
       `;
@@ -2028,12 +2028,29 @@
   function playSpeechSynthesis(verse) {
     stopCurrentAudio();
     if (!('speechSynthesis' in window)) {
-      showToast('Speech synthesis not supported on this browser', 'Γ£ò');
+      showToast('Speech synthesis not supported on this browser', '✕');
       return;
     }
 
     AppState.audio.mode = 'synth';
     window.speechSynthesis.cancel(); // Clear any pending
+
+    // Voices can still be empty on the very first call in Chrome/Edge, since
+    // they load asynchronously. Wait once for the 'voiceschanged' event
+    // before speaking, so the very first click doesn't silently fall back
+    // to whatever default voice happens to be ready yet.
+    if (window.speechSynthesis.getVoices().length === 0) {
+      let spoken = false;
+      const speakOnce = () => {
+        if (spoken) return;
+        spoken = true;
+        window.speechSynthesis.removeEventListener('voiceschanged', speakOnce);
+        playSpeechSynthesis(verse);
+      };
+      window.speechSynthesis.addEventListener('voiceschanged', speakOnce);
+      setTimeout(speakOnce, 1000); // don't hang forever if voices never arrive
+      return;
+    }
 
     // Choose text and language code based on voice engine selection
     let textToSpeak = verse.sanskrit;
@@ -2114,6 +2131,11 @@
       clearInterval(AppState.audio.synthProgressTimer);
       AppState.audio.isPlaying = false;
       updatePlayPauseButtonUI();
+      // 'canceled'/'interrupted' fire whenever we intentionally stop/replace
+      // an utterance (switching verses, closing the page) - not real failures.
+      if (e.error !== 'canceled' && e.error !== 'interrupted') {
+        showToast('Narration failed: ' + (e.error || 'unknown error'), '✕');
+      }
     };
 
     AppState.audio.synthUtterance = utterance;
@@ -2224,13 +2246,13 @@
 
   function updatePlayPauseButtonUI() {
     const isLive = AppState.audio.isPlaying && !AppState.audio.isPaused;
-    DOM.mainPlayGlyph.textContent = isLive ? 'Γ¥ÜΓ¥Ü' : 'Γû╢';
+    DOM.mainPlayGlyph.textContent = isLive ? '❚❚' : '▶';
 
     // Update active highlight on card play buttons
     document.querySelectorAll('.play-verse-btn').forEach(btn => {
       const isThisCard = btn.dataset.verseId === AppState.activeVerseId;
       btn.classList.toggle('active-play', isThisCard && isLive);
-      btn.innerHTML = isThisCard && isLive ? '<span>Γ¥ÜΓ¥Ü</span>' : '<span>Γû╢</span>';
+      btn.innerHTML = isThisCard && isLive ? '<span>❚❚</span>' : '<span>▶</span>';
     });
   }
 
@@ -2240,7 +2262,7 @@
       AppState.audio.currentLoopCount = 0;
       playSingleVerse(AppState.audio.queue[idx + 1]);
     } else {
-      showToast('Reached end of chapter', 'Γ¥û');
+      showToast('Reached end of chapter', '❖');
     }
   }
 
@@ -2260,15 +2282,15 @@
     AppState.audio.currentLoopCount = 0;
     updateLoopBadge();
     
-    const label = AppState.audio.loopMode === Infinity ? 'Infinite Chanting Loop' : `Repeat ${AppState.audio.loopMode}├ù`;
-    showToast(label, 'Γå║');
+    const label = AppState.audio.loopMode === Infinity ? 'Infinite Chanting Loop' : `Repeat ${AppState.audio.loopMode}×`;
+    showToast(label, '↺');
   }
 
   function updateLoopBadge() {
     if (AppState.audio.loopMode === Infinity) {
-      DOM.loopBadge.textContent = 'Γê₧';
+      DOM.loopBadge.textContent = '∞';
     } else {
-      DOM.loopBadge.textContent = `${AppState.audio.loopMode}├ù`;
+      DOM.loopBadge.textContent = `${AppState.audio.loopMode}×`;
     }
   }
 
@@ -2278,10 +2300,10 @@
     const nextIndex = (currentIndex + 1) % speeds.length;
     AppState.audio.playbackRate = speeds[nextIndex];
 
-    DOM.speedLabel.textContent = `${AppState.audio.playbackRate}├ù`;
+    DOM.speedLabel.textContent = `${AppState.audio.playbackRate}×`;
     DOM.htmlAudioPlayer.playbackRate = AppState.audio.playbackRate;
     
-    showToast(`Recitation Speed: ${AppState.audio.playbackRate}├ù`, 'Γùê');
+    showToast(`Recitation Speed: ${AppState.audio.playbackRate}×`, '◈');
   }
 
   function highlightActiveVerseCard(verseId) {
@@ -2326,8 +2348,8 @@
     if (!AppState.database || !query || query.trim().length === 0) {
       DOM.searchResultsList.innerHTML = `
         <div class="search-empty-prompt">
-          <span class="empty-glyph">Γ£º</span>
-          <p>Type keywords such as <em>"karma"</em>, <em>"Agni"</em>, <em>"Brahman"</em>, <em>"2.47"</em>, or <em>"αñ╕αññαÑìαñ»αñ«αÑì"</em></p>
+          <span class="empty-glyph">✧</span>
+          <p>Type keywords such as <em>"karma"</em>, <em>"Agni"</em>, <em>"Brahman"</em>, <em>"2.47"</em>, or <em>"सत्यम्"</em></p>
         </div>
       `;
       return;
@@ -2366,7 +2388,7 @@
     if (results.length === 0) {
       DOM.searchResultsList.innerHTML = `
         <div class="search-empty-prompt">
-          <span class="empty-glyph">Γ£ò</span>
+          <span class="empty-glyph">✕</span>
           <p>No sacred manuscripts matched "<strong>${escapeHtml(query)}</strong>"${categoryFilter !== 'all' ? ' in this category' : ''}.</p>
         </div>
       `;
@@ -2405,7 +2427,7 @@
       }
 
       card.innerHTML = `
-        <span class="search-res-citation">${highlightTerm(res.verse.citation, q)} ΓÇö ${highlightTerm(res.book.title, q)} (${highlightTerm(res.chap.title, q)})</span>
+        <span class="search-res-citation">${highlightTerm(res.verse.citation, q)} — ${highlightTerm(res.book.title, q)} (${highlightTerm(res.chap.title, q)})</span>
         ${snippetHTML}
       `;
 
@@ -2468,18 +2490,18 @@
     }
 
     closeLayersModal();
-    showToast('Display layers updated', 'Γùê');
+    showToast('Display layers updated', '◈');
   }
 
   // -------------------------------------------------------------------------
   // CLIPBOARD & UTILITIES
   // -------------------------------------------------------------------------
   function copyVerseText(verse) {
-    const textToCopy = `αÑÑ ${verse.citation} αÑÑ\n\n${verse.sanskrit}\n\nIAST:\n${verse.transliteration}\n\nEnglish:\n${verse.english}\n\nαñ╣αñ┐αñ¿αÑìαñªαÑÇ:\n${verse.hindi}\n\nΓÇö Antara Classical Heritage Library`;
+    const textToCopy = `॥ ${verse.citation} ॥\n\n${verse.sanskrit}\n\nIAST:\n${verse.transliteration}\n\nEnglish:\n${verse.english}\n\nहिन्दी:\n${verse.hindi}\n\n— Antara Classical Heritage Library`;
     
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(textToCopy).then(() => {
-        showToast(`Copied ${verse.citation} citation`, 'ΓÄÿ');
+        showToast(`Copied ${verse.citation} citation`, '⎘');
       }).catch(() => {
         fallbackCopy(textToCopy);
       });
@@ -2495,15 +2517,15 @@
     textarea.select();
     try {
       document.execCommand('copy');
-      showToast('Copied citation to clipboard', 'ΓÄÿ');
+      showToast('Copied citation to clipboard', '⎘');
     } catch (e) {
-      showToast('Could not copy to clipboard', 'Γ£ò');
+      showToast('Could not copy to clipboard', '✕');
     }
     document.body.removeChild(textarea);
   }
 
   let toastTimer = null;
-  function showToast(message, glyph = 'Γ£ª') {
+  function showToast(message, glyph = '✦') {
     clearTimeout(toastTimer);
     DOM.toastGlyph.textContent = glyph;
     DOM.toastMsg.textContent = message;
@@ -2588,7 +2610,7 @@
         updateBookmarksUI();
         // Update all bookmarked buttons
         document.querySelectorAll('.bookmark-verse-btn').forEach(btn => btn.classList.remove('bookmarked'));
-        showToast('All bookmarks cleared', 'Γ£ª');
+        showToast('All bookmarks cleared', '✦');
       }
     });
 
@@ -2788,7 +2810,7 @@
             if (!isNaN(mins) && mins > 0) {
               startDhyanaTimer(mins);
             } else {
-              showToast('Invalid duration entered', 'Γ£ò');
+              showToast('Invalid duration entered', '✕');
             }
           }
         } else {
@@ -2819,7 +2841,7 @@
 
     DOM.focusModeBtn.addEventListener('click', () => {
       DOM.appSidebar.classList.toggle('collapsed');
-      showToast('Focus Mode Toggled', 'Γƒí');
+      showToast('Focus Mode Toggled', '⟡');
     });
 
     // Sticky Bottom Audio Controls
@@ -2832,7 +2854,7 @@
     // Audio Voice Selector
     DOM.voiceSelect.addEventListener('change', (e) => {
       AppState.audio.voiceEngine = e.target.value;
-      showToast(`Recitation Voice: ${e.target.options[e.target.selectedIndex].text}`, 'ΓùÄ');
+      showToast(`Recitation Voice: ${e.target.options[e.target.selectedIndex].text}`, '◎');
     });
 
     // Volume Slider & Mute
@@ -2840,7 +2862,7 @@
       const vol = parseFloat(e.target.value);
       AppState.audio.volume = vol;
       DOM.htmlAudioPlayer.volume = vol;
-      DOM.volGlyph.textContent = vol === 0 ? 'Γ£ò' : 'Γÿ╡';
+      DOM.volGlyph.textContent = vol === 0 ? '✕' : '☵';
     });
 
     DOM.volumeMuteBtn.addEventListener('click', () => {
@@ -2849,13 +2871,13 @@
         AppState.audio.volume = 0;
         DOM.volumeSlider.value = 0;
         DOM.htmlAudioPlayer.volume = 0;
-        DOM.volGlyph.textContent = 'Γ£ò';
+        DOM.volGlyph.textContent = '✕';
       } else {
         const prev = parseFloat(DOM.volumeSlider.dataset.prevVol || '0.9');
         AppState.audio.volume = prev;
         DOM.volumeSlider.value = prev;
         DOM.htmlAudioPlayer.volume = prev;
-        DOM.volGlyph.textContent = 'Γÿ╡';
+        DOM.volGlyph.textContent = '☵';
       }
     });
 
