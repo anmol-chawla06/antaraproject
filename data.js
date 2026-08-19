@@ -872,7 +872,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "india-gate",
-    "image": "https://images.unsplash.com/photo-1611080626919-60d8e0dd143f?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/India_Gate_Delhi.jpg",
     "slug": "india-gate",
     "name": "India Gate",
     "city": "Delhi",
@@ -1029,7 +1029,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "hawa-mahal",
-    "image": "https://images.unsplash.com/photo-1597735449895-37e2bada1e38?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Hawa_Mahal_Jaipur.jpg",
     "slug": "hawa-mahal",
     "name": "Hawa Mahal",
     "city": "Jaipur",
@@ -1365,7 +1365,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "meenakshi-temple",
-    "image": "https://images.unsplash.com/photo-1597735449895-37e2bada1e38?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Meenakshi_Temple_Madurai.jpg",
     "slug": "meenakshi-temple",
     "name": "Meenakshi Temple",
     "city": "Madurai",
@@ -1529,7 +1529,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "mysore-palace",
-    "image": "https://images.unsplash.com/photo-1569163139660-31e3b9b37f0f?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Mysore_Palace.jpg",
     "slug": "mysore-palace",
     "name": "Mysore Palace",
     "city": "Mysuru",
@@ -1686,7 +1686,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "gateway-of-india",
-    "image": "https://images.unsplash.com/photo-1567401077933-e3c828a4c5d1?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Gateway_of_India_Mumbai.jpg",
     "slug": "gateway-of-india",
     "name": "Gateway of India",
     "city": "Mumbai",
@@ -2017,7 +2017,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "konark-sun-temple",
-    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/extra/imgi_10_licensed-image.jpg",
     "slug": "konark-sun-temple",
     "name": "Konark Sun Temple",
     "city": "Konark",
@@ -2813,7 +2813,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "modhera-sun-temple",
-    "image": "https://images.unsplash.com/photo-1627894483216-2138af692e32?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Modhera_Sun_Temple.jpg",
     "slug": "modhera-sun-temple",
     "name": "Modhera Sun Temple",
     "city": "Modhera",
@@ -3127,7 +3127,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "gwalior-fort",
-    "image": "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Gwalior_Fort.jpg",
     "slug": "gwalior-fort",
     "name": "Gwalior Fort",
     "city": "Gwalior",
@@ -3230,7 +3230,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "padmanabhaswamy-temple",
-    "image": "https://images.unsplash.com/photo-1609946850438-e69d799f92d4?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Padmanabhaswamy_Temple.jpg",
     "slug": "padmanabhaswamy-temple",
     "name": "Sree Padmanabhaswamy Temple",
     "city": "Thiruvananthapuram",
@@ -3327,7 +3327,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "mattancherry-palace",
-    "image": "https://images.unsplash.com/photo-1600100397608-f090742f400b?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Mattancherry_Palace.jpg",
     "slug": "mattancherry-palace",
     "name": "Mattancherry Palace (Dutch Palace)",
     "city": "Kochi",
@@ -3433,7 +3433,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "victoria-memorial",
-    "image": "https://images.unsplash.com/photo-1569163139992-d5462e6b019d?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Victoria_Memorial_Kolkata.jpg",
     "slug": "victoria-memorial",
     "name": "Victoria Memorial Hall",
     "city": "Kolkata",
@@ -3654,7 +3654,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "charminar",
-    "image": "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Charminar_Hyderabad.jpg",
     "slug": "charminar",
     "name": "Charminar",
     "city": "Hyderabad",
@@ -3754,7 +3754,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "golconda-fort",
-    "image": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Golconda_Fort.jpg",
     "slug": "golconda-fort",
     "name": "Golconda Fort",
     "city": "Hyderabad",
@@ -3864,7 +3864,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "golden-temple",
-    "image": "https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Golden_Temple_Amritsar.jpg",
     "slug": "golden-temple",
     "name": "Sri Harmandir Sahib (Golden Temple)",
     "city": "Amritsar",
@@ -3980,7 +3980,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "jallianwala-bagh",
-    "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Jallianwala_Bagh.jpg",
     "slug": "jallianwala-bagh",
     "name": "Jallianwala Bagh National Memorial",
     "city": "Amritsar",
@@ -4086,7 +4086,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "kamakhya-temple",
-    "image": "https://images.unsplash.com/photo-1621831971375-47000b037db3?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Kamakhya_Temple.jpg",
     "slug": "kamakhya-temple",
     "name": "Kamakhya Temple",
     "city": "Guwahati",
@@ -4183,7 +4183,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "rang-ghar",
-    "image": "https://images.unsplash.com/photo-1600100397608-f090742f400b?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Rang_Ghar_Sivasagar.jpg",
     "slug": "rang-ghar",
     "name": "Rang Ghar",
     "city": "Sivasagar",
@@ -4285,7 +4285,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "kedarnath-temple",
-    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Kedarnath_Temple.jpg",
     "slug": "kedarnath-temple",
     "name": "Kedarnath Temple",
     "city": "Kedarnath",
@@ -4391,7 +4391,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "hadimba-temple",
-    "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Hadimba_Temple_Manali.jpg",
     "slug": "hadimba-temple",
     "name": "Hadimba Devi Temple",
     "city": "Manali",
@@ -4835,7 +4835,7 @@ window.DESTINATIONS = [
   },
   {
     "id": "shalimar-bagh",
-    "image": "https://images.unsplash.com/photo-1597040663342-45b6af8d8a7c?auto=format&fit=crop&w=1200&q=80",
+    "image": "photos sites/Shalimar_Bagh_Srinagar.jpg",
     "slug": "shalimar-bagh",
     "name": "Shalimar Bagh Mughal Garden",
     "city": "Srinagar",
@@ -5040,7 +5040,7 @@ window.DESTINATIONS = [
         "url": "https://www.raipur.nic.in/"
       }
     ],
-    "image": ""
+    "image": "photos sites/chhattisgarh/Mahant_Ghasidas_Memorial_Museum.jpg"
   },
   {
     "id": "danteshwari-temple",
@@ -5137,7 +5137,7 @@ window.DESTINATIONS = [
         "url": "https://bastar.gov.in/"
       }
     ],
-    "image": ""
+    "image": "photos sites/chhattisgarh/Danteshwari_Temple.jpg"
   },
   {
     "id": "bhoramdeo-temple",
@@ -5234,7 +5234,7 @@ window.DESTINATIONS = [
         "url": "https://www.chhattisgarhtourism.in/"
       }
     ],
-    "image": ""
+    "image": "photos sites/chhattisgarh/Bhoramdeo_Temple.jpg"
   },
   {
     "id": "sirpur-heritage-site",
@@ -5332,6 +5332,6 @@ window.DESTINATIONS = [
         "url": "https://asi.nic.in/"
       }
     ],
-    "image": ""
+    "image": "photos sites/chhattisgarh/Sirpur_Laxman_Temple.jpg"
   }
 ];

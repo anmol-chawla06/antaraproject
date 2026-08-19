@@ -22,6 +22,29 @@
   --font-serif: 'Playfair Display', serif;
 }
 
+[data-theme="light"] {
+  --bg: #FDFBF7;
+  --bg-warm: #F5F0E6;
+  --surface: #FFFFFF;
+  --surface-raised: #F5F0E6;
+  --surface-glass: rgba(255, 255, 255, 0.85);
+  --cream: #1C1921;
+  --gold: #9B7829;
+  --gold-dim: #7A5C1B;
+  --terracotta: #B4552C;
+  --crimson: #7A2820;
+  --ink-90: rgba(28, 25, 33, 0.90);
+  --ink-70: rgba(28, 25, 33, 0.70);
+  --ink-45: rgba(28, 25, 33, 0.45);
+  --ink-25: rgba(28, 25, 33, 0.25);
+  --ink-10: rgba(28, 25, 33, 0.10);
+  --ink-05: rgba(28, 25, 33, 0.05);
+}
+
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 /* Reset & Base */
 *, *::before, *::after {
   box-sizing: border-box;

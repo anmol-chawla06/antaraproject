@@ -3,10 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Antara ΓÇö Explore India, by Map</title>
-<meta name="description" content="An interactive cartographic guide to India's heritage ΓÇö explore states, discover UNESCO sites and historic destinations, and plan your journey.">
+<title>Antara — Explore India, by Map</title>
+<meta name="description" content="An interactive cartographic guide to India's heritage — explore states, discover UNESCO sites and historic destinations, and plan your journey.">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="app.css?v=4">
+<script>
+(function() {
+  var savedTheme = localStorage.getItem('antara_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+})();
+</script>
 </head>
 <body>
 
@@ -21,7 +27,7 @@
 
 <!-- ============================== NAV ================================== -->
 <nav class="nav" id="nav">
-  <button class="nav-brand" id="nav-brand" aria-label="Antara ΓÇö home">
+  <button class="nav-brand" id="nav-brand" aria-label="Antara — home">
     <span class="mark">&#9673;</span> ANTARA <span class="tag">India</span>
   </button>
   <div class="nav-links">
@@ -31,6 +37,9 @@
     <button class="nav-link" id="nav-about">About</button>
   </div>
   <div class="nav-actions">
+    <button class="icon-btn" id="theme-toggle-btn" aria-label="Switch to light theme" title="Switch theme">
+      <span id="theme-toggle-icon">☀</span>
+    </button>
     <a class="icon-btn" id="home-link" href="landing-page/index.html" aria-label="Back to Antara home" title="Back to Antara home" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
     </a>

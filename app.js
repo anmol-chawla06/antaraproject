@@ -953,6 +953,29 @@ const navEl = document.getElementById('nav');
 window.addEventListener('scroll', () => { navEl.classList.toggle('is-solid', window.scrollY>10); });
 el.destPage.addEventListener('scroll', () => { navEl.classList.toggle('is-solid', el.destPage.scrollTop>10 && el.destPage.classList.contains('is-open')); });
 
+/* ---------------------------------------------------------------------- */
+/* THEME TOGGLE (dark / light, persisted like the other Antara apps)      */
+/* ---------------------------------------------------------------------- */
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('antara_theme', theme);
+  const icon = document.getElementById('theme-toggle-icon');
+  const btn = document.getElementById('theme-toggle-btn');
+  if(icon) icon.textContent = theme === 'dark' ? '☀' : '☾';
+  if(btn){
+    btn.setAttribute('title', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  }
+}
+applyTheme(localStorage.getItem('antara_theme') || 'dark');
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
+if(themeToggleBtn){
+  themeToggleBtn.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+}
+
 document.getElementById('nav-brand').addEventListener('click', () => { closeDestination(); goIndia(); });
 document.querySelectorAll('[data-scrollto]').forEach(b=>{
   b.addEventListener('click', ()=>{

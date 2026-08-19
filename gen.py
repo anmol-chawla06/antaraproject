@@ -3,6 +3,19 @@ import urllib.request
 import sys
 
 # Simplified GeoJSON of India states (this is a popular, well-maintained source)
+#
+# KNOWN LIMITATION: this source's "Jammu and Kashmir" polygon follows the
+# Line of Control, excluding Pakistan-occupied Kashmir (Muzaffarabad/Mirpur)
+# and the Ladakh/Aksai Chin extent. That does not match India's official
+# political map. Re-running this script overwrites map-data.js's
+# "Jammu and Kashmir" entry with that inaccurate boundary.
+#
+# The current map-data.js has been hand-corrected: districts were pulled from
+# udit-001/india-maps-data (jammu-and-kashmir.geojson + ladakh.geojson, which
+# include Muzaffarabad/Mirpur and the full Ladakh extent), dissolved into one
+# outline with turf.union, then run through the same project()/simplify_ring()
+# pipeline as this script. If you re-run this script, redo that correction
+# for "Jammu and Kashmir" afterwards rather than shipping the LoC-cut shape.
 url = "https://raw.githubusercontent.com/geohacker/india/master/state/india_telengana.geojson"
 
 print("Fetching GeoJSON from GitHub...")
