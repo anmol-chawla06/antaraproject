@@ -8,9 +8,9 @@ Antara is a static, framework-free cultural heritage platform for India. It is a
 
 | App | Entry point | Own JS/data | Backend |
 | :--- | :--- | :--- | :--- |
-| Festival Temporal Grid | `index.html` | inline `<script>`, fetches `festivals_database.json` | `bot.js` (Telegram bot) |
+| Festival Temporal Grid | `index.html` | inline `<script>`, fetches `festivals_database.json` | none (pure static) |
 | Destinations Map/Explorer | `map.html` | `map-data.js` + `data.js` + `app.js` | none (pure static) |
-| Heritage Library (scriptures) | `library.html` | `texts_data.js` + `library.js` | none (pure static) |
+| Heritage Library (scriptures) | `library.html` | `texts_data.js` + `narration.js` + `library.js` | none (pure static) |
 | Marketing landing page | `landing-page/index.html` | `landing-page/js/main.js` + `chatService.js` | `landing-page/server.js` (Express) |
 
 Because these apps are independent, **do not assume a change to one JS file affects another page** — check which HTML file actually `<script src=...>`s it before editing (e.g. `app.js`/`data.js`/`map-data.js` belong to `map.html`, NOT `index.html`, which is fully self-contained with inline scripts).
@@ -26,11 +26,7 @@ npx serve -l 8080 .
 ```
 Then open `http://localhost:8080/index.html`, `/map.html`, or `/library.html`.
 
-Run the festival Telegram bot (root package.json):
-```bash
-npm install
-node bot.js        # requires TELEGRAM_TOKEN and GEMINI_API_KEY env vars
-```
+The repo root has **no npm dependencies** — the static apps are plain browser JS and the validation scripts use only Node built-ins. Only `landing-page/` needs `npm install`.
 
 Run the landing page backend (separate npm project, separate deps):
 ```bash
@@ -63,17 +59,19 @@ There is no linter, formatter, or automated test suite configured anywhere in th
 ## Architecture notes
 
 ### Data-layer philosophy
-Every app is built around **zero external API calls for core content** — all content lives in static JSON committed to the repo (`festivals_database.json`, `texts_database.json`/`texts_data.js`, `data.js`/`map-data.js`). Pages `fetch()` or directly `<script>`-include these files; the Telegram bot loads them with `fs.readFileSync` at startup. When adding content, prefer extending these static files over introducing a live API dependency, since "zero-latency / offline-capable" is a stated design goal (see `TECHSTACK.md`, `WORKFLOW.md`).
+Every app is built around **zero external API calls for core content** — all content lives in static JSON committed to the repo (`festivals_database.json`, `texts_database.json`/`texts_data.js`, `data.js`/`map-data.js`). Pages `fetch()` or directly `<script>`-include these files. When adding content, prefer extending these static files over introducing a live API dependency, since "zero-latency / offline-capable" is a stated design goal (see `TECHSTACK.md`, `WORKFLOW.md`).
 
-### Festival portal (`index.html` + `bot.js`)
-- `index.html` renders a 12-month calendar grid from `festivals_database.json`, and a detail panel with a **◈ Plan a trip** button that deep-links to `https://t.me/AntaraV1bot?start=<festival_id>`.
-- `bot.js` is a Telegram bot (`node-telegram-bot-api`) that intercepts `/start <festival_id>`, does an exact lookup against `festivals_database.json`, and also runs a conversational RAG assistant via Google Gemini (`@google/generative-ai`) with multi-turn per-chat session memory (`userSessions` Map) and multi-model failover (`gemini-3.7-flash` → `gemini-3.5-flash` → `gemini-3.1-flash-lite`), falling back to a deterministic offline response if the AI call fails/times out. See `WORKFLOW.md` for the full sequence diagram.
-- Adding a festival = adding an entry to `festivals_database.json` with the schema documented in `TECHSTACK.md` §3 (`id`, `name`, `state`, `month`, `all_months`, `timing`, `location`, `coordinates`, `history`, `culture_and_rituals`, `how_to_join`, `local_language`, `uniqueness`, `cuisine`, `image_placeholder`); both the frontend and the bot read this same file, no separate sync step needed.
+### Festival portal (`index.html`)
+- `index.html` renders a 12-month calendar grid from `festivals_database.json`, and a detail panel with a **◈ Plan your visit** button that deep-links into the map at `map.html#/india/<state-slug>`.
+- The slug is derived by `stateSlug()` in `index.html` and must stay consistent with the `slug` values in `STATES_META` (`data.js`) — a festival whose `state` has no matching entry will land on a state the map cannot render.
+- **The Telegram bot was retired.** `bot.js`, `node-telegram-bot-api`, `@google/generative-ai`, `TELEGRAM_TOKEN` and `GEMINI_API_KEY` were removed entirely; nothing in Antara depended on them. `WORKFLOW.md` and `TECHSTACK.md` still describe the bot and are stale on that point.
+- Adding a festival = adding an entry to `festivals_database.json` with the schema documented in `TECHSTACK.md` §3 (`id`, `name`, `state`, `month`, `all_months`, `timing`, `location`, `coordinates`, `history`, `culture_and_rituals`, `how_to_join`, `local_language`, `uniqueness`, `image_placeholder`); both the frontend and the bot read this same file, no separate sync step needed. (`TECHSTACK.md` also lists a `cuisine` field, but no entry in the live data has ever carried one.)
 
 ### Heritage Library (`library.html` + `library.js` + `data_builders/`)
 - Source of truth for scripture content is Python: `data_builders/gita.py`, `upanishads.py`, `rigveda.py`, `classics.py` each expose a `get_*()` function returning book objects (categories: `vedas_upanishads`, `epics_itihasa`, `philosophy_darshana`, `classical_shastras`).
 - `build_all.py` imports all of these, assembles/validates the full DB (asserts every verse has `id`, `verse_number`, `citation`, `sanskrit`, `transliteration`, `word_meanings`, `english`, `hindi`, `commentary`), then writes both `texts_database.json` and `texts_data.js`.
 - `download_and_integrate.js` is a Node-side resync utility that regenerates `texts_data.js` from an already-written `texts_database.json` (use `build_all.py` when adding/editing content in `data_builders/`; use this only if `texts_database.json` was edited directly and `texts_data.js` needs to catch up).
+- **Narration is browser text-to-speech, not recorded audio.** `verse.audio` is empty for all 142 verses and no audio files ship in this repo. `narration.js` holds the pure decision logic (language registry, voice resolution, recorded-vs-synthesis precedence) and is unit-tested by `validate_narration.js`; `library.js` owns the player and all side effects. The critical invariant: **if no matching voice is installed, refuse to speak and show an "unavailable" state** — Chromium accepts an utterance with no bound voice, emits no sound, and never fires `onerror`, so a player that trusts `onstart` will animate over silence. Adding a language = one entry in `NARRATION_LANGS` plus an `<option>` in `library.html`.
 - `library.js` drives an `AppState` object (active book/chapter/verse, theme, language mode, per-layer visibility toggles for Devanagari/IAST/Anvaya/English/Hindi/commentary, bookmarks) persisted to `localStorage`, plus a dual-mode audio recitation engine (`html5` playback vs. Web Audio `synth` fallback) with configurable loop counts (1/3/9/21/108/∞ — mirrors japa/mala repetition conventions).
 
 ### Destinations map (`map.html` + `data.js` + `map-data.js` + `app.js`)
@@ -82,10 +80,12 @@ Every app is built around **zero external API calls for core content** — all c
 - `app.js` projects each destination's lon/lat into SVG space using the *same formula* as `gen.py`'s `project()` — keep these two implementations numerically identical if bounds ever change. It also manages a `localStorage`-backed favorites list (`antara.favorites`).
 
 ### Landing page (`landing-page/`)
-- Fully separate Node project (own `package.json`, own `node_modules`) using Express + the `openai` SDK, distinct from the root's Telegram bot stack.
-- `server.js` serves the landing page statically, serves `/admin` behind a **placeholder, no-op auth middleware** (`requireAdmin` — explicitly marked in code as demo-only, not real auth), and exposes a contact form API (`POST /api/contact`, `GET/PATCH /api/contact/messages/:id`) backed by flat-file JSON storage (`landing-page/data/contact_messages.json`).
-- `landing-page/js/chatService.js` implements a `ChatService` with a swappable provider: `MockChatProvider` (default, simulated response) vs. `OpenAIChatProvider` (calls `/api/chat`, not yet implemented server-side as of this writing — check `server.js` before assuming it exists).
-- Requires `landing-page/.env` (`OPENAI_API_KEY`, `OPENAI_MODEL`) — copy from `landing-page/.env.example`.
+- Fully separate Node project (own `package.json`, own `node_modules`) using Express + the `openai` SDK. It is the only Node project in the repo.
+- `server.js` serves the landing page statically, guards `/admin` with real signed-cookie sessions (`middleware/adminAuth.js` — admin is **disabled outright** unless `ADMIN_PASSWORD` is set; there is no default credential), applies per-IP rate limiting (`middleware/rateLimit.js`), and exposes a contact form API (`POST /api/contact`, `GET/PATCH /api/contact/messages/:id`) backed by flat-file JSON storage (`landing-page/data/contact_messages.json`).
+- All API responses use one envelope: `{ success: true, data }` or `{ success: false, error: { code, message } }`. Errors never carry stack traces or upstream provider messages. Changing a response shape means updating its consumer in the same commit.
+- `landing-page/js/chatService.js` calls `POST /api/chat`, which **is** implemented server-side (`server.js`). The API key stays on the server; the browser never holds it.
+- Requires `landing-page/.env` — copy from `landing-page/.env.example`. `OPENAI_API_KEY`, `OPENAI_MODEL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, `PORT`, `ALLOWED_ORIGINS`.
+- `landing-page/data/contact_messages.json` must never become HTTP-reachable: a 404 handler for `/data` is registered *before* the static middlewares. Do not reorder those routes. Contact fields are attacker-controlled — the admin UI renders them as text nodes, never via `innerHTML`.
 
 ### Visual design language (shared across all four apps)
 Dark charcoal background (`#070509`), metallic gold gradient accent (`linear-gradient(135deg, #fcf6ba, #bf953f)`), frosted-glass containers (`backdrop-filter: blur(16px)`), serif/display type pairing (`Cinzel` for headings, `Cormorant Garamond` for body, `Montserrat` for UI/metadata), and standardized Unicode glyphs (`✦ ◈ △ ❖`) in place of emoji for a consistent cross-platform look. Match this palette/typography when touching any of the four front ends — see `TECHSTACK.md` §4 for exact tokens.

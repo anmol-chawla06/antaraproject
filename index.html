@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Antara | Cultural Heritage Grid</title>
-  
+  <meta name="description" content="A twelve-month calendar of India's living festivals — when they happen, where, and how to join them.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
   <!-- Immediate Theme Application to prevent theme flash -->
   <script>
     (function() {
@@ -798,6 +800,12 @@
       }, 400);
     };
 
+    // Mirrors the slug form used by STATES_META in data.js, so the festival
+    // panel can deep-link into the map's #/india/<state> route.
+    function stateSlug(state) {
+      return String(state || '').toLowerCase().trim().replace(/\s+/g, '-');
+    }
+
     function renderDetails(fest) {
       const contentLayer = document.getElementById('content-layer');
       const cuisineFallback = "Traditional regional sweets, ceremonial harvest grains, and indigenous local delicacies.";
@@ -826,8 +834,8 @@
         <p class="heritage-text">${cuisineContent}</p>
 
         <div class="action-container">
-          <a href="https://t.me/AntaraV1bot?start=${fest.id}" target="_blank" rel="noopener noreferrer" class="plan-trip-btn">
-            ◈ Plan a trip
+          <a href="map.html#/india/${stateSlug(fest.state)}" class="plan-trip-btn">
+            ◈ Plan your visit
           </a>
         </div>
       `;

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antara — Admin Sign In</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0d12;
+      --surface: #17141b;
+      --border: #2a2530;
+      --text: #ece8f0;
+      --muted: #9a92a4;
+      --accent: #bf953f;
+      --error: #d98a7a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem 1.25rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, sans-serif;
+    }
+    .card {
+      width: 100%;
+      max-width: 24rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .brand {
+      font-family: "Lora", Georgia, serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.08em;
+      margin: 0;
+      color: var(--accent);
+    }
+    h1 { font-size: 1rem; font-weight: 500; margin: 0; }
+    p.hint { margin: 0; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    label { font-size: 0.8rem; color: var(--muted); display: block; margin-bottom: 0.4rem; }
+    input {
+      width: 100%;
+      padding: 0.7rem 0.8rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font: inherit;
+      border-radius: 2px;
+    }
+    input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--accent);
+      color: #17141b;
+      border: none;
+      border-radius: 2px;
+      font: inherit;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    button:hover { filter: brightness(1.08); }
+    button:disabled { opacity: 0.6; cursor: default; }
+    button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+    .error { color: var(--error); font-size: 0.85rem; margin: 0; min-height: 1.2em; }
+    a { color: var(--muted); font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <p class="brand">ANTARA</p>
+    <h1>Admin sign in</h1>
+    <p class="hint">Contact messages contain personal information. Sign in to continue.</p>
+
+    <form id="loginForm">
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required autofocus>
+      </div>
+      <p class="error" id="errorMsg" role="alert"></p>
+      <button type="submit" id="submitBtn">Sign in</button>
+    </form>
+
+    <a href="/">Back to Antara</a>
+  </main>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.textContent = '';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing in...';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: document.getElementById('password').value })
+        });
+        const payload = await res.json().catch(() => null);
+
+        if (res.ok && payload && payload.success) {
+          window.location.href = '/admin/messages/';
+          return;
+        }
+        errorMsg.textContent = (payload && payload.error && payload.error.message) || 'Sign in failed.';
+      } catch (err) {
+        errorMsg.textContent = 'Could not reach the server.';
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign in';
+    });
+  </script>
+</body>
+</html>

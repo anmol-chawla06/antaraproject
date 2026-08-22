@@ -5,7 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Antara | Digital Heritage Platform</title>
     <meta name="description" content="Antara connects place, history, culture, and travel in India.">
-    
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+    <!-- Social sharing. og:url and a canonical link need the production domain;
+         add them here (or set SITE_URL and template them) once one exists. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Antara">
+    <meta property="og:title" content="Antara | Digital Heritage Platform">
+    <meta property="og:description" content="A digital gateway to India's living heritage: places, manuscripts, festivals, and the traditions that connect them.">
+    <meta property="og:image" content="assets/images/hero_bg.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Antara | Digital Heritage Platform">
+    <meta name="twitter:description" content="A digital gateway to India's living heritage: places, manuscripts, festivals, and the traditions that connect them.">
+    <meta name="twitter:image" content="assets/images/hero_bg.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -30,14 +44,14 @@
                 <button class="nav-btn-heritage" id="heritageAiNavBtn">Heritage AI</button>
             </div>
             
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
+            <button class="mobile-menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
                 <span></span>
                 <span></span>
             </button>
         </div>
     </nav>
 
-    <div class="mobile-nav">
+    <div class="mobile-nav" id="mobileNav">
         <a href="#map-section">Explore</a>
         <a href="#knowledge-section">Knowledge</a>
         <a href="#travel-section">Travel</a>
@@ -240,7 +254,7 @@
         Heritage AI
     </button>
 
-    <div class="heritage-ai-panel" id="heritageAiPanel">
+    <div class="heritage-ai-panel" id="heritageAiPanel" role="dialog" aria-modal="false" aria-label="Heritage AI" aria-hidden="true">
         <div class="ai-panel-header">
             <div class="ai-title">
                 <h4>Heritage AI</h4>
@@ -264,10 +278,10 @@
     </div>
 
     <!-- Contact Modal -->
-    <div class="modal-overlay" id="contactModal">
+    <div class="modal-overlay" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Contact Antara</h3>
+                <h3 id="contactModalTitle">Contact Antara</h3>
                 <button class="close-modal-btn" id="closeContactBtn">&times;</button>
             </div>
             <div class="modal-body">
@@ -299,8 +313,8 @@
                     <p class="editorial-text">Your message has been received. We will be in touch soon.</p>
                 </div>
                 
-                <div class="form-state" id="contactErrorState" style="display: none;">
-                    <p class="editorial-text text-error">Unable to send message. Please try again or email us directly.</p>
+                <div class="form-state" id="contactErrorState" style="display: none;" role="alert">
+                    <p class="editorial-text text-error" id="contactErrorText">Unable to send message. Please try again or email us directly.</p>
                     <button class="btn btn-link mt-sm" id="btnRetryContact">Retry</button>
                 </div>
             </div>

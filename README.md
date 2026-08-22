@@ -1,97 +1,269 @@
-# Antara: Cultural Heritage & Temporal Exploration Platform
+# Antara
 
-Antara is a professional-grade cultural heritage travel portal designed to showcase regional festivals, cultural traditions, and travel itineraries across India. Built with a high-performance split-screen temporal grid interface and zero external API dependencies, Antara enables seamless discovery and instant trip planning.
+**स्मृतिषु संस्कृतिः, स्थलेषु इतिहासः।**
+*In memories, culture; in places, history.*
 
----
-
-## Key Features
-
-- **Temporal Grid Interface**: A clean 12-month calendar grid allowing travelers to explore cultural events organized chronologically with visual event markers (`✦`).
-- **Dynamic Content & Imagery**: A synchronized detail panel rendering high-resolution regional imagery, historical overviews, cultural highlights, and culinary heritage.
-- **Zero-Latency Static Data Architecture**: Powered by a robust local data layer (`festivals_database.json`), ensuring lightning-fast client-side updates and zero downtime during live demonstrations.
-- **Integrated Telegram Travel Assistant**: One-click deep-link integration routing users directly into the Antara Telegram Bot (`@AntaraV1bot`) with specific festival context to generate customized travel itineraries and booking pathways.
-- **High-Contrast Dark Aesthetics**: Polished dark charcoal backdrop (`#070509`) combined with metallic gold accents, frosted glass containers (`backdrop-filter: blur`), and clean serif typography.
+A digital gateway to India's living heritage — festivals, destinations, and classical texts, connected into one experience.
 
 ---
 
-## Project Structure
+## What Antara actually is
 
-```
-├── index.html                  # Core split-screen frontend interface
-├── bot.js                      # Node.js Telegram bot backend
-├── festivals_database.json     # Static database of cultural festivals and metadata
-├── images/
-│   ├── temple.png              # Background ambient architectural graphic
-│   └── festivals/              # High-resolution regional festival imagery
-├── package.json                # Project dependencies and metadata
-├── README.md                   # Project overview & local setup guide
-├── TECHSTACK.md                # Detailed technical stack specifications
-└── WORKFLOW.md                 # System architecture and end-to-end data flow
-```
+Four independent front ends in one repository, two Node backends, and a Python data pipeline. There is **no bundler and no build step** for the front ends: each HTML page loads plain `<script>` files directly.
+
+| Experience | Entry point | Scripts it loads | Backend |
+| :--- | :--- | :--- | :--- |
+| Festival calendar | `index.html` | inline; fetches `festivals_database.json` | none |
+| Destinations map | `map.html` | `map-data.js` → `data.js` → `app.js` | none |
+| Heritage Library | `library.html` | `texts_data.js` → `narration.js` → `library.js` | none |
+| Landing page | `landing-page/index.html` | `js/chatService.js`, `js/main.js` | `landing-page/server.js` |
+
+Because the apps are independent, **a change to one script does not affect another page.** Check which HTML file actually loads a script before editing it.
 
 ---
 
-## Local Setup & Running the Platform
+## 1. Requirements
 
-### Prerequisites
-- **Node.js**: v18+ (tested on Node.js v24+)
-- **Web Browser**: Modern browser supporting ES6+ and CSS Grid/Flexbox
-- **Python** (Optional, for local HTTP serving): Python 3.8+
+- **Node.js 18+** (tested on 22)
+- **Python 3.8+** — only for the static file server and the data pipeline
+- A modern browser
 
 ---
 
-### Step 1: Install Backend Dependencies
-
-Navigate to the project root and install required packages:
+## 2. Installation
 
 ```bash
-npm install
+git clone <repository-url>
+cd "Antara India"
+
+cd landing-page && npm install && cd ..
 ```
 
-*(Key dependency: `node-telegram-bot-api`)*
+The repository root has **no npm dependencies** — the three static apps run on plain browser JavaScript, and the validation scripts use only Node built-ins. Only the web server needs installing.
 
 ---
 
-### Step 2: Launch the Telegram Travel Assistant
+## 3. Environment variables
 
-Start the local Node.js Telegram bot process:
+One `.env` file, for the web server. Copy the example and fill it in — **never commit a `.env`.**
 
 ```bash
-node bot.js
+cp landing-page/.env.example landing-page/.env
 ```
 
-The bot will initialize in polling mode and synchronously load `festivals_database.json`.
+**`landing-page/.env`**:
+
+| Variable | Purpose |
+| :--- | :--- |
+| `OPENAI_API_KEY` | Heritage AI. Unset ⇒ the AI panel reports it is unconfigured. |
+| `OPENAI_MODEL` | Defaults to `gpt-4o`. |
+| `ADMIN_PASSWORD` | **Unset ⇒ the admin area is disabled entirely.** There is no default password. |
+| `ADMIN_SESSION_SECRET` | Signs admin cookies. Blank ⇒ random per start, so restarts sign you out. |
+| `PORT` | Defaults to `8080`. |
+| `ALLOWED_ORIGINS` | Comma-separated cross-origin allow-list. Blank is correct for local use. |
 
 ---
 
-### Step 3: Launch the Frontend Interface
+## 4. Running it
 
-Serve the static web portal using any standard HTTP server:
+### Everything through one server (recommended)
 
-#### Option A: Python HTTP Server (Recommended)
+`landing-page/server.js` serves the landing page **and** the three sibling apps, so all cross-app links work:
+
 ```bash
-python -m http.server 8080
+cd landing-page
+npm start
 ```
 
-#### Option B: Node `http-server` / `npx serve`
+| URL | Page |
+| :--- | :--- |
+| http://localhost:8080/ | Landing page |
+| http://localhost:8080/index.html | Festival calendar |
+| http://localhost:8080/map.html | Destinations map |
+| http://localhost:8080/library.html | Heritage Library |
+| http://localhost:8080/admin/messages/ | Contact inbox (sign-in required) |
+
+### Static apps only (no backend)
+
+The three root apps need no server-side code:
+
 ```bash
-npx serve -l 8080 .
+npm run serve      # python -m http.server 8080
 ```
+
+Heritage AI and the contact form will not work in this mode — they need `server.js`.
+
+> **Port conflict:** `server.js` and the static server both default to 8080. Give one a different port if you run both.
 
 ---
 
-### Step 4: Access the Application
+## 5. Architecture
 
-Open your browser and navigate to:
-```
-http://localhost:8080/index.html
-```
+### Data-first, offline-capable
 
-- Select any active month on the **Temporal Grid** (e.g., `JUN`, `AUG`, `OCT`).
-- Review the festival details, cultural highlights, and regional imagery on the right panel.
-- Click **◈ Plan a trip** to open the Telegram Bot with the preloaded destination parameters.
+Every app's core content is static JSON committed to the repository — `festivals_database.json`, `texts_database.json` / `texts_data.js`, `data.js` / `map-data.js`. Pages `fetch()` or `<script>`-include these; the bot reads them with `fs.readFileSync` at startup. **Prefer extending these files over adding a live API dependency.**
+
+### Backends
+
+- **`landing-page/server.js`** — Express. Serves static files, proxies Heritage AI to OpenAI, stores contact messages, and guards the admin area.
+  - `middleware/adminAuth.js` — signed-cookie admin sessions
+  - `middleware/rateLimit.js` — per-IP fixed-window limiting
 
 ---
 
-## License & Attribution
-Designed and engineered for cultural tourism, heritage documentation, and rapid offline demonstrations.
+## 6. API routes
+
+All JSON responses use one of two shapes:
+
+```jsonc
+{ "success": true,  "data": { } }
+{ "success": false, "error": { "code": "…", "message": "…" } }
+```
+
+| Method | Route | Auth | Notes |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/contact` | public | 5 requests / 10 min per IP |
+| `GET` | `/api/contact/messages` | admin | Newest first |
+| `PATCH` | `/api/contact/messages/:id` | admin | `new` \| `read` \| `replied` \| `archived` |
+| `POST` | `/api/chat` | public | 12 requests / min per IP |
+| `POST` | `/api/admin/login` | public | 10 attempts / 15 min per IP |
+| `POST` | `/api/admin/logout` | public | Clears the session cookie |
+
+Request bodies are capped at 32 kB. Errors never include stack traces or upstream provider messages.
+
+---
+
+## 7. Narration
+
+**Current state: narration is browser text-to-speech, not recorded audio.** No audio files ship with this repository — `verse.audio` is empty for all 142 verses.
+
+The player therefore uses the Web Speech API, and **only when the device actually has a matching voice installed.** If it does not:
+
+- the language is disabled in the voice picker and labelled *unavailable*
+- the player shows *"Narration unavailable — no <language> voice is installed on this device"*
+- **nothing is spoken and no progress bar animates**
+
+This matters because the browser API fails silently: with no voice bound, Chromium accepts the utterance, emits no sound, and never fires an error. Earlier builds animated a player over that silence.
+
+### Adding real recorded audio
+
+`narration.js` already resolves recorded audio in preference to synthesis. Add a per-language block to a verse and the player will use it with no code change:
+
+```jsonc
+{
+  "id": "bg_2_47",
+  "sanskrit": "…",
+  "narration": {
+    "hi": { "available": true, "audioUrl": "/audio/bg_2_47_hi.mp3" },
+    "en": { "available": true, "audioUrl": "/audio/bg_2_47_en.mp3" }
+  }
+}
+```
+
+`available: false` is respected — a language marked unavailable falls back to synthesis rather than requesting a missing file. The legacy flat `"audio": "…"` field still works.
+
+**Adding a language** (Tamil, Telugu, …) means one entry in `NARRATION_LANGS` in `narration.js` plus an `<option>` in `library.html`. No new branches in the player.
+
+Because `texts_data.js` is generated, real audio paths belong in `data_builders/*.py`, then `python build_all.py`.
+
+---
+
+## 8. Heritage AI (OpenAI)
+
+The API key lives **only** on the server. The browser calls `/api/chat`; `server.js` adds the system prompt and any page context, then calls OpenAI.
+
+- Set `OPENAI_API_KEY` in `landing-page/.env`
+- Optionally set `OPENAI_MODEL` (default `gpt-4o`)
+- With no key the endpoint returns `AI_UNCONFIGURED` and the panel says so plainly
+
+Page context (which section the reader is viewing) is sent as `{ type, id }` and clipped server-side before it reaches the prompt.
+
+---
+
+## 9. Booking and payments
+
+**Not implemented.** There is no Razorpay integration, no payment routes, and no booking logic in this repository. "Plan your visit" links to the festival calendar. Nothing in the UI claims a booking capability that does not exist.
+
+---
+
+## 10. Contact system
+
+Submissions are validated server-side (name, email format, message, per-field length caps) and appended to `landing-page/data/contact_messages.json`.
+
+That file is **never** served over HTTP — a 404 handler for `/data` is registered ahead of the static middleware. Do not reorder those routes.
+
+The inbox at `/admin/messages/` requires a signed session. Message fields are rendered as text nodes, never interpolated into HTML, because they are attacker-controlled.
+
+---
+
+## 11. Data structures
+
+### Festival (`festivals_database.json`)
+
+`id` · `name` · `state` · `month` · `all_months` · `timing` · `location` · `coordinates` · `history` · `culture_and_rituals` · `how_to_join` · `local_language` · `uniqueness` · `image_placeholder`
+
+`state` must match a key in `STATES_META` (`data.js`), because the festival panel's "Plan your visit" button deep-links to `map.html#/india/<state-slug>`.
+
+### Library
+
+Python is the source of truth. `data_builders/gita.py`, `upanishads.py`, `rigveda.py`, `classics.py` each expose a `get_*()` function; `build_all.py` assembles, validates, and writes **both** `texts_database.json` and `texts_data.js`.
+
+```bash
+npm run build:library      # python build_all.py
+```
+
+**Never hand-edit `texts_data.js`** — it is generated.
+
+### Map
+
+`map-data.js` holds the projection bounds and per-state SVG paths, generated by `gen.py`:
+
+```bash
+npm run build:map          # python gen.py
+```
+
+The projection formula is duplicated in `gen.py`, `map-data.js` (`PROJECT_BOUNDS`) and `app.js` (`project()`). **If you change bounds, change all three** or markers drift from the coastline.
+
+---
+
+## 12. Tests
+
+```bash
+npm test
+```
+
+Runs three checks:
+
+| Script | Verifies |
+| :--- | :--- |
+| `validate_db.js` | Every verse has all required fields; sample searches return hits |
+| `validate_app.js` | Each page's scripts load in real order under a mocked DOM |
+| `validate_narration.js` | Voice resolution, language selection, audio-source precedence |
+
+---
+
+## 13. Troubleshooting
+
+**Narration is silent / says unavailable.**
+Working as intended when no matching voice is installed. Install a Hindi or English TTS voice at the OS level (Windows: *Settings → Time & Language → Speech*), then reload. The picker re-checks when voices load.
+
+**Heritage AI says it is not configured.**
+`OPENAI_API_KEY` is missing from `landing-page/.env`. Restart the server after adding it.
+
+**`/admin/messages/` redirects to a sign-in page that rejects every password.**
+`ADMIN_PASSWORD` is unset, so the admin area is disabled. Set it and restart.
+
+**Signed out of admin after every restart.**
+Expected unless `ADMIN_SESSION_SECRET` is set.
+
+**Port 8080 already in use.**
+Set `PORT` in `landing-page/.env`, or run the static server on another port.
+
+**Map markers sit in the wrong place.**
+The projection constants in `gen.py`, `map-data.js` and `app.js` have drifted apart. Re-sync all three.
+
+**Library shows mojibake instead of Devanagari.**
+Serve over HTTP rather than opening the file directly; `file://` can mis-detect encoding.
+
+**Cross-app links 404.**
+Run `landing-page/server.js`, which serves the repository root too. A bare static server in `landing-page/` cannot see the sibling apps.

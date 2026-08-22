@@ -163,6 +163,7 @@
     volGlyph: document.getElementById('volGlyph'),
     audioCloseBtn: document.getElementById('audioCloseBtn'),
     htmlAudioPlayer: document.getElementById('htmlAudioPlayer'),
+    audioStatusNote: document.getElementById('audioStatusNote'),
 
     // Layer Settings Modal
     viewOptionsBtn: document.getElementById('viewOptionsBtn'),
@@ -1989,22 +1990,57 @@
   // -------------------------------------------------------------------------
   // DUAL-MODE AUDIO & TEXT-TO-SPEECH CONTROLLER
   // -------------------------------------------------------------------------
+  const NARRATION_LANGS = window.AntaraNarration.LANGS;
+
+  function narrationLangFor(engine) {
+    return window.AntaraNarration.langFor(engine, AppState.langPreference);
+  }
+
+  function resolveNarrationVoice(langDef) {
+    const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    return window.AntaraNarration.resolveVoice(langDef, voices);
+  }
+
+  function resolveVerseAudioUrl(verse, langKey) {
+    return window.AntaraNarration.resolveAudioUrl(verse, langKey);
+  }
+
+  function setNarrationStatus(message, kind) {
+    if (!DOM.audioStatusNote) return;
+    DOM.audioStatusNote.textContent = message || '';
+    DOM.audioStatusNote.className = 'audio-status-note' + (kind ? ' is-' + kind : '');
+    DOM.audioStatusNote.hidden = !message;
+  }
+
+  function reportNarrationUnavailable(langDef, reason) {
+    stopCurrentAudio();
+    clearInterval(AppState.audio.synthProgressTimer);
+    AppState.audio.mode = 'idle';
+    updatePlayPauseButtonUI();
+    DOM.progressBarFill.style.width = '0%';
+    DOM.audioCurrentTime.textContent = formatTime(0);
+    setNarrationStatus('Narration unavailable — ' + reason, 'unavailable');
+    showToast(langDef.label + ' narration unavailable on this device', '✕');
+  }
+
   function playSingleVerse(verse) {
     AppState.activeVerseId = verse.id;
     highlightActiveVerseCard(verse.id);
-    
+
     DOM.audioCitation.textContent = verse.citation;
     DOM.audioSnippet.textContent = verse.sanskrit.split('\n')[0];
 
-    // Check if MP3 file hook is valid
-    if (verse.audio && verse.audio.trim() !== '') {
-      playHtml5Audio(verse.audio);
+    const langDef = narrationLangFor(AppState.audio.voiceEngine);
+    const recorded = resolveVerseAudioUrl(verse, langDef.key);
+
+    if (recorded) {
+      playHtml5Audio(recorded, verse, langDef);
     } else {
-      playSpeechSynthesis(verse);
+      playSpeechSynthesis(verse, langDef);
     }
   }
 
-  function playHtml5Audio(src) {
+  function playHtml5Audio(src, verse, langDef) {
     stopCurrentAudio();
     AppState.audio.mode = 'html5';
     DOM.htmlAudioPlayer.src = src;
@@ -2016,61 +2052,61 @@
         AppState.audio.isPlaying = true;
         AppState.audio.isPaused = false;
         updatePlayPauseButtonUI();
+        setNarrationStatus('Recorded narration', 'recorded');
       })
-      .catch(e => {
-        console.warn('HTML5 Audio failed, falling back to Web Speech Synthesis:', e);
-        // Fallback to synth
-        const verse = findVerseById(AppState.activeVerseId);
-        if (verse) playSpeechSynthesis(verse);
+      .catch(() => {
+        // The file is declared but unplayable (missing, wrong MIME type, blocked
+        // autoplay). Fall back to synthesis rather than stalling on a dead src.
+        playSpeechSynthesis(verse, langDef);
       });
   }
 
-  function playSpeechSynthesis(verse) {
+  function playSpeechSynthesis(verse, langDef, attempt = 0) {
     stopCurrentAudio();
+    langDef = langDef || narrationLangFor(AppState.audio.voiceEngine);
+
     if (!('speechSynthesis' in window)) {
-      showToast('Speech synthesis not supported on this browser', '✕');
+      reportNarrationUnavailable(langDef, 'this browser has no speech engine');
       return;
     }
 
     AppState.audio.mode = 'synth';
     window.speechSynthesis.cancel(); // Clear any pending
 
-    // Voices can still be empty on the very first call in Chrome/Edge, since
-    // they load asynchronously. Wait once for the 'voiceschanged' event
-    // before speaking, so the very first click doesn't silently fall back
-    // to whatever default voice happens to be ready yet.
+    // Voices load asynchronously and are often empty on the first call. Retry a
+    // bounded number of times: the previous version recursed with no cap, which
+    // looped once a second forever on machines with no TTS engine installed.
     if (window.speechSynthesis.getVoices().length === 0) {
-      let spoken = false;
-      const speakOnce = () => {
-        if (spoken) return;
-        spoken = true;
-        window.speechSynthesis.removeEventListener('voiceschanged', speakOnce);
-        playSpeechSynthesis(verse);
+      if (attempt >= 3) {
+        reportNarrationUnavailable(langDef, 'no speech voices are installed on this device');
+        return;
+      }
+      let retried = false;
+      const retry = () => {
+        if (retried) return;
+        retried = true;
+        window.speechSynthesis.removeEventListener('voiceschanged', retry);
+        playSpeechSynthesis(verse, langDef, attempt + 1);
       };
-      window.speechSynthesis.addEventListener('voiceschanged', speakOnce);
-      setTimeout(speakOnce, 1000); // don't hang forever if voices never arrive
+      window.speechSynthesis.addEventListener('voiceschanged', retry);
+      setTimeout(retry, 1000);
       return;
     }
 
-    // Choose text and language code based on voice engine selection
-    let textToSpeak = verse.sanskrit;
-    let voiceLang = 'hi-IN';
+    const selectedVoice = resolveNarrationVoice(langDef);
 
-    if (AppState.audio.voiceEngine === 'en') {
-      textToSpeak = verse.english;
-      voiceLang = 'en-IN'; // Prefer Indian English for natural accentuation of Sanskrit terms
-    } else if (AppState.audio.voiceEngine === 'sa_hi') {
-      textToSpeak = verse.sanskrit;
-      voiceLang = 'hi-IN';
-    } else if (AppState.audio.voiceEngine === 'auto') {
-      // Auto matches active display language preference
-      if (AppState.langPreference === 'en') {
-        textToSpeak = verse.english;
-        voiceLang = 'en-IN';
-      } else {
-        textToSpeak = verse.sanskrit;
-        voiceLang = 'hi-IN';
-      }
+    // Root cause of the original silent failure: with no voice bound, Chromium
+    // fires onstart then onend, produces no sound, and never fires onerror.
+    // Refuse to start rather than animate a progress bar over silence.
+    if (!selectedVoice) {
+      reportNarrationUnavailable(langDef, 'no ' + langDef.label + ' voice is installed on this device');
+      return;
+    }
+
+    const textToSpeak = langDef.text(verse) || '';
+    if (!textToSpeak.trim()) {
+      reportNarrationUnavailable(langDef, 'this verse has no text in the selected language');
+      return;
     }
 
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
@@ -2078,68 +2114,66 @@
     utterance.rate = Math.max(0.6, Math.min(1.5, AppState.audio.playbackRate * 0.82));
     utterance.pitch = 0.94; // Resonant, natural pitch
     utterance.volume = AppState.audio.volume;
-    utterance.lang = voiceLang;
-
-    // Detect high-quality native regional voice
-    const voices = window.speechSynthesis.getVoices();
-    let selectedVoice = null;
-
-    if (voiceLang === 'hi-IN') {
-      // Prioritize high-quality local Hindi voices
-      selectedVoice = voices.find(v => v.lang.toLowerCase() === 'hi-in' && v.name.toLowerCase().includes('google')) ||
-                      voices.find(v => v.lang.toLowerCase() === 'hi-in' && v.name.toLowerCase().includes('microsoft')) ||
-                      voices.find(v => v.lang.toLowerCase() === 'hi-in') ||
-                      voices.find(v => v.lang.toLowerCase().startsWith('hi')) ||
-                      // Fallback to other Indian languages if no Hindi voice (e.g. Marathi or Sanskrit approximation)
-                      voices.find(v => v.lang.toLowerCase().includes('in') && (v.lang.toLowerCase().startsWith('mr') || v.lang.toLowerCase().startsWith('sa')));
-    } else {
-      // voiceLang is 'en-IN' (or standard English)
-      selectedVoice = voices.find(v => v.lang.toLowerCase() === 'en-in' && v.name.toLowerCase().includes('google')) ||
-                      voices.find(v => v.lang.toLowerCase() === 'en-in' && v.name.toLowerCase().includes('microsoft')) ||
-                      voices.find(v => v.lang.toLowerCase() === 'en-in') ||
-                      voices.find(v => v.lang.toLowerCase() === 'en-us' && v.name.toLowerCase().includes('google')) ||
-                      voices.find(v => v.lang.toLowerCase().startsWith('en-us')) ||
-                      voices.find(v => v.lang.toLowerCase().startsWith('en'));
-    }
-
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-      utterance.lang = selectedVoice.lang;
-    }
+    utterance.voice = selectedVoice;
+    utterance.lang = selectedVoice.lang;
 
     // Estimate duration for progress animation
     const words = textToSpeak.split(/\s+/).length;
     AppState.audio.synthEstimatedDuration = Math.max(3, (words / (1.5 * AppState.audio.playbackRate)));
     AppState.audio.synthElapsed = 0;
 
+    let startedAt = 0;
+
     utterance.onstart = () => {
+      startedAt = Date.now();
       AppState.audio.isPlaying = true;
       AppState.audio.isPaused = false;
       updatePlayPauseButtonUI();
       startSynthProgressSimulation();
+      setNarrationStatus('Browser narration — ' + selectedVoice.name, 'synth');
       // Ensure visual sync: highlight card and scroll
       highlightActiveVerseCard(verse.id);
     };
 
     utterance.onend = () => {
       clearInterval(AppState.audio.synthProgressTimer);
+      // Speaking a full verse cannot complete in a few hundred milliseconds. If
+      // it did, the engine accepted the utterance and emitted nothing - the
+      // silent-failure case - so report it instead of advancing the queue.
+      if (startedAt && Date.now() - startedAt < 400 && textToSpeak.length > 20) {
+        reportNarrationUnavailable(langDef, 'the speech engine produced no audio');
+        return;
+      }
       handleAudioTrackEnded();
     };
 
     utterance.onerror = (e) => {
-      console.warn('SpeechSynthesis error:', e);
       clearInterval(AppState.audio.synthProgressTimer);
       AppState.audio.isPlaying = false;
       updatePlayPauseButtonUI();
       // 'canceled'/'interrupted' fire whenever we intentionally stop/replace
       // an utterance (switching verses, closing the page) - not real failures.
       if (e.error !== 'canceled' && e.error !== 'interrupted') {
-        showToast('Narration failed: ' + (e.error || 'unknown error'), '✕');
+        reportNarrationUnavailable(langDef, e.error || 'the speech engine reported an error');
       }
     };
 
     AppState.audio.synthUtterance = utterance;
     window.speechSynthesis.speak(utterance);
+  }
+
+  // Grey out voice options this device cannot actually narrate, so the picker
+  // never advertises a language that will fail.
+  function refreshVoiceOptionAvailability() {
+    if (!DOM.voiceSelect) return;
+    Array.from(DOM.voiceSelect.options).forEach(opt => {
+      const langDef = opt.value === 'auto' ? null : NARRATION_LANGS[opt.value];
+      if (!langDef) return;
+      const available = !!resolveNarrationVoice(langDef);
+      opt.disabled = !available;
+      const base = opt.dataset.baseLabel || (opt.dataset.baseLabel = opt.textContent);
+      opt.textContent = available ? base : base + ' — unavailable';
+    });
   }
 
   function startSynthProgressSimulation() {
@@ -2854,8 +2888,23 @@
     // Audio Voice Selector
     DOM.voiceSelect.addEventListener('change', (e) => {
       AppState.audio.voiceEngine = e.target.value;
-      showToast(`Recitation Voice: ${e.target.options[e.target.selectedIndex].text}`, '◎');
+      setNarrationStatus('', null);
+      const langDef = narrationLangFor(e.target.value);
+      if (resolveNarrationVoice(langDef)) {
+        showToast(`Recitation Voice: ${e.target.options[e.target.selectedIndex].text}`, '◎');
+      } else {
+        setNarrationStatus(
+          'Narration unavailable — no ' + langDef.label + ' voice is installed on this device',
+          'unavailable'
+        );
+      }
     });
+
+    // Voices arrive asynchronously, so re-check availability when they land.
+    refreshVoiceOptionAvailability();
+    if (window.speechSynthesis) {
+      window.speechSynthesis.addEventListener('voiceschanged', refreshVoiceOptionAvailability);
+    }
 
     // Volume Slider & Mute
     DOM.volumeSlider.addEventListener('input', (e) => {
