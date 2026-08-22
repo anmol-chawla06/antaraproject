@@ -3,4 +3,7 @@ node_modules/
 *.log
 .gemini/
 .git/
+# Secrets. Ignore every .env variant, but keep the committed templates.
 .env
+.env.*
+!.env.example

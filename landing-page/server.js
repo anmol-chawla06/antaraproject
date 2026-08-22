@@ -16,19 +16,52 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+const { requireAdmin, passwordMatches, startSession, endSession, isConfigured } = require('./middleware/adminAuth');
+const { rateLimit } = require('./middleware/rateLimit');
 
-// Dummy Auth Middleware for Admin Routes
-const requireAdmin = (req, res, next) => {
-    // Placeholder for real authentication (e.g., JWT, session)
-    // For ProjectExpo / demo, allow access to admin routes.
-    // In production, block if not authenticated.
-    next();
-};
+// Consistent response envelopes, so every client parses replies the same way.
+const ok = (res, data) => res.json({ success: true, data });
+const fail = (res, status, code, message) =>
+    res.status(status).json({ success: false, error: { code, message } });
 
-// Serve static admin files behind dummy auth
+// Browsers on the same origin send no Origin header, so local use needs no
+// entry here. Cross-origin callers must be named in ALLOWED_ORIGINS.
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(value => value.trim())
+    .filter(Boolean);
+
+app.use(cors({
+    origin: (origin, callback) => callback(null, !origin || allowedOrigins.includes(origin)),
+    credentials: true
+}));
+
+// Contact and chat payloads are small; a cap stops trivial memory abuse.
+app.use(express.json({ limit: '32kb' }));
+
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: 'Too many sign-in attempts. Try again in a few minutes.'
+});
+
+app.post('/api/admin/login', loginLimiter, (req, res) => {
+    if (!isConfigured()) {
+        return fail(res, 503, 'ADMIN_DISABLED', 'Admin access is not configured on this server.');
+    }
+    if (!passwordMatches(req.body && req.body.password)) {
+        return fail(res, 401, 'INVALID_PASSWORD', 'That password is not correct.');
+    }
+    startSession(res);
+    return ok(res, { signedIn: true });
+});
+
+app.post('/api/admin/logout', (req, res) => {
+    endSession(res);
+    return ok(res, { signedIn: false });
+});
+
+// Serve static admin files behind real session auth
 app.use('/admin', requireAdmin, express.static(path.join(__dirname, 'admin')));
 
 // Never expose the raw contact-message store over HTTP (was previously
@@ -89,26 +122,45 @@ const ContactService = {
 // API Routes
 // ==========================================================================
 
-// POST /api/contact - Public endpoint for submitting a contact form
-app.post('/api/contact', (req, res) => {
-    try {
-        const { name, email, subject, message } = req.body;
+const contactLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 5,
+    message: 'You have sent several messages already. Please try again shortly.'
+});
 
-        // Validation
-        if (!name || !name.trim()) return res.status(400).json({ error: 'Please enter your name.' });
-        if (!email || !email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return res.status(400).json({ error: 'Please enter a valid email address.' });
+// Long enough for a real enquiry, short enough to keep the JSON store sane.
+const FIELD_LIMITS = { name: 120, email: 200, subject: 200, message: 5000 };
+
+// POST /api/contact - Public endpoint for submitting a contact form
+app.post('/api/contact', contactLimiter, (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body || {};
+
+        if (!name || !String(name).trim()) return fail(res, 400, 'NAME_REQUIRED', 'Please enter your name.');
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim())) {
+            return fail(res, 400, 'EMAIL_INVALID', 'Please enter a valid email address.');
         }
-        if (!message || !message.trim()) return res.status(400).json({ error: 'Please tell us how we can help.' });
+        if (!message || !String(message).trim()) {
+            return fail(res, 400, 'MESSAGE_REQUIRED', 'Please tell us how we can help.');
+        }
+
+        const trimmed = {
+            name: String(name).trim(),
+            email: String(email).trim(),
+            subject: subject ? String(subject).trim() : 'No Subject',
+            message: String(message).trim()
+        };
+
+        for (const [field, limit] of Object.entries(FIELD_LIMITS)) {
+            if (trimmed[field].length > limit) {
+                return fail(res, 400, 'FIELD_TOO_LONG', `Your ${field} is longer than ${limit} characters.`);
+            }
+        }
 
         const messages = ContactService.getMessages();
-        
         const newMessage = {
             id: 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
-            name: name.trim(),
-            email: email.trim(),
-            subject: subject ? subject.trim() : 'No Subject',
-            message: message.trim(),
+            ...trimmed,
             status: 'new',
             created_at: new Date().toISOString()
         };
@@ -116,10 +168,10 @@ app.post('/api/contact', (req, res) => {
         messages.push(newMessage);
         ContactService.saveMessages(messages);
 
-        res.json({ success: true, message: 'Your message has been received by Antara.' });
+        return ok(res, { message: 'Your message has been received by Antara.' });
     } catch (error) {
         console.error('Contact API Error:', error);
-        res.status(500).json({ error: 'Something went wrong. Please try again later.' });
+        return fail(res, 500, 'CONTACT_FAILED', 'Something went wrong. Please try again later.');
     }
 });
 
@@ -127,11 +179,11 @@ app.post('/api/contact', (req, res) => {
 app.get('/api/contact/messages', requireAdmin, (req, res) => {
     try {
         const messages = ContactService.getMessages();
-        // Sort newest first
         messages.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        res.json({ messages });
+        return ok(res, { messages });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch messages.' });
+        console.error('Admin list error:', error);
+        return fail(res, 500, 'FETCH_FAILED', 'Failed to fetch messages.');
     }
 });
 
@@ -139,25 +191,26 @@ app.get('/api/contact/messages', requireAdmin, (req, res) => {
 app.patch('/api/contact/messages/:id', requireAdmin, (req, res) => {
     try {
         const { id } = req.params;
-        const { status } = req.body;
-        
+        const { status } = req.body || {};
+
         if (!['new', 'read', 'replied', 'archived'].includes(status)) {
-            return res.status(400).json({ error: 'Invalid status.' });
+            return fail(res, 400, 'INVALID_STATUS', 'That status is not recognised.');
         }
 
         const messages = ContactService.getMessages();
         const messageIndex = messages.findIndex(m => m.id === id);
 
         if (messageIndex === -1) {
-            return res.status(404).json({ error: 'Message not found.' });
+            return fail(res, 404, 'NOT_FOUND', 'Message not found.');
         }
 
         messages[messageIndex].status = status;
         ContactService.saveMessages(messages);
 
-        res.json({ success: true, message: messages[messageIndex] });
+        return ok(res, { message: messages[messageIndex] });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to update message.' });
+        console.error('Admin update error:', error);
+        return fail(res, 500, 'UPDATE_FAILED', 'Failed to update message.');
     }
 });
 
@@ -182,13 +235,25 @@ Guidelines:
 - If you don't know the answer, politely say so.
 `;
 
-// Chat API Endpoint
-app.post('/api/chat', async (req, res) => {
-    try {
-        const { message, context } = req.body;
+const chatLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 12,
+    message: 'You are asking faster than Heritage AI can answer. Please wait a moment.'
+});
 
-        if (!message) {
-            return res.status(400).json({ error: 'Message is required' });
+// Chat API Endpoint
+app.post('/api/chat', chatLimiter, async (req, res) => {
+    try {
+        const { message, context } = req.body || {};
+
+        if (!message || !String(message).trim()) {
+            return fail(res, 400, 'MESSAGE_REQUIRED', 'Please enter a question.');
+        }
+        if (String(message).length > 2000) {
+            return fail(res, 400, 'MESSAGE_TOO_LONG', 'Please shorten your question to 2000 characters or fewer.');
+        }
+        if (!process.env.OPENAI_API_KEY) {
+            return fail(res, 503, 'AI_UNCONFIGURED', 'Heritage AI is not configured on this server.');
         }
 
         // Build messages array
@@ -196,15 +261,18 @@ app.post('/api/chat', async (req, res) => {
             { role: 'system', content: SYSTEM_PROMPT }
         ];
 
-        // Inject context if available
+        // Inject context if available. Values reach the prompt from the browser,
+        // so they are clipped rather than passed through at arbitrary length.
         if (context && context.type && context.id) {
+            const type = String(context.type).slice(0, 40);
+            const id = String(context.id).slice(0, 120);
             messages.push({
                 role: 'system',
-                content: `Current User Context: The user is looking at a ${context.type} with the identifier "${context.id}". Tailor your response to this context if relevant.`
+                content: `Current User Context: The user is looking at a ${type} with the identifier "${id}". Tailor your response to this context if relevant.`
             });
         }
 
-        messages.push({ role: 'user', content: message });
+        messages.push({ role: 'user', content: String(message) });
 
         const model = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
 
@@ -217,17 +285,39 @@ app.post('/api/chat', async (req, res) => {
 
         const reply = completion.choices[0].message.content;
 
-        res.json({ reply });
+        return ok(res, { reply });
     } catch (error) {
+        // Logged in full server-side; the client is told only that it failed,
+        // so upstream provider details never reach the browser.
         console.error('OpenAI API Error:', error);
-        res.status(500).json({ 
-            error: 'Failed to communicate with Heritage AI',
-            details: error.message 
-        });
+        return fail(res, 502, 'AI_UNAVAILABLE', 'Heritage AI could not answer just now. Please try again.');
     }
+});
+
+// Catch-all error handler, so a thrown route never returns a stack trace.
+app.use((error, req, res, next) => {
+    if (res.headersSent) return next(error);
+
+    // express.json rejects oversized and malformed bodies before any route runs;
+    // both deserve their real status rather than a blanket 500.
+    if (error.type === 'entity.too.large') {
+        return fail(res, 413, 'PAYLOAD_TOO_LARGE', 'That request is too large.');
+    }
+    if (error.type === 'entity.parse.failed') {
+        return fail(res, 400, 'MALFORMED_JSON', 'That request body is not valid JSON.');
+    }
+
+    console.error('Unhandled error:', error);
+    return fail(res, 500, 'INTERNAL_ERROR', 'Something went wrong. Please try again.');
 });
 
 // Start the server
 app.listen(port, () => {
     console.log(`Antara server running on http://localhost:${port}`);
+    if (!isConfigured()) {
+        console.warn('  ADMIN_PASSWORD is not set - the admin area is disabled.');
+    }
+    if (!process.env.OPENAI_API_KEY) {
+        console.warn('  OPENAI_API_KEY is not set - Heritage AI is disabled.');
+    }
 });

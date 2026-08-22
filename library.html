@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Antara Heritage Library | अन्तरा ग्रन्थागार — Classical Sanskrit & Vedic Texts</title>
   <meta name="description" content="A scholarly digital library for classical Indian heritage texts including the Bhagavad Gita, Rigveda Samhita, and Principal Upanishads with interlinear translations, audio recitation, and Vedic Tanpura drone.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   
   <!-- Classical Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -428,6 +429,7 @@
           <div class="audio-text-info">
             <div class="audio-verse-citation" id="audioCitation">Bhagavad Gita 2.47</div>
             <div class="audio-verse-snippet" id="audioSnippet">कर्मण्येवाधिकारस्ते मा फलेषु कदाचन...</div>
+            <div class="audio-status-note" id="audioStatusNote" role="status" aria-live="polite" hidden></div>
           </div>
         </div>
 
@@ -598,6 +600,8 @@
 
   <!-- Embedded Data Layer (Bypasses file:// CORS) -->
   <script src="texts_data.js"></script>
+  <!-- Narration language + voice resolution (must load before library.js) -->
+  <script src="narration.js"></script>
   <!-- App Engine Logic -->
   <script src="library.js"></script>
 </body>

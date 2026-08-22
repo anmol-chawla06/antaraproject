@@ -1,5 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
+    // Keeps Tab inside an open dialog and restores focus to whatever opened it,
+    // so keyboard users are never stranded behind an overlay.
+    const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    function createFocusTrap(container) {
+        let previouslyFocused = null;
+
+        const onKeydown = (e) => {
+            if (e.key !== 'Tab') return;
+            const items = Array.from(container.querySelectorAll(FOCUSABLE))
+                .filter(el => el.offsetParent !== null);
+            if (items.length === 0) return;
+
+            const first = items[0];
+            const last = items[items.length - 1];
+
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        };
+
+        return {
+            activate() {
+                previouslyFocused = document.activeElement;
+                container.addEventListener('keydown', onKeydown);
+            },
+            release() {
+                container.removeEventListener('keydown', onKeydown);
+                if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+                    previouslyFocused.focus();
+                }
+                previouslyFocused = null;
+            }
+        };
+    }
+
     // Navbar Scroll Effect
     const navbar = document.getElementById('navbar');
     
@@ -17,37 +57,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
     
     if (mobileMenuBtn && mobileNav) {
+        const setMenuOpen = (open) => {
+            mobileNav.classList.toggle('open', open);
+            mobileMenuBtn.setAttribute('aria-expanded', String(open));
+            mobileMenuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        };
+        setMenuOpen(false);
+
         mobileMenuBtn.addEventListener('click', () => {
-            mobileNav.classList.toggle('open');
+            setMenuOpen(!mobileNav.classList.contains('open'));
         });
 
         mobileNavLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileNav.classList.remove('open');
-            });
+            link.addEventListener('click', () => setMenuOpen(false));
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
+                setMenuOpen(false);
+                mobileMenuBtn.focus();
+            }
         });
     }
 
     // Theme Toggle Logic
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     if (themeToggleBtn) {
-        const currentTheme = localStorage.getItem('theme') || 'dark';
-        if (currentTheme === 'light') {
-            document.documentElement.setAttribute('data-theme', 'light');
-            themeToggleBtn.textContent = '☾';
-        }
+        const applyTheme = (theme) => {
+            const light = theme === 'light';
+            if (light) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+            themeToggleBtn.textContent = light ? '☾' : '☀';
+            themeToggleBtn.setAttribute('aria-pressed', String(light));
+            themeToggleBtn.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+        };
+
+        // Honour the visitor's system setting until they choose for themselves.
+        const stored = localStorage.getItem('theme');
+        const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+        applyTheme(stored || (prefersLight ? 'light' : 'dark'));
 
         themeToggleBtn.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            if (current === 'light') {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'dark');
-                themeToggleBtn.textContent = '☀';
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                themeToggleBtn.textContent = '☾';
-            }
+            const nowLight = document.documentElement.getAttribute('data-theme') !== 'light';
+            applyTheme(nowLight ? 'light' : 'dark');
+            localStorage.setItem('theme', nowLight ? 'light' : 'dark');
         });
     }
 
@@ -89,19 +145,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('aiSendBtn');
     const suggestionChips = document.querySelectorAll('.ai-chip');
 
+    const aiTrap = aiPanel ? createFocusTrap(aiPanel) : null;
+
+    const openAiPanel = () => {
+        aiPanel.classList.add('active');
+        aiPanel.setAttribute('aria-hidden', 'false');
+        if (aiTrap) aiTrap.activate();
+        if (chatInput) chatInput.focus();
+    };
+
+    const closeAiPanel = () => {
+        aiPanel.classList.remove('active');
+        aiPanel.setAttribute('aria-hidden', 'true');
+        if (aiTrap) aiTrap.release();
+    };
+
     const toggleAiPanel = () => {
-        aiPanel.classList.toggle('active');
-        if(aiPanel.classList.contains('active') && chatInput) {
-            chatInput.focus();
+        if (aiPanel.classList.contains('active')) {
+            closeAiPanel();
+        } else {
+            openAiPanel();
         }
     };
 
     if(aiBtn && aiPanel && closeAiBtn) {
+        aiPanel.setAttribute('aria-hidden', 'true');
         aiBtn.addEventListener('click', toggleAiPanel);
         if (aiNavBtn) aiNavBtn.addEventListener('click', toggleAiPanel);
 
-        closeAiBtn.addEventListener('click', () => {
-            aiPanel.classList.remove('active');
+        closeAiBtn.addEventListener('click', closeAiPanel);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && aiPanel.classList.contains('active')) {
+                closeAiPanel();
+            }
         });
 
         // Chat UI Helpers
@@ -130,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     appendMessage(reply, 'assistant');
                 } catch (err) {
                     chatHistory.removeChild(loadingMsg);
-                    appendMessage('I am currently unable to reach the archive. Please try again later.', 'assistant');
+                    appendMessage(err.message || 'I am currently unable to reach the archive. Please try again later.', 'assistant');
                 }
             } else {
                 chatHistory.removeChild(loadingMsg);
@@ -188,22 +265,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const stateLoading = document.getElementById('contactLoadingState');
     const stateSuccess = document.getElementById('contactSuccessState');
     const stateError = document.getElementById('contactErrorState');
+    const errorText = document.getElementById('contactErrorText');
+    const errorTextDefault = errorText ? errorText.textContent : '';
     const btnRetryContact = document.getElementById('btnRetryContact');
 
+    const contactTrap = contactModal ? createFocusTrap(contactModal) : null;
+
     const openContactModal = () => {
-        if(contactModal) contactModal.classList.add('active');
+        if(contactModal) {
+            contactModal.classList.add('active');
+            contactModal.setAttribute('aria-hidden', 'false');
+            if (contactTrap) contactTrap.activate();
+            const firstField = document.getElementById('contactName');
+            if (firstField) firstField.focus();
+        }
         document.body.style.overflow = 'hidden'; // Prevent scrolling
     };
 
     const closeContactModal = () => {
         if(contactModal) {
             contactModal.classList.remove('active');
+            contactModal.setAttribute('aria-hidden', 'true');
+            if (contactTrap) contactTrap.release();
             // Reset form state after closing
             setTimeout(() => {
                 contactForm.style.display = 'block';
                 stateLoading.style.display = 'none';
                 stateSuccess.style.display = 'none';
                 stateError.style.display = 'none';
+                if (errorText) errorText.textContent = errorTextDefault;
                 contactForm.reset();
                 document.querySelectorAll('.form-group').forEach(g => g.classList.remove('invalid'));
             }, 300);
@@ -279,14 +369,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         message: messageInput.value.trim()
                     })
                 })
-                .then(res => res.json().then(data => ({ status: res.status, body: data })))
+                .then(res => res.json().catch(() => null).then(data => ({ status: res.status, body: data })))
                 .then(({ status, body }) => {
                     stateLoading.style.display = 'none';
-                    if (status === 200 && body.success) {
+                    if (status === 200 && body && body.success) {
                         stateSuccess.style.display = 'block';
-                    } else {
-                        stateError.style.display = 'block';
+                        return;
                     }
+                    // Tell the visitor what to correct instead of a generic failure.
+                    const detail = body && body.error && body.error.message;
+                    if (detail && errorText) errorText.textContent = detail;
+                    stateError.style.display = 'block';
                 })
                 .catch(err => {
                     console.error('Contact submit error:', err);

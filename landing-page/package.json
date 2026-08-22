@@ -1,14 +1,16 @@
 {
   "name": "antara-landing",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"No tests for the landing server yet\" && exit 0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Antara landing page, Heritage AI proxy, and contact backend.",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
