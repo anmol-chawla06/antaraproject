@@ -8,7 +8,7 @@ Antara is a static, framework-free cultural heritage platform for India. It is a
 
 | App | Entry point | Own JS/data | Backend |
 | :--- | :--- | :--- | :--- |
-| Festival Temporal Grid | `index.html` | inline `<script>`, fetches `festivals_database.json` | `bot.js` (Telegram bot) |
+| Festival Temporal Grid | `index.html` | inline `<script>`, fetches `festivals_database.json` | none (pure static) |
 | Destinations Map/Explorer | `map.html` | `map-data.js` + `data.js` + `app.js` | none (pure static) |
 | Heritage Library (scriptures) | `library.html` | `texts_data.js` + `narration.js` + `library.js` | none (pure static) |
 | Marketing landing page | `landing-page/index.html` | `landing-page/js/main.js` + `chatService.js` | `landing-page/server.js` (Express) |
@@ -26,11 +26,7 @@ npx serve -l 8080 .
 ```
 Then open `http://localhost:8080/index.html`, `/map.html`, or `/library.html`.
 
-Run the festival Telegram bot (root package.json):
-```bash
-npm install
-node bot.js        # requires TELEGRAM_TOKEN and GEMINI_API_KEY env vars
-```
+The repo root has **no npm dependencies** — the static apps are plain browser JS and the validation scripts use only Node built-ins. Only `landing-page/` needs `npm install`.
 
 Run the landing page backend (separate npm project, separate deps):
 ```bash
@@ -63,11 +59,12 @@ There is no linter, formatter, or automated test suite configured anywhere in th
 ## Architecture notes
 
 ### Data-layer philosophy
-Every app is built around **zero external API calls for core content** — all content lives in static JSON committed to the repo (`festivals_database.json`, `texts_database.json`/`texts_data.js`, `data.js`/`map-data.js`). Pages `fetch()` or directly `<script>`-include these files; the Telegram bot loads them with `fs.readFileSync` at startup. When adding content, prefer extending these static files over introducing a live API dependency, since "zero-latency / offline-capable" is a stated design goal (see `TECHSTACK.md`, `WORKFLOW.md`).
+Every app is built around **zero external API calls for core content** — all content lives in static JSON committed to the repo (`festivals_database.json`, `texts_database.json`/`texts_data.js`, `data.js`/`map-data.js`). Pages `fetch()` or directly `<script>`-include these files. When adding content, prefer extending these static files over introducing a live API dependency, since "zero-latency / offline-capable" is a stated design goal (see `TECHSTACK.md`, `WORKFLOW.md`).
 
-### Festival portal (`index.html` + `bot.js`)
-- `index.html` renders a 12-month calendar grid from `festivals_database.json`, and a detail panel with a **◈ Plan a trip** button that deep-links to `https://t.me/AntaraV1bot?start=<festival_id>`.
-- `bot.js` is a Telegram bot (`node-telegram-bot-api`) that intercepts `/start <festival_id>`, does an exact lookup against `festivals_database.json`, and also runs a conversational RAG assistant via Google Gemini (`@google/generative-ai`) with multi-turn per-chat session memory (`userSessions` Map) and multi-model failover (`gemini-3.7-flash` → `gemini-3.5-flash` → `gemini-3.1-flash-lite`), falling back to a deterministic offline response if the AI call fails/times out. See `WORKFLOW.md` for the full sequence diagram.
+### Festival portal (`index.html`)
+- `index.html` renders a 12-month calendar grid from `festivals_database.json`, and a detail panel with a **◈ Plan your visit** button that deep-links into the map at `map.html#/india/<state-slug>`.
+- The slug is derived by `stateSlug()` in `index.html` and must stay consistent with the `slug` values in `STATES_META` (`data.js`) — a festival whose `state` has no matching entry will land on a state the map cannot render.
+- **The Telegram bot was retired.** `bot.js`, `node-telegram-bot-api`, `@google/generative-ai`, `TELEGRAM_TOKEN` and `GEMINI_API_KEY` were removed entirely; nothing in Antara depended on them. `WORKFLOW.md` and `TECHSTACK.md` still describe the bot and are stale on that point.
 - Adding a festival = adding an entry to `festivals_database.json` with the schema documented in `TECHSTACK.md` §3 (`id`, `name`, `state`, `month`, `all_months`, `timing`, `location`, `coordinates`, `history`, `culture_and_rituals`, `how_to_join`, `local_language`, `uniqueness`, `image_placeholder`); both the frontend and the bot read this same file, no separate sync step needed. (`TECHSTACK.md` also lists a `cuisine` field, but no entry in the live data has ever carried one.)
 
 ### Heritage Library (`library.html` + `library.js` + `data_builders/`)
@@ -83,7 +80,7 @@ Every app is built around **zero external API calls for core content** — all c
 - `app.js` projects each destination's lon/lat into SVG space using the *same formula* as `gen.py`'s `project()` — keep these two implementations numerically identical if bounds ever change. It also manages a `localStorage`-backed favorites list (`antara.favorites`).
 
 ### Landing page (`landing-page/`)
-- Fully separate Node project (own `package.json`, own `node_modules`) using Express + the `openai` SDK, distinct from the root's Telegram bot stack.
+- Fully separate Node project (own `package.json`, own `node_modules`) using Express + the `openai` SDK. It is the only Node project in the repo.
 - `server.js` serves the landing page statically, guards `/admin` with real signed-cookie sessions (`middleware/adminAuth.js` — admin is **disabled outright** unless `ADMIN_PASSWORD` is set; there is no default credential), applies per-IP rate limiting (`middleware/rateLimit.js`), and exposes a contact form API (`POST /api/contact`, `GET/PATCH /api/contact/messages/:id`) backed by flat-file JSON storage (`landing-page/data/contact_messages.json`).
 - All API responses use one envelope: `{ success: true, data }` or `{ success: false, error: { code, message } }`. Errors never carry stack traces or upstream provider messages. Changing a response shape means updating its consumer in the same commit.
 - `landing-page/js/chatService.js` calls `POST /api/chat`, which **is** implemented server-side (`server.js`). The API key stays on the server; the browser never holds it.

@@ -2,10 +2,7 @@
   "name": "antara",
   "version": "1.0.0",
   "description": "Antara - a digital gateway to India's living heritage: festivals, destinations, and classical texts.",
-  "main": "bot.js",
   "scripts": {
-    "start": "node bot.js",
-    "bot": "node bot.js",
     "serve": "python -m http.server 8080",
     "build:library": "python build_all.py",
     "build:map": "python gen.py",
@@ -19,10 +16,5 @@
   ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "@google/generative-ai": "^0.24.1",
-    "dotenv": "^17.4.2",
-    "node-telegram-bot-api": "^1.2.0"
-  }
+  "type": "commonjs"
 }

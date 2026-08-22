@@ -13,7 +13,7 @@ Four independent front ends in one repository, two Node backends, and a Python d
 
 | Experience | Entry point | Scripts it loads | Backend |
 | :--- | :--- | :--- | :--- |
-| Festival calendar | `index.html` | inline; fetches `festivals_database.json` | `bot.js` (Telegram) |
+| Festival calendar | `index.html` | inline; fetches `festivals_database.json` | none |
 | Destinations map | `map.html` | `map-data.js` → `data.js` → `app.js` | none |
 | Heritage Library | `library.html` | `texts_data.js` → `narration.js` → `library.js` | none |
 | Landing page | `landing-page/index.html` | `js/chatService.js`, `js/main.js` | `landing-page/server.js` |
@@ -36,29 +36,22 @@ Because the apps are independent, **a change to one script does not affect anoth
 git clone <repository-url>
 cd "Antara India"
 
-npm install                  # Telegram bot dependencies
 cd landing-page && npm install && cd ..
 ```
+
+The repository root has **no npm dependencies** — the three static apps run on plain browser JavaScript, and the validation scripts use only Node built-ins. Only the web server needs installing.
 
 ---
 
 ## 3. Environment variables
 
-Two separate `.env` files. Copy each example and fill it in — **never commit a `.env`.**
+One `.env` file, for the web server. Copy the example and fill it in — **never commit a `.env`.**
 
 ```bash
-cp .env.example .env                          # Telegram bot
-cp landing-page/.env.example landing-page/.env  # web server
+cp landing-page/.env.example landing-page/.env
 ```
 
-**Root `.env`** — only needed to run the Telegram bot:
-
-| Variable | Purpose |
-| :--- | :--- |
-| `TELEGRAM_TOKEN` | Bot token from @BotFather |
-| `GEMINI_API_KEY` | Google AI Studio key for the bot's assistant |
-
-**`landing-page/.env`** — needed for the web server:
+**`landing-page/.env`**:
 
 | Variable | Purpose |
 | :--- | :--- |
@@ -100,14 +93,6 @@ npm run serve      # python -m http.server 8080
 
 Heritage AI and the contact form will not work in this mode — they need `server.js`.
 
-### The Telegram bot
-
-```bash
-npm run bot
-```
-
-Requires `TELEGRAM_TOKEN` and `GEMINI_API_KEY`.
-
 > **Port conflict:** `server.js` and the static server both default to 8080. Give one a different port if you run both.
 
 ---
@@ -120,7 +105,6 @@ Every app's core content is static JSON committed to the repository — `festiva
 
 ### Backends
 
-- **`bot.js`** — Telegram bot. Intercepts `/start <festival_id>`, looks the ID up in `festivals_database.json`, and runs a conversational assistant on Google Gemini with multi-model failover and a deterministic offline fallback.
 - **`landing-page/server.js`** — Express. Serves static files, proxies Heritage AI to OpenAI, stores contact messages, and guards the admin area.
   - `middleware/adminAuth.js` — signed-cookie admin sessions
   - `middleware/rateLimit.js` — per-IP fixed-window limiting
@@ -218,7 +202,7 @@ The inbox at `/admin/messages/` requires a signed session. Message fields are re
 
 `id` · `name` · `state` · `month` · `all_months` · `timing` · `location` · `coordinates` · `history` · `culture_and_rituals` · `how_to_join` · `local_language` · `uniqueness` · `image_placeholder`
 
-`id` must match the `fest-NN` form the Telegram deep link uses.
+`state` must match a key in `STATES_META` (`data.js`), because the festival panel's "Plan your visit" button deep-links to `map.html#/india/<state-slug>`.
 
 ### Library
 
