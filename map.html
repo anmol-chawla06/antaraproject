@@ -6,7 +6,7 @@
 <title>Antara — Explore India, by Map</title>
 <meta name="description" content="An interactive cartographic guide to India's heritage — explore states, discover UNESCO sites and historic destinations, and plan your journey.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="app.css?v=6">
+<link rel="stylesheet" href="app.css?v=8">
 <script>
 (function() {
   var savedTheme = localStorage.getItem('antara_theme') || 'dark';
@@ -120,10 +120,14 @@
 <!-- ============================== TOAST =================================== -->
 <div class="toast" id="toast"></div>
 
-<script src="map-data.js?v=6"></script>
-<script src="data.js?v=6"></script>
+<script src="map-data.js?v=8"></script>
+<script src="data.js?v=8"></script>
 <!-- Heritage site media resolver (must load before app.js) -->
-<script src="site-media.js?v=6"></script>
-<script src="app.js?v=6"></script>
+<script src="site-media.js?v=8"></script>
+<!-- Shared image viewer, also used by Visual India (must load before app.js) -->
+<script src="lightbox.js?v=8"></script>
+<!-- State grouping + heritage-status rules, shared with visual-india.html -->
+<script src="visual-india.js?v=8"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

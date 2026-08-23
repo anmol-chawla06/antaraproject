@@ -52,6 +52,17 @@ html {
   padding: 0;
 }
 
+/* Inline icons are authored with a 24x24 viewBox and no intrinsic size, so in
+   a flex or grid parent they stretch to fill it — which is how a 24px warning
+   glyph ended up drawn 700px wide across every site page. Give every icon a
+   default size; components that want another size override it by class. The
+   map's own geometry uses different viewBoxes and is untouched. */
+svg[viewBox="0 0 24 24"] {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
 html, body {
   width: 100%;
   height: 100%;
@@ -1103,31 +1114,6 @@ button {
   width: 100%;
   height: 100%;
 }
-.view-toggle-btn {
-  position: absolute;
-  top: 32px;
-  right: 92px;
-  height: 48px;
-  padding: 0 20px;
-  border-radius: 24px;
-  background: rgba(10, 10, 10, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 10;
-  color: var(--cream);
-  border: 1px solid var(--ink-10);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.view-toggle-btn:hover {
-  background: var(--surface);
-  border-color: var(--gold);
-}
 .dest-hero-scrim {
   position: absolute;
   inset: 0;
@@ -1679,6 +1665,21 @@ button {
   border-top: 1px solid var(--ink-05);
 }
 
+/* Hands off to that state's Visual India gallery. */
+.dest-cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ink-70);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink-25);
+  padding-bottom: 3px;
+}
+.dest-cta-link:hover { color: var(--gold); border-bottom-color: var(--gold); }
+.dest-cta-link svg { width: 14px; height: 14px; }
+
 /* Toast */
 #toast {
   position: fixed;
@@ -1788,9 +1789,21 @@ button {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--surface-raised);
+  padding: 20px 16px 38px;
+  text-align: center;
+  background:
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--placeholder-tint, #C9A86A) 11%, var(--surface-raised)),
+      var(--surface-raised) 62%);
 }
-.media-placeholder svg { width: 100%; height: 100%; object-fit: cover; }
+.media-placeholder-name {
+  font-family: var(--font-serif);
+  font-size: clamp(15px, 2.2vw, 22px);
+  line-height: 1.25;
+  color: var(--ink-70);
+  max-width: 22ch;
+  text-wrap: balance;
+}
 .media-placeholder-note {
   position: absolute;
   bottom: 10px;
@@ -1840,6 +1853,52 @@ button {
   max-width: 34ch;
   line-height: 1.5;
 }
+.btn-booking { display: inline-flex; align-items: center; gap: 8px; }
+.btn-booking svg { width: 16px; height: 16px; }
+
+/* Shown in place of the booking button when no official portal exists. */
+.plan-info {
+  margin-top: 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent, var(--ink-45));
+  border-radius: 4px;
+  background: var(--paper-2, transparent);
+}
+.plan-info-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-70);
+  margin-bottom: 9px;
+}
+.plan-info-head svg { width: 15px; height: 15px; flex: none; }
+.plan-info-text {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ink-70);
+  margin: 0;
+  max-width: 62ch;
+}
+.plan-info-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 2px;
+}
+.plan-info-link:hover { border-bottom-color: currentColor; }
+.plan-info-link svg { width: 14px; height: 14px; flex: none; }
 
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 .hero-plan-btn {
@@ -1876,6 +1935,18 @@ button {
   display: block;
 }
 .thumb-failed { background: var(--surface-raised); }
+/* Stands in for a missing thumbnail so list rows keep their rhythm. */
+.thumb-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--ink-45);
+  background: color-mix(in srgb, var(--placeholder-tint, #C9A86A) 14%, var(--surface-raised));
+}
 
 /* ---------------------------------------------------------------------- */
 /* LIGHTBOX                                                               */
@@ -1966,6 +2037,9 @@ button {
   .lb-figure img { max-height: 68vh; }
   .plan-cta { flex-direction: column; align-items: flex-start; gap: 10px; }
   .plan-cta-note { max-width: none; }
+  .plan-cta .btn-primary { width: 100%; justify-content: center; }
+  .plan-info { padding: 16px; }
+  .plan-info-text { max-width: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,408 @@
+/* ----------------------------------------------------------------------
+   VISUAL INDIA
+   State-level visual discovery. Inherits every colour, font and the image
+   viewer from app.css; this file only adds the two views that are new.
+   ---------------------------------------------------------------------- */
+
+.vi-page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.vi-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px 96px;
+}
+
+/* --- top bar ---------------------------------------------------------- */
+
+.vi-top {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 32px;
+  background: var(--surface-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--ink-10);
+}
+.vi-brand {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  letter-spacing: .01em;
+  color: var(--cream);
+  text-decoration: none;
+}
+.vi-top-spacer { flex: 1; }
+.vi-top-link {
+  font-size: 12.5px;
+  color: var(--ink-70);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  white-space: nowrap;
+}
+.vi-top-link:hover { color: var(--cream); border-bottom-color: var(--gold); }
+
+/* --- masthead --------------------------------------------------------- */
+
+.vi-masthead { padding: 68px 0 40px; }
+.vi-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+.vi-title {
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 7vw, 78px);
+  line-height: 1.02;
+  font-weight: 500;
+  color: var(--cream);
+  text-wrap: balance;
+  margin-bottom: 18px;
+}
+.vi-lede {
+  font-size: clamp(15px, 1.6vw, 18px);
+  line-height: 1.6;
+  color: var(--ink-70);
+  max-width: 46ch;
+}
+.vi-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 34px;
+  margin-top: 34px;
+  padding-top: 26px;
+  border-top: 1px solid var(--ink-10);
+}
+.vi-stat .n {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  color: var(--cream);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.vi-stat .k {
+  margin-top: 7px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+
+/* --- state index ------------------------------------------------------ */
+
+.vi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  gap: 26px;
+  margin-top: 44px;
+}
+.vi-card {
+  position: relative;
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+  text-decoration: none;
+  background: var(--surface-raised);
+  aspect-ratio: 4 / 5;
+  isolation: isolate;
+}
+.vi-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8,8,8,.93) 0%, rgba(8,8,8,.55) 42%, rgba(8,8,8,.12) 100%);
+  z-index: 1;
+}
+.vi-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .9s cubic-bezier(.2,.7,.3,1);
+}
+.vi-card:hover img { transform: scale(1.045); }
+.vi-card-body {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  padding: 22px 22px 20px;
+}
+.vi-card-name {
+  font-family: var(--font-serif);
+  font-size: 25px;
+  line-height: 1.12;
+  color: var(--cream);
+  text-wrap: balance;
+}
+.vi-card-meta {
+  margin-top: 9px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.vi-card-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink-25); }
+.vi-card-desc {
+  margin-top: 11px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-70);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.vi-card:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* --- state view ------------------------------------------------------- */
+
+.vi-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 34px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+  text-decoration: none;
+}
+.vi-back:hover { color: var(--cream); }
+.vi-back svg { width: 14px; height: 14px; }
+
+.vi-hero {
+  position: relative;
+  margin-top: 22px;
+  border-radius: 5px;
+  overflow: hidden;
+  aspect-ratio: 21 / 9;
+  background: var(--surface-raised);
+}
+.vi-hero img { width: 100%; height: 100%; object-fit: cover; }
+.vi-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8,8,8,.9) 0%, rgba(8,8,8,.3) 55%, transparent 100%);
+}
+.vi-hero-body {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  padding: 34px 36px 30px;
+}
+.vi-hero-name {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5.2vw, 62px);
+  line-height: 1.03;
+  color: var(--cream);
+  text-wrap: balance;
+}
+.vi-hero-desc {
+  margin-top: 12px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-70);
+  max-width: 58ch;
+}
+.vi-hero-credit {
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  z-index: 3;
+  font-size: 10px;
+  color: rgba(247,243,236,.5);
+  background: rgba(8,8,8,.55);
+  padding: 4px 9px;
+  border-radius: 3px;
+}
+.vi-hero-credit a { color: inherit; }
+
+.vi-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 22px;
+}
+
+.vi-section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 58px 0 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ink-10);
+}
+.vi-section-head h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 3vw, 31px);
+  font-weight: 500;
+  color: var(--cream);
+}
+.vi-section-head .count {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+  white-space: nowrap;
+}
+
+/* --- site groups ------------------------------------------------------ */
+
+.vi-site {
+  display: grid;
+  grid-template-columns: minmax(210px, 300px) 1fr;
+  gap: 34px;
+  align-items: start;
+  padding: 34px 0;
+  border-bottom: 1px solid var(--ink-05);
+}
+.vi-site:last-child { border-bottom: 0; }
+.vi-site-name {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  line-height: 1.14;
+  color: var(--cream);
+  text-wrap: balance;
+}
+.vi-site-loc {
+  margin-top: 9px;
+  font-size: 12.5px;
+  color: var(--ink-45);
+}
+.vi-badge {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 2px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+/* A heritage label that is not a UNESCO inscription is stated plainly, without
+   the gold that reads as a distinction. */
+.vi-badge.is-plain {
+  border-color: var(--ink-25);
+  color: var(--ink-70);
+}
+.vi-site-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-size: 12.5px;
+  color: var(--cream);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink-25);
+  padding-bottom: 3px;
+}
+.vi-site-link:hover { border-bottom-color: var(--gold); color: var(--gold); }
+.vi-site-link svg { width: 14px; height: 14px; }
+
+.vi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.vi-shot {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--surface-raised);
+  cursor: zoom-in;
+  display: block;
+  width: 100%;
+}
+.vi-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .7s cubic-bezier(.2,.7,.3,1), opacity .5s ease;
+}
+.vi-shot:hover img { transform: scale(1.05); }
+.vi-shot:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.vi-shot-more {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: rgba(8,8,8,.7);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--cream);
+}
+.vi-strip-empty {
+  grid-column: 1 / -1;
+  padding: 26px;
+  border: 1px dashed var(--ink-10);
+  border-radius: 3px;
+  font-size: 12.5px;
+  color: var(--ink-45);
+}
+
+.vi-foot {
+  margin-top: 72px;
+  padding-top: 22px;
+  border-top: 1px solid var(--ink-10);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-45);
+}
+.vi-foot a { color: var(--ink-70); }
+
+/* --- responsive ------------------------------------------------------- */
+
+@media (max-width: 1024px) {
+  .vi-shell { padding: 0 24px 80px; }
+  .vi-site { grid-template-columns: 1fr; gap: 20px; }
+  .vi-hero-body { padding: 26px 26px 22px; }
+}
+
+@media (max-width: 700px) {
+  .vi-top { padding: 13px 18px; gap: 12px; }
+  .vi-top-link { font-size: 11.5px; }
+  .vi-shell { padding: 0 18px 64px; }
+  .vi-masthead { padding: 40px 0 26px; }
+  .vi-stats { gap: 22px; }
+  .vi-grid { grid-template-columns: 1fr; gap: 18px; }
+  .vi-card { aspect-ratio: 3 / 2; }
+  .vi-hero { aspect-ratio: 4 / 3; }
+  .vi-strip { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  /* A lone third picture should not sit in a half-width slot. */
+  .vi-strip .vi-shot:nth-child(3):last-child { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
+  .vi-section-head { margin-top: 38px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vi-card img, .vi-shot img { transition: none; }
+  .vi-card:hover img, .vi-shot:hover img { transform: none; }
+}

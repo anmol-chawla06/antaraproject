@@ -347,7 +347,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹540 (additional ₹200 for main mausoleum)",
       "childFree": "under 15",
       "note": "Night viewing is available for 5 nights around the full moon (except Fridays and Ramadan).",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "agra-fort",
@@ -515,7 +519,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹40",
       "childFree": "under 15",
       "note": "Online ticket booking provides a small discount.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "humayuns-tomb",
@@ -736,7 +744,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹40",
       "childFree": "under 15",
       "note": "Combo tickets with nearby monuments are sometimes available.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "qutub-minar",
@@ -961,7 +973,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹50",
       "childFree": "under 15",
       "note": "Evening light and sound show requires a separate ticket.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "humayuns-tomb",
@@ -1172,7 +1188,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "Yes",
       "note": "The adjacent National War Memorial has specific opening hours (9:00 AM - 6:30 PM).",
-      "bookingUrl": ""
+      "ticketNote": "Free to visit. India Gate is an open public memorial with no ticket or entry fee.",
+      "authorityUrl": "https://www.delhitourism.gov.in/",
+      "authorityLabel": "Delhi Tourism"
     },
     "nearby": [
       "red-fort",
@@ -1378,7 +1396,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹50",
       "childFree": "under 7",
       "note": "Composite tickets available for multiple monuments.",
-      "bookingUrl": "http://www.artandculture.rajasthan.gov.in/"
+      "bookingUrl": "https://obms-tourist.rajasthan.gov.in/place-details/Hawa-mahal",
+      "bookingProvider": "Rajasthan Tourism (OBMS)",
+      "authorityUrl": "https://www.tourism.rajasthan.gov.in/hawa-mahal.html",
+      "authorityLabel": "Rajasthan Tourism",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "amber-fort"
@@ -1604,7 +1626,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹100",
       "childFree": "under 7",
       "note": "Night viewing offers a very different, beautifully lit experience.",
-      "bookingUrl": "http://www.artandculture.rajasthan.gov.in/"
+      "bookingUrl": "https://obms-tourist.rajasthan.gov.in/place-details/Amber-Fort",
+      "bookingProvider": "Rajasthan Tourism (OBMS)",
+      "authorityUrl": "https://www.tourism.rajasthan.gov.in/",
+      "authorityLabel": "Rajasthan Tourism",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "hawa-mahal"
@@ -1772,7 +1798,11 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "Yes",
       "note": "Special darshan lines are available for a fee to bypass long queues.",
-      "bookingUrl": ""
+      "bookingUrl": "https://maduraimeenakshi.hrce.tn.gov.in/ticketing/service_collectionindex.php?tid=31962&scode=21&sscode=1&target_type=1&paycategory=6",
+      "bookingProvider": "Tamil Nadu HR&CE Department",
+      "authorityUrl": "https://maduraimeenakshi.hrce.tn.gov.in/",
+      "authorityLabel": "Tamil Nadu HR&CE",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "brihadeeswara-temple"
@@ -1981,7 +2011,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹100",
       "childFree": "under 10",
       "note": "Illumination occurs on Sundays and public holidays from 7:00 PM to 7:45 PM.",
-      "bookingUrl": "https://mysorepalace.karnataka.gov.in/"
+      "bookingUrl": "https://mysorepalace.karnataka.gov.in/book-tickets.php",
+      "bookingProvider": "Mysore Palace Board",
+      "authorityUrl": "https://mysorepalace.karnataka.gov.in/",
+      "authorityLabel": "Mysore Palace Board",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [],
     "sources": [
@@ -2188,7 +2222,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "Yes",
       "note": "Ferries to Elephanta Caves operate from 9:00 AM to 2:00 PM (closed Mondays).",
-      "bookingUrl": ""
+      "ticketNote": "Free to visit. The Gateway is an open seafront monument; only the boat jetty to Elephanta charges a fare, paid at the pier.",
+      "authorityUrl": "https://maharashtratourism.gov.in/",
+      "authorityLabel": "Maharashtra Tourism"
     },
     "nearby": [
       "ajanta-caves"
@@ -2405,7 +2441,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹40",
       "childFree": "under 15",
       "note": "Consider combining with a trip to the nearby Ellora Caves (requires a separate day).",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "gateway-of-india"
@@ -2568,7 +2608,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹40",
       "childFree": "under 15",
       "note": "Light and sound show available in the evenings.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [],
     "sources": [
@@ -2789,7 +2833,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹50",
       "childFree": "under 15",
       "note": "Entry to the mosque complex is free, the ticket is for the palace complex.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "taj-mahal",
@@ -3001,7 +3049,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "Yes",
       "note": "A small fee may apply for specific inner areas or camera use.",
-      "bookingUrl": ""
+      "ticketNote": "Free entry. A living temple — no entry ticket; separate queue passes for special darshan are issued at the temple.",
+      "authorityUrl": "https://www.tamilnadutourism.tn.gov.in/",
+      "authorityLabel": "Tamil Nadu Tourism"
     },
     "nearby": [
       "meenakshi-temple"
@@ -3223,7 +3273,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹50",
       "childFree": "under 15",
       "note": "A ₹50 discount is available on Friday (when Taj Mahal is closed).",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "taj-mahal",
@@ -3404,7 +3458,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹40",
       "childFree": "under 15",
       "note": "Combine with Modhera Sun Temple nearby.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "modhera-sun-temple"
@@ -3555,7 +3613,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹25",
       "childFree": "under 15",
       "note": "Light show starts at 7:00 PM.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "rani-ki-vav"
@@ -3710,7 +3772,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹40",
       "childFree": "under 15",
       "note": "Ticket covers all Western Group temples.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "sanchi-stupa"
@@ -3866,7 +3932,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹40",
       "childFree": "under 15",
       "note": "Located 46 km from Bhopal.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "khajuraho-monuments",
@@ -4020,7 +4090,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹25",
       "childFree": "under 15",
       "note": "Vehicles can drive right up to the palace entrance.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "sanchi-stupa"
@@ -4166,7 +4240,10 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "All",
       "note": "Mobile phones and electronic devices strictly prohibited inside.",
-      "bookingUrl": "https://spst.in/"
+      "ticketNote": "Tickets and darshan queue passes are issued at the temple. The trust's site offers pooja bookings only, not general entry.",
+      "authorityUrl": "https://spst.in/",
+      "authorityLabel": "Sree Padmanabhaswamy Temple Trust",
+      "needsVerification": "Trust site is a JavaScript app whose routes all return the same shell, so no entry-ticket flow could be confirmed."
     },
     "nearby": [
       "mattancherry-palace"
@@ -4287,7 +4364,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹5",
       "childFree": "under 15",
       "note": "Photography inside mural rooms is restricted.",
-      "bookingUrl": "https://asi.nic.in/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "padmanabhaswamy-temple"
@@ -4443,7 +4524,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹100",
       "childFree": "under 15",
       "note": "Sound & Light show hosted in winter evenings.",
-      "bookingUrl": "https://victoriamemorial-cal.org/"
+      "bookingUrl": "https://victoriamemorial-cal.org/buy-tickets-online/",
+      "bookingProvider": "Victoria Memorial Hall",
+      "authorityUrl": "https://victoriamemorial-cal.org/",
+      "authorityLabel": "Victoria Memorial Hall",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "darjeeling-railway"
@@ -4606,7 +4691,9 @@ window.DESTINATIONS = [
       "entrySaarc": "₹1,000 – ₹1,500",
       "childFree": "under 5",
       "note": "Diesel options available, but steam offers the classic heritage experience.",
-      "bookingUrl": "https://www.irctc.co.in/"
+      "ticketNote": "Joy-ride and through tickets are sold by Indian Railways at the station counter and on IRCTC, which has no per-service link for the DHR.",
+      "authorityUrl": "https://dhr.indianrailways.gov.in/",
+      "authorityLabel": "Darjeeling Himalayan Railway"
     },
     "nearby": [
       "victoria-memorial"
@@ -4755,7 +4842,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹25",
       "childFree": "under 15",
       "note": "Combine with nearby Mecca Masjid & Chowmahalla Palace.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "golconda-fort"
@@ -4915,7 +5006,10 @@ window.DESTINATIONS = [
       "entrySaarc": "₹25",
       "childFree": "under 15",
       "note": "Evening sound and light show available.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "ticketNote": "Tickets are sold at the fort entrance. Golconda is not listed on ASI's online ticketing portal.",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "needsVerification": "ASI protects the fort but does not carry it in the live online monument list; confirm whether counter sale is the only channel."
     },
     "nearby": [
       "charminar"
@@ -5046,7 +5140,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "All",
       "note": "Photography allowed around the outer marble walkway only.",
-      "bookingUrl": "https://goldentempleamritsar.org/"
+      "ticketNote": "Free entry, open around the clock. No ticket exists for the Golden Temple; beware third-party sites selling one.",
+      "authorityUrl": "https://sgpc.net/",
+      "authorityLabel": "Shiromani Gurdwara Parbandhak Committee"
     },
     "nearby": [
       "jallianwala-bagh"
@@ -5202,7 +5298,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "All",
       "note": "3D sound & light show available in evenings.",
-      "bookingUrl": "https://amritsar.nic.in/"
+      "ticketNote": "Free entry. The memorial charges no admission fee.",
+      "authorityUrl": "https://amritsar.nic.in/",
+      "authorityLabel": "Amritsar District Administration"
     },
     "nearby": [
       "golden-temple"
@@ -5348,7 +5446,10 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "All",
       "note": "Camera restrictions apply inside the main cave.",
-      "bookingUrl": "https://kamakhyatemple.org/"
+      "ticketNote": "Darshan queue passes are issued at the temple. No official online booking channel could be confirmed.",
+      "authorityUrl": "https://assamtourism.gov.in/",
+      "authorityLabel": "Assam Tourism",
+      "needsVerification": "kamakhyatemple.org calls itself an 'Official Visitor Guide' but could not be tied to the Kamakhya Debutter Board; not used."
     },
     "nearby": [
       "rang-ghar"
@@ -5501,7 +5602,12 @@ window.DESTINATIONS = [
       "entrySaarc": "₹25",
       "childFree": "under 15",
       "note": "Located in the historic Ahom capital of Sivasagar.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23",
+      "needsVerification": "ASI lists 'Ranghar Ruins' (Guwahati circle); confirm it is the Sivasagar Rang Ghar pavilion."
     },
     "nearby": [
       "kamakhya-temple"
@@ -5658,7 +5764,12 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "All",
       "note": "Biometric registration is mandatory for all pilgrims.",
-      "bookingUrl": "https://badrinath-kedarnath.gov.in/"
+      "bookingUrl": "https://registrationandtouristcare.uk.gov.in/",
+      "bookingProvider": "Uttarakhand Tourism",
+      "bookingKind": "registration",
+      "authorityUrl": "https://badrinath-kedarnath.gov.in/",
+      "authorityLabel": "Badarinath–Kedarnath Temple Committee",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "hadimba-temple"
@@ -5804,7 +5915,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "All",
       "note": "Yak rides and traditional Himachali attire photos available in the forest park.",
-      "bookingUrl": "https://himachaltourism.gov.in/"
+      "ticketNote": "Free entry. No ticket is required for the temple.",
+      "authorityUrl": "https://himachaltourism.gov.in/",
+      "authorityLabel": "Himachal Pradesh Tourism"
     },
     "nearby": [
       "kedarnath-temple"
@@ -5967,7 +6080,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "All",
       "note": "Combine with Se Cathedral located directly across the road.",
-      "bookingUrl": "https://asi.nic.in/"
+      "ticketNote": "Free entry. An active church — no entry ticket; visitors are asked to respect service times.",
+      "authorityUrl": "https://goatourism.gov.in/",
+      "authorityLabel": "Goa Tourism"
     },
     "nearby": [
       "padmanabhaswamy-temple"
@@ -6118,7 +6233,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "All",
       "note": "Footwear must be deposited at the free counter outside.",
-      "bookingUrl": "https://mahabodhi.org/"
+      "ticketNote": "Free entry. Camera and mobile deposit charges are collected at the gate.",
+      "authorityUrl": "https://bodhgayatemple.com/",
+      "authorityLabel": "Bodhgaya Temple Management Committee"
     },
     "nearby": [
       "nalanda-ruins"
@@ -6286,7 +6403,11 @@ window.DESTINATIONS = [
       "entrySaarc": "₹40",
       "childFree": "under 15",
       "note": "Located 15 km from Rajgir.",
-      "bookingUrl": "https://asi.payumoney.com/"
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23"
     },
     "nearby": [
       "mahabodhi-temple"
@@ -6449,7 +6570,10 @@ window.DESTINATIONS = [
       "entrySaarc": "₹24",
       "childFree": "under 5",
       "note": "Reachable by Shikara ride across Dal Lake.",
-      "bookingUrl": "https://jktdc.co.in/"
+      "ticketNote": "Tickets are sold at the garden gate. No official online booking portal could be confirmed.",
+      "authorityUrl": "https://jktdc.co.in/",
+      "authorityLabel": "J&K Tourism Development Corporation",
+      "needsVerification": "Previous link pointed at JKTDC's hotel-booking corporation, which does not sell garden entry."
     },
     "nearby": [],
     "sources": [
@@ -6594,7 +6718,9 @@ window.DESTINATIONS = [
       "entrySaarc": "₹20",
       "childFree": "under 5",
       "note": "Located centrally in Raipur, easy to combine with city sightseeing.",
-      "bookingUrl": ""
+      "ticketNote": "Entry is handled at the museum counter; no online booking exists.",
+      "authorityUrl": "https://tourism.cgstate.gov.in/",
+      "authorityLabel": "Chhattisgarh Tourism Board"
     },
     "nearby": [],
     "sources": [
@@ -6728,7 +6854,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "Free",
       "note": "Best reached by road from Jagdalpur or nearby Bastar towns.",
-      "bookingUrl": ""
+      "ticketNote": "Free entry. No ticket is required for the temple.",
+      "authorityUrl": "https://bastar.gov.in/",
+      "authorityLabel": "Bastar District Administration"
     },
     "nearby": [],
     "sources": [
@@ -6874,7 +7002,9 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "Free",
       "note": "A scenic temple visit that pairs well with the landscapes of central Chhattisgarh.",
-      "bookingUrl": ""
+      "ticketNote": "Free entry. No ticket is required for the temple.",
+      "authorityUrl": "https://tourism.cgstate.gov.in/",
+      "authorityLabel": "Chhattisgarh Tourism Board"
     },
     "nearby": [],
     "sources": [
@@ -6988,7 +7118,12 @@ window.DESTINATIONS = [
       "entrySaarc": "Free",
       "childFree": "Free",
       "note": "Ideal for heritage travellers interested in archaeology and temple history.",
-      "bookingUrl": ""
+      "bookingUrl": "https://asi.paygov.org.in/asi-webapp/#/ticketbooking",
+      "bookingProvider": "Archaeological Survey of India",
+      "authorityUrl": "https://asi.nic.in/",
+      "authorityLabel": "Archaeological Survey of India",
+      "bookingVerified": "2026-08-23",
+      "needsVerification": "ASI lists 'Temple of Laxman and Old sites including sculptures Sirpur' (Raipur circle); confirm it covers the whole Sirpur complex."
     },
     "nearby": [],
     "sources": [

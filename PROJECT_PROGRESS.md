@@ -2,7 +2,7 @@
 
 > Living development tracker. Updated continuously as the project evolves.
 
-**Last audited:** 2026-08-23 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 132 assertions, exit 0
+**Last audited:** 2026-08-23 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 211 assertions, exit 0
 
 Every status below was established by inspecting the repository and exercising the running
 application. Where something was *not* executed, it is marked 🟠 NEEDS VERIFICATION rather
@@ -15,15 +15,15 @@ than assumed.
 | Area | Status | Notes |
 |---|---|---|
 | Core Application | ✅ COMPLETE | Four front ends + one Express backend, all serving 200, zero console/network errors |
-| Heritage Map | 🟡 IN PROGRESS | 40 destinations, search, filters, gallery + lightbox. **137 Commons images added — 37/40 sites now rich, 0 hero-only.** Region filter and mobile tap targets still open |
+| Heritage Map | 🟡 IN PROGRESS | 40 destinations, search, filters, gallery + lightbox. **137 Commons images added — 37/40 sites now rich, 0 hero-only.** **Line-art removed globally; Visual India state galleries added.** Region filter and mobile tap targets still open |
 | Library | ✅ COMPLETE | 142 verses, 10 manuscripts, layered text, bookmarks, search |
 | Narration | 🟡 IN PROGRESS | Hybrid engine verified in Chrome: recorded audio first, browser voice fallback. **No production recordings exist** — audible narration is browser TTS, which varies by machine |
 | Festivals | ✅ COMPLETE | 14 festivals, all fields populated, calendar + detail + map deep-links |
-| Travel | 🟡 IN PROGRESS | Visitor info complete for all 40 sites; booking is an external handoff, not a flow |
+| Travel | 🟡 IN PROGRESS | Visitor info complete for all 40 sites. **Booking audited 2026-08-23: 24 verified official portals, 16 honest visitor-info states, 19 broken/wrong links removed.** External handoff only — no payment code |
 | Heritage AI | ✅ COMPLETE | Verified end-to-end against live OpenAI, rate limiting confirmed |
 | Contact | ✅ COMPLETE | Verified end-to-end; flat-file storage is a known production limitation |
 | Security | ✅ COMPLETE | Secrets and PII purged from history; all controls tested live |
-| Testing | 🟡 IN PROGRESS | 132 automated assertions; no API or backend test suite |
+| Testing | 🟡 IN PROGRESS | 211 automated assertions; no API or backend test suite |
 | Product Polish | 🟡 IN PROGRESS | One confirmed mobile overflow bug; accessibility partially addressed |
 
 ---
@@ -74,12 +74,127 @@ build step for the front ends — each page loads plain `<script>` files.
 - [x] Favourites persisted to `localStorage` (`antara.favorites`) with a live count badge
 - [x] Light/dark theme toggle persisted to `localStorage` (`antara_theme`)
 - [x] Loader, toast, drawer, scrim, custom cursor
-- [x] **40/40 destinations carry images**; **26 flagged UNESCO**; **33 have `nearby` links**
+- [x] **40/40 destinations carry images**; **33 have `nearby` links**
+- [x] Heritage status, counted strictly (see the data-integrity fix below): **17 UNESCO
+      World Heritage**, 5 UNESCO Tentative List, 4 other heritage labels, 14 with none.
+      *26 was the old figure and was wrong — it counted any non-empty `unesco.status`.*
 - [x] **40/40 carry `sources`** — provenance is recorded, not invented
 
 ### In Progress
 - [ ] Mobile map usability — page does **not** overflow at 390px (0px), but **53 interactive
       elements measure under 24px** at that width. Functional, not comfortable.
+
+### Global line-art cleanup — ✅ COMPLETE & VERIFIED (2026-08-23)
+
+The heritage pages carried an `artSVG` "art plate" generator producing decorative
+line-art etchings on a 400×300 canvas. It has been removed entirely, along with the
+user-facing **"Switch to Line Art"** hero toggle. Photographs, the state map geometry,
+UI control icons and genuine source imagery are untouched.
+
+Two distinct defects were found and both are fixed:
+
+| Defect | Before | After |
+| :--- | ---: | ---: |
+| Decorative line-art plates rendered | **13** (on 13 sites) | **0** |
+| Inline icons inflated past icon size | **105** | **0** |
+| `.mini-map` state geometry (legitimate, left alone) | 40 | 40 |
+
+- [x] **`artSVG` deleted** (182 lines) together with all five call sites
+- [x] **The "Switch to Line Art" toggle removed** — markup, handler and stylesheet rules
+- [x] **The icon-size bug fixed at the root.** Inline icons are authored with a
+      `viewBox="0 0 24 24"` and no intrinsic size, so inside a flex parent they stretched
+      to fill it — which is how a 24px warning glyph came to be drawn **~700px wide on
+      every one of the 40 site pages**, and a scroll cue at 132px on all 40. One base rule
+      in `app.css` now sizes them; components override by class. The rule keys off the
+      24×24 viewBox, so the map's own geometry is unaffected.
+- [x] **Look Closer now requires its detail photograph.** Its hotspot coordinates were
+      authored against one specific picture; without that picture the coordinates would
+      land on arbitrary parts of some other image. **13 sites** therefore omit the section
+      rather than illustrate it with a stand-in — no orphaned heading, no dead container,
+      and section numbering is computed so no gap appears.
+- [x] **Placeholders no longer draw pictures** — a missing photograph shows a quiet tinted
+      panel carrying the site's own name plus *"Visual archive coming soon"*
+- [x] Verified across all 40 sites at 1440px and 390px: **0 line-art plates, 0 oversized
+      icons, 0 console errors, 0 exceptions, 0 HTTP 4xx**
+
+### Visual India — state-level visual discovery — ✅ COMPLETE & VERIFIED (2026-08-23)
+
+A higher-level way in: `INDIA → STATE → HERITAGE SITES → VISUAL GALLERY → SITE EXPERIENCE`,
+at **`visual-india.html`**. Nothing about the map or the site detail experience was rewritten.
+
+**20 states · 40 sites grouped · 197 photographs reused · 0 new images.**
+
+| | Count |
+|---|---|
+| States represented (all derived) | **20** |
+| Heritage sites grouped | **40** |
+| Photographs reused from existing records | **197** |
+| States with a representative image | **20 / 20** |
+| States with a real description in the dataset | **20 / 20** |
+
+- [x] **Nothing is hardcoded.** States, counts, slugs, images and links are all computed
+      from `window.DESTINATIONS`. Asserted by rebuilding the model with a synthetic extra
+      site: it lands in its state, increments the count, contributes its images and gains
+      an "Explore Site" link **with no frontend change**. A brand-new state creates its own
+      entry and gets a usable slug even if absent from `STATES_META`.
+- [x] **Slugs come from `STATES_META`** — the same table the map router uses, so Visual
+      India and the map can never address a state differently.
+- [x] **Representative image rule (deterministic, documented in `visual-india.js`):**
+      only sites that resolve a hero are eligible; UNESCO-inscribed sites rank first; then
+      the most-documented site; ties break on dataset order. Rebuilds give an identical
+      result every time.
+- [x] **No second image schema.** Every picture is resolved through `site-media.js`; the
+      gallery holds the resolver's own objects. Adding to `site.images.gallery` flows
+      straight through. Creator, licence, source and attribution are preserved.
+- [x] **One shared lightbox.** The viewer moved out of `app.js` into **`lightbox.js`**, now
+      driven by both the heritage pages and Visual India — one implementation of keyboard
+      handling, focus return, preloading and attribution. `mediaCredit` delegates to it, so
+      a figure caption and the viewer can never disagree about who took a photograph.
+- [x] **Map integration with no map rewrite** — "Explore on Map →" uses the router's
+      existing `#/india/<state>` route, which already calls `focusState`.
+- [x] **Return path** — every heritage-site page gained *"Explore more from &lt;State&gt; →"*,
+      completing the State Gallery ↔ Individual Site loop.
+- [x] **Performance** — the index loads only 20 representative images, all lazy; a state's
+      site imagery loads only when that state is opened. At 1024px only 12 of 20 index
+      images had loaded and at 390px only 9, which is lazy loading behaving correctly.
+
+#### Data-integrity fix found during this phase
+
+`unesco.status` is **not a boolean and is not always about UNESCO**. It holds four kinds of
+value: an actual `World Heritage Site` inscription (17 sites), a `Tentative List` entry
+(5), a plain heritage label such as `Sacred pilgrimage site` (4), or nothing (14). Both the
+map and the new gallery were treating **any** truthy value as "UNESCO", which awarded a
+World Heritage listing to 9 sites that do not have one — Danteshwari Temple was badged
+"UNESCO World Heritage", and its Heritage-status row read `UNESCO · undefined`.
+
+- [x] One shared rule (`AntaraVisualIndia.isUnescoListed` / `heritageStatus`) now decides,
+      used by both `app.js` and Visual India
+- [x] Only a genuine inscription is called UNESCO World Heritage; a Tentative List entry
+      says so; any other label is shown **in the dataset's own words**, without the gold
+      styling that reads as a distinction
+- [x] All 6 call sites in `app.js` corrected; Chhattisgarh's UNESCO count went from a
+      fabricated 4 to a true 0
+
+#### Remaining media gaps (reported, not blocking)
+- 🟠 **3 sites show fewer than 3 pictures** in their state strip because only 2 exist:
+      Golconda Fort, Sree Padmanabhaswamy Temple, Bhoramdeo Temple. The strip renders
+      2 rather than padding with an unrelated image.
+- 🟠 **The 14 legacy hero images still carry no creator/licence metadata**, so the viewer
+      shows no attribution line for them — correctly, since none is recorded. Every image
+      sourced in the media pass does show one. (Same gap already tracked under Image
+      coverage.)
+- 🟠 Visual India shows the **hero of the best-documented site** for each state; three
+      states are represented by a legacy hero whose provenance is unverified.
+
+#### Routes and files
+- Added: `visual-india.html`, `visual-india.js` (model, UMD/Node-testable),
+      `visual-india-page.js` (DOM controller), `visual-india.css`, `lightbox.js`,
+      `validate_visual_india.js`
+- Modified: `app.js` (line-art removal, shared lightbox, heritage-status rule, state
+      back-link), `app.css` (icon sizing, placeholder, back-link, dead rules removed),
+      `map.html` (loads `lightbox.js` and `visual-india.js`; cache `v=8`), `package.json`
+- Routes added: `visual-india.html#/` and `visual-india.html#/state/<slug>`.
+      **No map route was added or changed.**
 
 ### Site media architecture — ✅ COMPLETE (2026-08-23)
 
@@ -425,16 +540,99 @@ Ready to receive ElevenLabs recordings. No audio was generated and no placeholde
 - [x] Entry fees, tiered: `entryIndian`, `entryForeign`, `entrySaarc`, `childFree`
 - [x] Per-site notes (`note`) for irregular conditions
 - [x] Plan Your Visit UI — rendered as a card grid in `renderDestination` (`app.js:722–731`)
-- [x] **Honest freshness disclosure** — every panel states "Last checked `LAST_VERIFIED`" and
-      links to the official portal
+- [x] **Honest freshness disclosure** — every panel states "Last checked `LAST_VERIFIED`"
 - [x] Festival → map travel route (see §5)
 
-### In Progress
-- [ ] Booking — handled as an **external handoff**. Every site carries a `bookingUrl` (e.g.
-      `https://asi.payumoney.com/`) opened in a new tab. There is no in-app flow.
+### Official booking audit — ✅ COMPLETE & VERIFIED (2026-08-23)
+
+Antara does not sell tickets and never will: it is a discovery and planning platform that
+hands visitors off to the authority that actually sells entry. **No Razorpay, no payment
+processing, no ticket inventory, no booking database, no refunds, no payment credentials.**
+
+All 40 sites were audited. Every booking URL was resolved in a real browser and checked
+against three tests: does it resolve, does it belong to the right authority, and is it about
+*this* site. The audit is enforced by `validate_visit.js` (22 assertions, in `npm test`);
+live reachability is a separate opt-in run, `npm run test:links`.
+
+**Result: 24 sites with a verified official booking link, 16 showing visitor information.**
+
+| | Count |
+|---|---|
+| Verified official booking portal | **24** |
+| No portal — honest visitor-information panel | **16** |
+| Flagged for manual re-verification | **6** |
+| Booking links that were broken, generic or wrong before this pass | **19** |
+
+#### Sites with a verified official booking link (24)
+- **ASI online ticketing (18)** — `https://asi.paygov.org.in/asi-webapp/#/ticketbooking`,
+  the portal ASI publishes on `asi.nic.in`. Each of these 18 was confirmed present in ASI's
+  own live ticketed-monument API (`/asi/api/v7/monuments`), not assumed:
+  Taj Mahal, Qutub Minar, Humayun's Tomb, Red Fort, Ajanta Caves, Konark Sun Temple,
+  Fatehpur Sikri, Agra Fort, Rani ki Vav, Modhera Sun Temple, Khajuraho, Sanchi,
+  Gwalior Fort, Charminar, Nalanda, Mattancherry Palace, Rang Ghar, Sirpur.
+- **Rajasthan OBMS (2)** — per-monument pages on `obms-tourist.rajasthan.gov.in`
+  (Amber Fort, Hawa Mahal). Confirmed site-specific with a control test: a bogus slug
+  returns a generic page, the real ones return the monument.
+- **Mysore Palace Board (1)** — `mysorepalace.karnataka.gov.in/book-tickets.php`
+- **Victoria Memorial Hall (1)** — `victoriamemorial-cal.org/buy-tickets-online/`
+- **Tamil Nadu HR&CE (1)** — Meenakshi Temple's own ticketing route (temple id 31962)
+- **Uttarakhand Tourism (1)** — Kedarnath, `registrationandtouristcare.uk.gov.in`. This is
+  mandatory free Char Dham registration, not a ticket, so the button reads
+  "Register for Your Visit" rather than "Book Official Tickets".
+
+#### Sites with no online booking — visitor information instead (16)
+Free entry, no ticket exists: India Gate, Gateway of India, Brihadeeswara, Golden Temple,
+Jallianwala Bagh, Basilica of Bom Jesus, Mahabodhi, Hadimba, Danteshwari, Bhoramdeo.
+Tickets sold at the gate only: Golconda Fort, Shalimar Bagh, Kamakhya, Padmanabhaswamy,
+Mahant Ghasidas Museum, Darjeeling Himalayan Railway.
+
+Each renders a "Visiting this site" panel stating what a visitor actually has to do, plus a
+labelled link to the responsible authority. **No site renders a booking button that leads
+nowhere.**
+
+#### Broken / wrong links this pass removed (19)
+- 🔴 `artandculture.rajasthan.gov.in` (Amber Fort, Hawa Mahal) — **dead host, and `http://`**
+- 🔴 `mahabodhi.org` (Mahabodhi Temple) — **wrong entity**; it is the Mahabodhi Society and
+  redirects to a Chinese-language page, not the Bodh Gaya Temple Management Committee
+- 🔴 `goldentempleamritsar.org` — an unofficial guide site, not SGPC
+- 🔴 `irctc.co.in` (Darjeeling Railway) — generic homepage; unreachable in both Node and Chrome
+- 🟠 `asi.nic.in` used as a *booking* link on Mattancherry Palace and Bom Jesus — that is ASI's
+  homepage, not a booking portal
+- 🟠 `amritsar.nic.in`, `jktdc.co.in`, `himachaltourism.gov.in`, `spst.in`,
+  `kamakhyatemple.org`, `badrinath-kedarnath.gov.in` — real sites, but homepages or the wrong
+  service standing in as booking portals; demoted to authority links
+- 🟠 `asi.payumoney.com` ×13 — worked, but redirects to a private vendor domain
+  (`eticket.webfront.in`). Replaced with ASI's own government-domain portal.
+- 🟢 Two sites gained booking links they should always have had: **Meenakshi Temple** and
+  **Sirpur** (both confirmed ticketed by their authority).
+
+#### Data model
+No new schema. The existing `plan` block was extended rather than replaced:
+`bookingUrl`, `bookingProvider`, `bookingKind`, `bookingVerified`, `authorityUrl`,
+`authorityLabel`, `ticketNote`, `needsVerification`.
+
+#### Verified in a real browser, not asserted
+All 40 sites driven through the live map at 1440px and 390px: booking button present exactly
+where the dataset says, correct `href`, `target="_blank"` and `rel="noopener noreferrer"` on
+every external link, no `href="undefined"`, no horizontal overflow, **0 console errors,
+0 exceptions, 0 4xx/5xx**.
+
+### Needs manual re-verification (6)
+These render honest visitor information today; none of them shows a booking button on a guess.
+- 🟠 **Golconda Fort** — ASI protects it but it is absent from ASI's live online monument list.
+      Confirm whether counter sale is genuinely the only channel.
+- 🟠 **Rang Ghar** — matched to ASI's "Ranghar Ruins" (Guwahati circle). Confirm this is the
+      Sivasagar pavilion.
+- 🟠 **Sirpur** — matched to ASI's "Temple of Laxman and Old sites including sculptures Sirpur"
+      (Raipur circle). Confirm it covers the whole complex.
+- 🟠 **Padmanabhaswamy** — the trust site is a JavaScript app whose routes all return the same
+      shell, so no entry-ticket flow could be confirmed. It offers pooja booking, not entry.
+- 🟠 **Kamakhya** — `kamakhyatemple.org` calls itself an "Official Visitor Guide" but could not
+      be tied to the Kamakhya Debutter Board. Not used.
+- 🟠 **Shalimar Bagh** — no official online garden-entry portal found.
 
 ### Not Started
-- [ ] In-app booking flow
+- [ ] In-app booking flow — **deliberately out of scope, permanently**
 - [ ] Payment integration — **no Razorpay code, no payment routes, no order/refund logic
       anywhere in the repository**
 - [ ] Confirmation flow, tickets, or itineraries
@@ -442,10 +640,16 @@ Ready to receive ElevenLabs recordings. No audio was generated and no placeholde
 
 ### Blocked / Needs Verification
 - 🟠 `LAST_VERIFIED` is a single global constant, so fee/hours accuracy is asserted per-build,
-      not per-site. Fees and hours have not been re-checked against official sources during
-      this work.
-- 🔴 **Booking is deliberately out of scope for the current release** (agreed 2026-08-22).
-      Treat it as unbuilt, not broken.
+      not per-site. **Fees, hours and durations were not re-checked in this pass** — the audit
+      covered booking and authority links only.
+- 🟠 Three government hosts (`obms-tourist.rajasthan.gov.in` ×2, `himachaltourism.gov.in`) ship
+      an incomplete TLS chain and, in the Rajasthan case, a malformed HTTP header. Chrome
+      renders them; strict clients such as Node's `fetch` reject them. `npm run test:links`
+      reports these as WARN, not failures.
+- 🟠 Broken links found in `sources` (out of scope, not changed):
+      `delhitourism.gov.in/.../india_gate.jsp` returns **404**, and
+      `tourism.rajasthan.gov.in/amber-fort.html` is a **soft-404** (redirects to a
+      "Page Not Found" page served as HTTP 200).
 
 ---
 
@@ -590,7 +794,7 @@ Ready to receive ElevenLabs recordings. No audio was generated and no placeholde
 
 ## 11. Testing
 
-**Latest verified run: 2026-08-23 — `npm test` → 132 assertions, 0 failures, exit 0.**
+**Latest verified run: 2026-08-23 — `npm test` → 211 assertions, 0 failures, exit 0.**
 
 ### Completed
 - [x] `validate_db.js` — every one of 142 verses has all required multi-language fields; sample
@@ -605,6 +809,25 @@ Ready to receive ElevenLabs recordings. No audio was generated and no placeholde
 - [x] Browser media verification — 6 site records at 1440px and 390px: lazy loading, lightbox
       (open, ←/→, wrap, Escape, focus return), themes, stacking, and **0 console errors,
       0 exceptions, 0 HTTP 4xx, 0 failed requests**
+- [x] `validate_visit.js` — **22 assertions**: booking URLs are https on an official host,
+      carry a provider and a verification date, are never a bare homepage standing in for a
+      booking page and never reused across sites unless the portal genuinely is multi-site;
+      every site without a portal explains why; the rendered CTA, its disclosure text and
+      `rel="noopener noreferrer"` on every external anchor. Live reachability is deliberately
+      excluded so a government server having a bad morning cannot fail the build — run it on
+      demand with `npm run test:links`
+- [x] `validate_visual_india.js` — **57 assertions**: the line-art generator and its toggle
+      stay deleted, inline icons keep a default size, Look Closer requires its detail
+      photograph; states/counts/slugs/images/links are all derived (proved by rebuilding the
+      model with a synthetic extra site and with a brand-new state); no photograph is shared
+      between sites; every referenced file exists on disk; the representative-image rule is
+      deterministic across rebuilds; heritage status is never inflated into a UNESCO listing;
+      and both navigation directions resolve
+- [x] Browser verification, Visual India — index plus **6 state galleries** at **1440 / 1024 /
+      390px**, and a **followed-link round-trip across 8 states and 8 heritage sites**
+      (state → Explore Site → site page → Explore more from → state → Explore on Map →
+      focused map). Lightbox open/←→/Escape at each width. **0 console errors, 0 exceptions,
+      0 HTTP 4xx, 0 failed images**
 - [x] `validate_narration.js` — **86 assertions**: scope resolution, voice resolution and
       ranking, Sanskrit strictness, text selection, the audio/speech/refusal plan, language
       availability, duration handling, manifest integrity, deterministic asset paths, the
@@ -767,7 +990,7 @@ Explicitly **not** counted toward current completion:
 - [x] **No secrets in repository** — pattern scan clean; token purged from history and revoked
 - [x] **No PII in repository** — `contact_messages.json` untracked and purged from history
 - [x] **Security audit complete** — every control exercised against the running server
-- [x] **Tests passing** — 132 assertions, exit 0, 2026-08-23
+- [x] **Tests passing** — 211 assertions, exit 0, 2026-08-23
 - [x] **Map works** — verified serving, routing, and data integrity
 - [x] **Library works** — 142/142 verses complete, page loads and executes cleanly
 - [x] **Festivals work** — 14/14 populated, all deep-links resolve
