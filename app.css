@@ -1973,3 +1973,25 @@ button {
   .media-frame img,
   .media-frame.is-zoomable:hover img { transition: none; transform: none; }
 }
+
+/* Attribution for externally licensed photography. CC BY / BY-SA require the
+   creator and licence to be visible wherever the image is used. */
+.media-credit {
+  display: block;
+  margin-top: 3px;
+  font-size: 10.5px;
+  letter-spacing: .03em;
+  color: var(--ink-25);
+}
+.media-credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.media-credit a:hover { color: var(--gold); }
+.lb-figure .media-credit { margin-top: 6px; font-size: 11px; color: rgba(247,243,236,.45); }
+
+/* Where an Explore or Don't Miss entry has no photograph of its own, the card
+   is text-only rather than a placeholder box — the Gallery section carries the
+   site's imagery, so an empty frame would promise something twice. */
+.explore-card.is-textonly {
+  border-left: 2px solid var(--ink-10);
+  padding-left: 18px;
+}
+.miss-item:not(:has(.miss-media)) { grid-template-columns: auto 1fr; }

@@ -54,7 +54,11 @@
         src: src,
         alt: fallbackAlt || null,
         caption: cleanPath(fallbackCaption),
-        credit: null
+        credit: null,
+        source: null,
+        license: null,
+        licenseUrl: null,
+        attribution: null
       };
     }
 
@@ -67,7 +71,13 @@
         // the site's own identity rather than a filename.
         alt: cleanPath(input.alt) || fallbackAlt || null,
         caption: cleanPath(input.caption) || cleanPath(fallbackCaption),
-        credit: cleanPath(input.credit)
+        // Provenance travels with the image so attribution can be rendered
+        // wherever it appears. Never synthesised -- absent stays null.
+        credit: cleanPath(input.credit) || cleanPath(input.creator),
+        source: cleanPath(input.source) || cleanPath(input.sourceUrl),
+        license: cleanPath(input.license),
+        licenseUrl: cleanPath(input.licenseUrl),
+        attribution: cleanPath(input.attribution)
       };
     }
     return null;
@@ -116,6 +126,11 @@
     declaredGallery.forEach(entry => push(toImage(entry, altFor(dest), null)));
 
     // --- Named slots -------------------------------------------------------
+    // Ordered the way a reader meets them: built detail, then human context,
+    // then the wider setting.
+    const architecture = toImage(declared.architecture, altFor(dest, 'Architectural detail'), null);
+    if (architecture) push(architecture);
+
     const culture = toImage(declared.culture, altFor(dest, 'Cultural detail'), null);
     if (culture) push(culture);
 
@@ -140,10 +155,13 @@
       hero: hero,
       gallery: gallery,
       extras: extras,
+      architecture: architecture || null,
       culture: culture || extras[0] || null,
       travel: travel || extras[extras.length - 1] || null,
       count: gallery.length,
       hasGallery: extras.length > 0,
+      // Any image that carries a licence needs its attribution shown.
+      attributions: gallery.filter(function (g) { return g.license || g.attribution; }),
       sources: Array.isArray(dest.sources) ? dest.sources : []
     };
   }

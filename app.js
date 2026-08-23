@@ -311,8 +311,26 @@ function mediaImg(img, dest, opts){
            onload="this.parentNode.classList.remove('is-loading')"
            onerror="window.__antaraImgFallback&&window.__antaraImgFallback(this)">
     </div>
-    ${img.caption ? `<figcaption>${esc(img.caption)}</figcaption>` : ''}
+    ${img.caption || img.credit || img.license ? `<figcaption>${img.caption ? esc(img.caption) : ''}${mediaCredit(img)}</figcaption>` : ''}
   </figure>`;
+}
+
+/* CC BY and CC BY-SA require the creator and licence to be shown wherever the
+   image appears, so credit is rendered on the page, not merely recorded in
+   data/media-sources.json. */
+function mediaCredit(img){
+  if(!img || (!img.credit && !img.license)) return '';
+  const who = img.credit ? esc(img.credit) : null;
+  const lic = img.license
+    ? (img.licenseUrl
+        ? `<a href="${esc(img.licenseUrl)}" target="_blank" rel="noopener noreferrer license">${esc(img.license)}</a>`
+        : esc(img.license))
+    : null;
+  const src = img.source
+    ? `<a href="${esc(img.source)}" target="_blank" rel="noopener noreferrer">source</a>`
+    : null;
+  const parts = [who, lic, src].filter(Boolean);
+  return parts.length ? `<span class="media-credit">${parts.join(' · ')}</span>` : '';
 }
 
 /* Swap a failed photo for the site motif rather than leaving a hole. */
@@ -779,8 +797,8 @@ function renderDestination(dest){
           ${dest.explore.map(x=>{
             const img = x.image ? MEDIA.toImage(x.image, MEDIA.altFor(dest, x.name), x.name) : null;
             if(img) usedImages.add(img.src);
-            return `<div class="explore-card reveal">
-              ${img ? mediaImg(img, dest, {ratio:'4 / 3', index: media.gallery.findIndex(g=>g.src===img.src)}) : mediaPlaceholder(dest)}
+            return `<div class="explore-card reveal${img ? '' : ' is-textonly'}">
+              ${img ? mediaImg(img, dest, {ratio:'4 / 3', index: media.gallery.findIndex(g=>g.src===img.src)}) : ''}
               <h3>${esc(x.name)}</h3><p>${esc(x.text)}</p>
               ${x.notice ? `<div class="notice">${esc(x.notice)}</div>` : ''}
             </div>`;
@@ -799,7 +817,7 @@ function renderDestination(dest){
             const img = m.image ? MEDIA.toImage(m.image, MEDIA.altFor(dest, m.title), m.title) : null;
             if(img) usedImages.add(img.src);
             return `<div class="miss-item reveal"><span class="n">${String(i+1).padStart(2,'0')}</span>
-              <div class="miss-media">${img ? mediaImg(img, dest, {ratio:'4 / 3', index: media.gallery.findIndex(g=>g.src===img.src)}) : mediaPlaceholder(dest)}</div>
+              ${img ? `<div class="miss-media">${mediaImg(img, dest, {ratio:'4 / 3', index: media.gallery.findIndex(g=>g.src===img.src)})}</div>` : ''}
               <div><h3>${esc(m.title)}</h3><p>${esc(m.text)}</p></div></div>`;
           }).join('')}
         </div>
@@ -1065,8 +1083,9 @@ function renderLightbox(){
   const capEl = document.getElementById('lb-cap');
   imgEl.src = img.src;
   imgEl.alt = img.alt || MEDIA.altFor(dest);
-  capEl.textContent = img.caption || '';
-  capEl.style.display = img.caption ? '' : 'none';
+  const credit = mediaCredit(img);
+  capEl.innerHTML = (img.caption ? esc(img.caption) : '') + credit;
+  capEl.style.display = (img.caption || credit) ? '' : 'none';
   document.getElementById('lb-count').textContent = `${index + 1} / ${images.length}`;
   const single = images.length < 2;
   document.getElementById('lb-prev').style.display = single ? 'none' : '';

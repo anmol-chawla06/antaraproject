@@ -208,6 +208,87 @@ for (const d of DESTS) {
 }
 ok('no alt text is a filename', filenameAlts.length === 0, filenameAlts.slice(0, 3).join('; '));
 
+// --- Provenance ---------------------------------------------------------
+
+group('Provenance of externally sourced imagery');
+
+ok('the architecture slot is exposed',
+  M.resolveMedia({ name: 'X', images: { architecture: 'a.jpg' } }).architecture.src === 'a.jpg');
+
+ok('licence fields survive normalisation',
+  (() => {
+    const i = M.toImage({
+      url: 'a.jpg', caption: 'Dome', license: 'CC BY-SA 4.0',
+      licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0',
+      creator: 'A Photographer', source: 'https://commons.wikimedia.org/wiki/File:a.jpg'
+    }, 'alt');
+    return i.license === 'CC BY-SA 4.0' && i.credit === 'A Photographer' &&
+           i.source.startsWith('https://commons') && i.licenseUrl.includes('creativecommons');
+  })());
+
+ok('provenance is never synthesised — absent stays null',
+  (() => {
+    const i = M.toImage('plain.jpg', 'alt');
+    return i.license === null && i.credit === null && i.source === null && i.attribution === null;
+  })());
+
+ok('attributions lists only images that carry a licence',
+  (() => {
+    const m = M.resolveMedia({
+      name: 'X', image: 'local.jpg',
+      images: { gallery: [{ url: 'ext.jpg', license: 'CC0', creator: 'Someone' }] }
+    });
+    return m.attributions.length === 1 && m.attributions[0].src === 'ext.jpg';
+  })());
+
+const sourcesPath = path.join(__dirname, 'data', 'media-sources.json');
+if (!fs.existsSync(sourcesPath)) {
+  ok('data/media-sources.json exists', false);
+} else {
+  const srcManifest = JSON.parse(fs.readFileSync(sourcesPath, 'utf8'));
+  const entries = srcManifest.sites.flatMap(s => s.images.map(i => ({ ...i, siteId: s.siteId })));
+
+  ok('the provenance manifest lists images', entries.length > 0, String(entries.length));
+
+  const missingFiles = entries.filter(e => !fs.existsSync(path.join(__dirname, e.file)));
+  missingFiles.slice(0, 5).forEach(e => console.log('         missing: ' + e.file));
+  ok('every image in the provenance manifest exists on disk', missingFiles.length === 0);
+
+  const noLicence = entries.filter(e => !e.license);
+  ok('every externally sourced image records a licence', noLicence.length === 0,
+    noLicence.slice(0, 3).map(e => e.file).join(', '));
+
+  const noCreator = entries.filter(e => !e.creator);
+  ok('every externally sourced image records a creator', noCreator.length === 0,
+    noCreator.slice(0, 3).map(e => e.file).join(', '));
+
+  const noSource = entries.filter(e => !e.source || !/^https?:\/\//.test(e.source));
+  ok('every externally sourced image records a source URL', noSource.length === 0,
+    noSource.slice(0, 3).map(e => e.file).join(', '));
+
+  // Non-commercial and no-derivatives licences cannot be used here.
+  const badLicence = entries.filter(e => /\bNC\b|non-?commercial|\bND\b|no.?deriv|fair use/i.test(e.license || ''));
+  badLicence.slice(0, 5).forEach(e => console.log('         restrictive: ' + e.license + '  ' + e.file));
+  ok('no image carries a non-commercial or no-derivatives licence', badLicence.length === 0);
+
+  // Every manifest entry must actually be referenced by its site, or we are
+  // shipping bytes nothing displays.
+  const orphan = [];
+  for (const s of srcManifest.sites) {
+    const dest = DESTS.find(d => d.id === s.siteId);
+    if (!dest) { orphan.push(s.siteId + ' (site not in dataset)'); continue; }
+    const used = new Set(M.resolveMedia(dest).gallery.map(g => g.src));
+    s.images.forEach(i => { if (!used.has(i.file)) orphan.push(i.file); });
+  }
+  orphan.slice(0, 5).forEach(o => console.log('         orphan: ' + o));
+  ok('every manifest image is actually referenced by its site', orphan.length === 0);
+
+  const licences = {};
+  entries.forEach(e => { licences[e.license] = (licences[e.license] || 0) + 1; });
+  console.log('         licences: ' + Object.entries(licences).sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => k + ' ×' + v).join(', '));
+}
+
 // --- Coverage report ----------------------------------------------------
 
 group('Coverage report');

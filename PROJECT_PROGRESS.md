@@ -2,7 +2,7 @@
 
 > Living development tracker. Updated continuously as the project evolves.
 
-**Last audited:** 2026-08-23 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 121 assertions, exit 0
+**Last audited:** 2026-08-23 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 132 assertions, exit 0
 
 Every status below was established by inspecting the repository and exercising the running
 application. Where something was *not* executed, it is marked 🟠 NEEDS VERIFICATION rather
@@ -15,7 +15,7 @@ than assumed.
 | Area | Status | Notes |
 |---|---|---|
 | Core Application | ✅ COMPLETE | Four front ends + one Express backend, all serving 200, zero console/network errors |
-| Heritage Map | 🟡 IN PROGRESS | 40 destinations, search, filters, gallery + lightbox, honest media fallbacks. **37/40 sites have only one photograph** — a content gap |
+| Heritage Map | 🟡 IN PROGRESS | 40 destinations, search, filters, gallery + lightbox. **137 Commons images added — 37/40 sites now rich, 0 hero-only.** Region filter and mobile tap targets still open |
 | Library | ✅ COMPLETE | 142 verses, 10 manuscripts, layered text, bookmarks, search |
 | Narration | 🟡 IN PROGRESS | Hybrid engine verified in Chrome: recorded audio first, browser voice fallback. **No production recordings exist** — audible narration is browser TTS, which varies by machine |
 | Festivals | ✅ COMPLETE | 14 festivals, all fields populated, calendar + detail + map deep-links |
@@ -23,7 +23,7 @@ than assumed.
 | Heritage AI | ✅ COMPLETE | Verified end-to-end against live OpenAI, rate limiting confirmed |
 | Contact | ✅ COMPLETE | Verified end-to-end; flat-file storage is a known production limitation |
 | Security | ✅ COMPLETE | Secrets and PII purged from history; all controls tested live |
-| Testing | 🟡 IN PROGRESS | 121 automated assertions; no API or backend test suite |
+| Testing | 🟡 IN PROGRESS | 132 automated assertions; no API or backend test suite |
 | Product Polish | 🟡 IN PROGRESS | One confirmed mobile overflow bug; accessibility partially addressed |
 
 ---
@@ -112,23 +112,91 @@ Verified in Chrome across 6 site records at 1440px and 390px — **0 console err
 - [x] Real photo thumbnails in search results and the favourites drawer
 - [x] **No photograph is shared between two sites** (asserted by `validate_media.js`)
 
-### Image coverage — 🟡 IN PROGRESS (content, not code)
+### Image coverage — ✅ COMPLETE for the current dataset (2026-08-23)
 
-**40 sites audited. 40/40 have a working hero. 0 broken paths. 60 distinct images total.**
+**40 sites. 40/40 have a working hero. 0 broken paths. 197 distinct image references.**
 
 | Level | Count | Sites |
 | :--- | :--- | :--- |
-| **Rich** (3+ extra images) | **3** | Amber Fort (8), Ajanta Caves (8), Taj Mahal (7) |
-| Partial (1–2 extra) | 0 | — |
-| **Hero only** | **37** | every other site |
+| **Rich** (3+ supporting images) | **37** | all but the three below |
+| Partial (1–2 supporting) | **3** | Sree Padmanabhaswamy Temple, Golconda Fort, Bhoramdeo Temple |
+| **Hero only** | **0** | — |
 | No image at all | 0 | — |
 
-**37 of 40 sites have exactly one photograph.** Their Explore and Don't Miss entries carry no
-imagery, so those cards render the honest motif placeholder. This is a **media-collection gap,
-not a code gap** — the architecture displays whatever arrives.
+**137 images sourced from Wikimedia Commons**, added across 37 sites. Coverage inverted from
+3 rich / 37 hero-only to **37 rich / 0 hero-only**.
 
-14 sites use opaque `photos sites/extra/imgi_*_licensed-image.jpg` heroes whose filenames carry
-no provenance. They resolve and display, but the source cannot be verified from the filename.
+The three partial sites are a **source-material limit, not an oversight**: their verified Commons
+categories hold only 1–3 files that pass the licence and description filters (Padmanabhaswamy has
+3 files in total; photography inside the temple is restricted).
+
+**Sourcing discipline**
+- Every image came from a **hand-verified Commons category**. Free-text search was rejected after
+  it resolved *Qutb Minar* to `Category:Hashtsal Minar` — a different Delhi monument
+- **Licence filter:** public domain and permissive CC only. Non-commercial, no-derivatives and
+  anything carrying a Restrictions field were refused
+- **Opaque filenames rejected** (`DSC_0787`, `IMG_1234`) — captioning them would mean inventing a
+  caption, so they were skipped rather than guessed at
+- **1600px renditions downloaded, never originals**; re-encoded to WebP at 1400px
+- **Roles derived from each file's own Commons description**, not assigned arbitrarily
+
+| Licence | Count |
+| :--- | ---: |
+| CC BY-SA 4.0 | 84 |
+| CC0 | 13 |
+| CC BY-SA 3.0 | 13 |
+| CC BY 3.0 | 7 |
+| Public domain | 6 |
+| CC BY 2.0 | 5 |
+| CC BY-SA 2.0 | 5 |
+| CC BY 4.0 | 2 |
+| CC BY 2.5 / CC BY 3.0 pl | 2 |
+
+**137/137 record a named creator, a licence and a source URL.** Attribution is **rendered on the
+page** (figure captions and the lightbox), not merely stored — CC BY and CC BY-SA require it.
+Full provenance lives in **`data/media-sources.json`**.
+
+**Asset weight:** 107 MB fetched → **29.8 MB stored** (WebP, avg 222 KB). Total media now ~61 MB
+including the pre-existing 31 MB of JPEGs.
+
+#### Open gap 1 — 14 heroes with unverifiable provenance
+
+These sites still use opaque `photos sites/extra/imgi_*_licensed-image.jpg` heroes. They render
+correctly and each now sits alongside properly sourced supporting imagery, but **the hero's own
+creator and licence cannot be established from the filename**, so it cannot be attributed.
+Replace each with a provenanced file from the site's verified Commons category.
+
+| Site | State | Current hero file | Sourced supporting images |
+| :--- | :--- | :--- | ---: |
+| Qutub Minar | Delhi | `imgi_7_licensed-image.jpg` | 4 |
+| Humayun's Tomb | Delhi | `imgi_8_licensed-image.jpg` | 4 |
+| Red Fort | Delhi | `imgi_9_licensed-image.jpg` | 4 |
+| Konark Sun Temple | Odisha | `imgi_10_licensed-image.jpg` | 4 |
+| Fatehpur Sikri | Uttar Pradesh | `imgi_6_licensed-image.jpg` | 4 |
+| Brihadeeswara Temple | Tamil Nadu | `imgi_11_licensed-image.jpg` | 4 |
+| Agra Fort | Uttar Pradesh | `imgi_5_licensed-image.jpg` | 4 |
+| Rani ki Vav | Gujarat | `imgi_12_licensed-image.jpg` | 4 |
+| Khajuraho Group of Monuments | Madhya Pradesh | `imgi_13_licensed-image.jpg` | 4 |
+| Great Stupa at Sanchi | Madhya Pradesh | `imgi_14_licensed-image.jpg` | 4 |
+| Darjeeling Himalayan Railway | West Bengal | `imgi_15_licensed-image.jpg` | 4 |
+| Basilica of Bom Jesus | Goa | `imgi_16_licensed-image.jpg` | 3 |
+| Mahabodhi Temple Complex | Bihar | `imgi_17_licensed-image.jpg` | 4 |
+| Nalanda Mahavihara Ruins | Bihar | `imgi_18_licensed-image.jpg` | 4 |
+
+The verified Commons categories for all 14 are already recorded in `data/media-sources.json`,
+so replacing a hero is a re-run of the same sourcing step, not new research.
+
+#### Open gap 2 — 3 sites with only 1 supporting image
+
+A **source-material limit, not an oversight.** Each site's verified Commons category holds too
+few files that pass the licence and description filters. More imagery needs a source outside
+Commons (state tourism board or ASI, where reuse is permitted).
+
+| Site | State | Supporting images | Total | Why |
+| :--- | :--- | ---: | ---: | :--- |
+| Sree Padmanabhaswamy Temple | Kerala | 1 | 2 | Commons category holds 3 files in total; photography inside the temple is restricted |
+| Golconda Fort | Telangana | 1 | 2 | Large category, but only 1 file passed the licence + description filters |
+| Bhoramdeo Temple | Chhattisgarh | 1 | 2 | Only 1 usable file after filtering |
 
 ### Data-integrity fixes found during the pass
 - [x] **8 sites rendered `href="undefined"`** for the booking link (`plan.bookingUrl` absent).
@@ -142,11 +210,12 @@ no provenance. They resolve and display, but the source cannot be verified from 
 ### Not Started
 - [ ] Region-level (North/South/East/West) filtering — only per-state and per-category exist
 - [ ] Map zoom/pan gestures beyond the state drill-down
-- [ ] **Collect 2–4 real photographs for each of the 37 hero-only sites** — the single largest
-      remaining content task in the map experience
-- [ ] Replace the 14 opaque `imgi_*` heroes with provenanced files
-- [ ] Image optimisation — `photos sites/` is **31 MB**, with single files up to 1.4 MB. Lazy
-      loading keeps this off the initial paint, but the originals should be resized/compressed
+- [ ] Replace the 14 opaque `imgi_*` **heroes** with provenanced files (their supporting imagery
+      is now properly sourced; only the hero lacks verifiable provenance)
+- [ ] Re-encode the pre-existing `photos sites/` JPEGs — still **31 MB** with single files up to
+      1.4 MB. The 137 new images are already WebP at ~222 KB
+- [ ] More imagery for Padmanabhaswamy, Golconda Fort and Bhoramdeo Temple — blocked on Commons
+      source material, not on effort
 
 ### Blocked / Needs Verification
 - 🟠 Not tested on a physical touch device — only emulated viewports.
@@ -521,7 +590,7 @@ Ready to receive ElevenLabs recordings. No audio was generated and no placeholde
 
 ## 11. Testing
 
-**Latest verified run: 2026-08-23 — `npm test` → 121 assertions, 0 failures, exit 0.**
+**Latest verified run: 2026-08-23 — `npm test` → 132 assertions, 0 failures, exit 0.**
 
 ### Completed
 - [x] `validate_db.js` — every one of 142 verses has all required multi-language fields; sample
@@ -529,7 +598,7 @@ Ready to receive ElevenLabs recordings. No audio was generated and no placeholde
 - [x] `validate_app.js` — loads **each page's real script bundle in its real order** under a
       mocked DOM (`map.html`: map-data → data → app; `library.html`: texts_data →
       narration_manifest → narration → library). Both execute cleanly
-- [x] `validate_media.js` — **31 assertions**: image normalisation, both media schemas, sites with
+- [x] `validate_media.js` — **42 assertions**: image normalisation, both media schemas, sites with
       no or hero-only imagery, section-image picking (never the hero, never repeated), and a live
       dataset audit asserting every referenced file exists, no photo is shared between sites, and
       no alt text is a filename
@@ -647,9 +716,9 @@ Explicitly **not** counted toward current completion:
 |---|---|---|---|
 | Landing page overflows horizontally at 390px | **High** | 🔴 OPEN | `.nav-container` measures **481px inside a 390px viewport**, forcing 91px of document scroll. Reproduced in headless Chrome 151. Other three pages: 0px |
 | No production narration audio exists | **High** | 🟡 OPEN | Only two placeholder fixtures. Everything else audible is a browser voice, so narration is **not identical across machines** — accepted for this release |
-| 37 of 40 heritage sites have only one photograph | **High** | 🟡 OPEN | Architecture displays whatever exists; the images themselves must be collected. Explore/Don't Miss cards render honest motif placeholders meanwhile |
-| 14 site heroes use opaque `imgi_*` filenames | Medium | 🟠 OPEN | They display, but provenance cannot be verified from the filename |
-| `photos sites/` is 31 MB, single files up to 1.4 MB | Medium | 🟠 OPEN | Lazy loading keeps it off first paint; originals still need resizing |
+| 3 sites still have only 1–2 supporting images | Low | 🟡 OPEN | Padmanabhaswamy, Golconda Fort, Bhoramdeo — their Commons categories hold too few usable files. A source-material limit |
+| 14 site heroes use opaque `imgi_*` filenames | Medium | 🟠 OPEN | They display and now sit alongside properly sourced supporting imagery, but the hero's own provenance is unverifiable |
+| Pre-existing `photos sites/` is 31 MB, files up to 1.4 MB | Medium | 🟠 OPEN | The 137 new images are WebP at ~222 KB; the older JPEGs still need re-encoding |
 | Sanskrit cannot be narrated at all | **High** | 🔴 OPEN | No mainstream browser ships a Sanskrit voice. The player refuses rather than substituting Hindi. Only a recording unblocks it |
 | Network voices cannot pause mid-sentence | Medium | 🟠 OPEN | Chromium limitation. Local voices are preferred where available; a failed pause is detected and converted to a stop rather than a dead button. Hindi has only a network voice on this machine |
 | Web Speech tested in Chrome only | Medium | 🟠 OPEN | Firefox, Safari and Android expose different voice sets and were not exercised |
@@ -673,6 +742,7 @@ Explicitly **not** counted toward current completion:
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-08-23 | Sourced **137 licensed images from Wikimedia Commons** across 37 sites — coverage inverted from 3 rich/37 hero-only to **37 rich/0 hero-only**. Provenance in `data/media-sources.json`, attribution rendered on page | ✅ Done |
 | 2026-08-23 | Heritage site media pass: `site-media.js` resolver, gallery + lightbox, lazy loading, honest placeholders, real thumbnails; fixed 8 `undefined` booking links and 24 empty Look Closer sections | ✅ Done |
 | 2026-08-23 | Audited image coverage across all 40 sites — 3 rich, 37 hero-only, 0 broken | 🟡 Content gap logged |
 | 2026-08-23 | Built the production-asset pipeline: deterministic path resolver, `npm run narration:expected` coverage report, `docs/NARRATION_ASSETS.md`, and an end-to-end drop-in test | ✅ Done |
@@ -697,7 +767,7 @@ Explicitly **not** counted toward current completion:
 - [x] **No secrets in repository** — pattern scan clean; token purged from history and revoked
 - [x] **No PII in repository** — `contact_messages.json` untracked and purged from history
 - [x] **Security audit complete** — every control exercised against the running server
-- [x] **Tests passing** — 121 assertions, exit 0, 2026-08-23
+- [x] **Tests passing** — 132 assertions, exit 0, 2026-08-23
 - [x] **Map works** — verified serving, routing, and data integrity
 - [x] **Library works** — 142/142 verses complete, page loads and executes cleanly
 - [x] **Festivals work** — 14/14 populated, all deep-links resolve
