@@ -2,7 +2,7 @@
 
 > Living development tracker. Updated continuously as the project evolves.
 
-**Last audited:** 2026-08-23 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 90 assertions, exit 0
+**Last audited:** 2026-08-23 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 121 assertions, exit 0
 
 Every status below was established by inspecting the repository and exercising the running
 application. Where something was *not* executed, it is marked 🟠 NEEDS VERIFICATION rather
@@ -15,7 +15,7 @@ than assumed.
 | Area | Status | Notes |
 |---|---|---|
 | Core Application | ✅ COMPLETE | Four front ends + one Express backend, all serving 200, zero console/network errors |
-| Heritage Map | ✅ COMPLETE | 40 destinations, 37 state paths, search, filters, favourites, detail pages |
+| Heritage Map | 🟡 IN PROGRESS | 40 destinations, search, filters, gallery + lightbox, honest media fallbacks. **37/40 sites have only one photograph** — a content gap |
 | Library | ✅ COMPLETE | 142 verses, 10 manuscripts, layered text, bookmarks, search |
 | Narration | 🟡 IN PROGRESS | Hybrid engine verified in Chrome: recorded audio first, browser voice fallback. **No production recordings exist** — audible narration is browser TTS, which varies by machine |
 | Festivals | ✅ COMPLETE | 14 festivals, all fields populated, calendar + detail + map deep-links |
@@ -23,7 +23,7 @@ than assumed.
 | Heritage AI | ✅ COMPLETE | Verified end-to-end against live OpenAI, rate limiting confirmed |
 | Contact | ✅ COMPLETE | Verified end-to-end; flat-file storage is a known production limitation |
 | Security | ✅ COMPLETE | Secrets and PII purged from history; all controls tested live |
-| Testing | 🟡 IN PROGRESS | 90 automated assertions; no API or backend test suite |
+| Testing | 🟡 IN PROGRESS | 121 automated assertions; no API or backend test suite |
 | Product Polish | 🟡 IN PROGRESS | One confirmed mobile overflow bug; accessibility partially addressed |
 
 ---
@@ -81,14 +81,79 @@ build step for the front ends — each page loads plain `<script>` files.
 - [ ] Mobile map usability — page does **not** overflow at 390px (0px), but **53 interactive
       elements measure under 24px** at that width. Functional, not comfortable.
 
+### Site media architecture — ✅ COMPLETE (2026-08-23)
+
+Verified in Chrome across 6 site records at 1440px and 390px — **0 console errors, 0 exceptions, 0 HTTP 4xx, 0 failed image requests**. Full suite: **121 assertions, exit 0**.
+
+- [x] **`site-media.js`** — one resolver producing `{ hero, gallery[], extras, culture, travel }`
+      from **two schemas at once**: the preferred `images: { hero, gallery[], culture, travel }`
+      and every legacy field (`image`, `explore[].image`, `dontMiss[].image`, `lookCloser.image`)
+- [x] **Adding `images` to a site needs no frontend change** — proven on a real record: the
+      previously-unused `Taj_Mahal_Dome.JPG` was added via `images.gallery` and appears in the
+      gallery and lightbox with its caption
+- [x] Accepts a bare string or `{ src, alt, caption, credit }`; de-duplicates across schemas
+- [x] **Alt text is built from the site's own identity** (`"Amber Fort — Jaipur, Rajasthan"`),
+      never a filename. Verified 0 missing and 0 filename-shaped alts across all rendered images
+- [x] Captions come only from data that already carried one — no fabricated provenance or credits
+- [x] **Sections render only where data exists** — numbering is computed, so a sparse site shows
+      `01–08` with no gap. Sirpur renders 8 sections, most render 9, Ajanta 10
+- [x] Editorial placement: History and Why Visit take a supporting image *beside* the prose
+      (sticky on desktop, image-first when stacked); Explore and Don't Miss keep their own
+      imagery; Plan Your Visit takes a 21:9 banner where a spare image exists
+- [x] **A supporting image is never the hero and never repeats** on the same page
+- [x] **Lightbox** — click or keyboard to open, ←/→ to step (wraps), Escape to close, captions,
+      `n / total` counter, focus moves to the close button and returns to the thumbnail
+- [x] **Lazy loading below the fold** — 15–17 of each rich site's images are deferred; only the
+      hero is `fetchpriority="high"`
+- [x] Aspect ratio reserved before load (`--media-ratio`), `object-fit: cover`, shimmer loading
+      state, and a motif fallback on `error` so a broken file never leaves an empty box
+- [x] **Honest fallback** — sites without a photograph for a slot show their own heritage motif
+      plus *"Visual archive coming soon"*. Never a stock photo, never another site's picture
+- [x] Real photo thumbnails in search results and the favourites drawer
+- [x] **No photograph is shared between two sites** (asserted by `validate_media.js`)
+
+### Image coverage — 🟡 IN PROGRESS (content, not code)
+
+**40 sites audited. 40/40 have a working hero. 0 broken paths. 60 distinct images total.**
+
+| Level | Count | Sites |
+| :--- | :--- | :--- |
+| **Rich** (3+ extra images) | **3** | Amber Fort (8), Ajanta Caves (8), Taj Mahal (7) |
+| Partial (1–2 extra) | 0 | — |
+| **Hero only** | **37** | every other site |
+| No image at all | 0 | — |
+
+**37 of 40 sites have exactly one photograph.** Their Explore and Don't Miss entries carry no
+imagery, so those cards render the honest motif placeholder. This is a **media-collection gap,
+not a code gap** — the architecture displays whatever arrives.
+
+14 sites use opaque `photos sites/extra/imgi_*_licensed-image.jpg` heroes whose filenames carry
+no provenance. They resolve and display, but the source cannot be verified from the filename.
+
+### Data-integrity fixes found during the pass
+- [x] **8 sites rendered `href="undefined"`** for the booking link (`plan.bookingUrl` absent).
+      Now the link and the "Book on the official portal" CTA appear only where a real URL exists;
+      the note falls back to "confirm with the site authority". Verified 0 bad links across all
+      6 tested sites, with the CTA correctly absent on India Gate and Sirpur
+- [x] **24 sites rendered an empty "Look Closer" section** (`lookCloser` present but no
+      hotspots). The section now requires hotspots to render
+- [x] All interpolated data is HTML-escaped at render time
+
 ### Not Started
 - [ ] Region-level (North/South/East/West) filtering — only per-state and per-category exist
 - [ ] Map zoom/pan gestures beyond the state drill-down
+- [ ] **Collect 2–4 real photographs for each of the 37 hero-only sites** — the single largest
+      remaining content task in the map experience
+- [ ] Replace the 14 opaque `imgi_*` heroes with provenanced files
+- [ ] Image optimisation — `photos sites/` is **31 MB**, with single files up to 1.4 MB. Lazy
+      loading keeps this off the initial paint, but the originals should be resized/compressed
 
 ### Blocked / Needs Verification
 - 🟠 Not tested on a physical touch device — only emulated viewports.
 - 🟠 Projection constants are duplicated across `gen.py`, `map-data.js` and `app.js`; they agree
       today but nothing enforces it.
+- 🟠 Heritage AI is **not** wired into the map site experience — it exists only on the landing
+      page. Explicitly out of scope for the media pass.
 
 ---
 
@@ -456,7 +521,7 @@ Ready to receive ElevenLabs recordings. No audio was generated and no placeholde
 
 ## 11. Testing
 
-**Latest verified run: 2026-08-23 — `npm test` → 90 assertions, 0 failures, exit 0.**
+**Latest verified run: 2026-08-23 — `npm test` → 121 assertions, 0 failures, exit 0.**
 
 ### Completed
 - [x] `validate_db.js` — every one of 142 verses has all required multi-language fields; sample
@@ -464,6 +529,13 @@ Ready to receive ElevenLabs recordings. No audio was generated and no placeholde
 - [x] `validate_app.js` — loads **each page's real script bundle in its real order** under a
       mocked DOM (`map.html`: map-data → data → app; `library.html`: texts_data →
       narration_manifest → narration → library). Both execute cleanly
+- [x] `validate_media.js` — **31 assertions**: image normalisation, both media schemas, sites with
+      no or hero-only imagery, section-image picking (never the hero, never repeated), and a live
+      dataset audit asserting every referenced file exists, no photo is shared between sites, and
+      no alt text is a filename
+- [x] Browser media verification — 6 site records at 1440px and 390px: lazy loading, lightbox
+      (open, ←/→, wrap, Escape, focus return), themes, stacking, and **0 console errors,
+      0 exceptions, 0 HTTP 4xx, 0 failed requests**
 - [x] `validate_narration.js` — **86 assertions**: scope resolution, voice resolution and
       ranking, Sanskrit strictness, text selection, the audio/speech/refusal plan, language
       availability, duration handling, manifest integrity, deterministic asset paths, the
@@ -575,6 +647,9 @@ Explicitly **not** counted toward current completion:
 |---|---|---|---|
 | Landing page overflows horizontally at 390px | **High** | 🔴 OPEN | `.nav-container` measures **481px inside a 390px viewport**, forcing 91px of document scroll. Reproduced in headless Chrome 151. Other three pages: 0px |
 | No production narration audio exists | **High** | 🟡 OPEN | Only two placeholder fixtures. Everything else audible is a browser voice, so narration is **not identical across machines** — accepted for this release |
+| 37 of 40 heritage sites have only one photograph | **High** | 🟡 OPEN | Architecture displays whatever exists; the images themselves must be collected. Explore/Don't Miss cards render honest motif placeholders meanwhile |
+| 14 site heroes use opaque `imgi_*` filenames | Medium | 🟠 OPEN | They display, but provenance cannot be verified from the filename |
+| `photos sites/` is 31 MB, single files up to 1.4 MB | Medium | 🟠 OPEN | Lazy loading keeps it off first paint; originals still need resizing |
 | Sanskrit cannot be narrated at all | **High** | 🔴 OPEN | No mainstream browser ships a Sanskrit voice. The player refuses rather than substituting Hindi. Only a recording unblocks it |
 | Network voices cannot pause mid-sentence | Medium | 🟠 OPEN | Chromium limitation. Local voices are preferred where available; a failed pause is detected and converted to a stop rather than a dead button. Hindi has only a network voice on this machine |
 | Web Speech tested in Chrome only | Medium | 🟠 OPEN | Firefox, Safari and Android expose different voice sets and were not exercised |
@@ -598,6 +673,8 @@ Explicitly **not** counted toward current completion:
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-08-23 | Heritage site media pass: `site-media.js` resolver, gallery + lightbox, lazy loading, honest placeholders, real thumbnails; fixed 8 `undefined` booking links and 24 empty Look Closer sections | ✅ Done |
+| 2026-08-23 | Audited image coverage across all 40 sites — 3 rich, 37 hero-only, 0 broken | 🟡 Content gap logged |
 | 2026-08-23 | Built the production-asset pipeline: deterministic path resolver, `npm run narration:expected` coverage report, `docs/NARRATION_ASSETS.md`, and an end-to-end drop-in test | ✅ Done |
 | 2026-08-23 | Restored Web Speech as the fallback when no recording exists; recorded audio still wins. Verified 24/24 in headed Chrome | ✅ Done |
 | 2026-08-23 | Voice ranking now prefers local over network voices — fixed `pause()` silently failing on `Google UK English Female` | ✅ Fixed |
@@ -620,7 +697,7 @@ Explicitly **not** counted toward current completion:
 - [x] **No secrets in repository** — pattern scan clean; token purged from history and revoked
 - [x] **No PII in repository** — `contact_messages.json` untracked and purged from history
 - [x] **Security audit complete** — every control exercised against the running server
-- [x] **Tests passing** — 90 assertions, exit 0, 2026-08-23
+- [x] **Tests passing** — 121 assertions, exit 0, 2026-08-23
 - [x] **Map works** — verified serving, routing, and data integrity
 - [x] **Library works** — 142/142 verses complete, page loads and executes cleanly
 - [x] **Festivals work** — 14/14 populated, all deep-links resolve

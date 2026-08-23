@@ -178,6 +178,14 @@ window.DESTINATIONS = [
   {
     "id": "taj-mahal",
     "image": "photos sites/tajmahal/Taj_Mahal,_Agra,_India_edit3.jpg",
+    "images": {
+      "gallery": [
+        {
+          "src": "photos sites/tajmahal/Taj_Mahal_Dome.JPG",
+          "caption": "The central dome"
+        }
+      ]
+    },
     "slug": "taj-mahal",
     "name": "Taj Mahal",
     "city": "Agra",

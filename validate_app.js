@@ -10,7 +10,7 @@ const vm = require('vm');
 // Each bundle matches one HTML entry point. app.js reads globals defined by
 // map-data.js and data.js, so order matters here exactly as it does in map.html.
 const bundles = [
-  { page: 'map.html', files: ['map-data.js', 'data.js', 'app.js'] },
+  { page: 'map.html', files: ['map-data.js', 'data.js', 'site-media.js', 'app.js'] },
   { page: 'library.html', files: ['texts_data.js', 'audio/narration_manifest.js', 'narration.js', 'library.js'] }
 ];
 
