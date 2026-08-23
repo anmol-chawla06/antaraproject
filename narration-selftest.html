@@ -160,13 +160,26 @@
     // --- Availability semantics ---------------------------------------------
     const absent = index.languages.map(l => l.code).find(c => !N.hasTrack(index, scope, c));
     if (absent) {
-      check('a language with no recording resolves to null (no TTS fallback)',
+      check('a language with no recording resolves to no track (it falls back to a voice)',
         N.resolveTrack(index, scope, absent) === null, 'tested "' + absent + '"');
     } else {
       info('every catalogued language has audio', 'skipped missing-language check');
     }
-    check('Web Speech API is not used by narration.js',
-      !/speechSynthesis/.test(N.createIndex.toString() + N.resolveTrack.toString()));
+
+    // narration.js stays pure: it is handed the voice list and never reaches
+    // for speechSynthesis itself. That is what keeps it testable in Node.
+    check('narration.js does not touch speechSynthesis directly',
+      !/speechSynthesis/.test(N.createIndex.toString() + N.resolveTrack.toString() + N.resolveVoice.toString()));
+
+    const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    info('browser voices detected', voices.length + ' — ' +
+      ([...new Set(voices.map(v => v.lang))].sort().join(', ') || 'none'));
+    const sa = index.languages.find(l => l.code === 'sa');
+    if (sa) {
+      check('Sanskrit is not satisfied by a non-Sanskrit voice',
+        N.resolveVoice(sa, voices) === null || /^sa(-|_|$)/i.test(N.resolveVoice(sa, voices).lang),
+        N.resolveVoice(sa, voices) ? N.resolveVoice(sa, voices).lang : 'no Sanskrit voice (expected)');
+    }
 
     // --- Network -------------------------------------------------------------
     let head;

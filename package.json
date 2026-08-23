@@ -7,6 +7,7 @@
     "build:library": "python build_all.py",
     "build:map": "python gen.py",
     "build:narration": "node build_narration_manifest.js",
+    "narration:expected": "node build_narration_manifest.js --expected",
     "test": "node validate_db.js && node validate_app.js && node validate_narration.js"
   },
   "keywords": [

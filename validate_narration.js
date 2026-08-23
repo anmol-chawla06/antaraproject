@@ -36,10 +36,14 @@ function eq(label, actual, expected) {
 const manifest = {
   version: 1,
   languages: [
-    { code: 'sa', label: 'Sanskrit', nativeLabel: 'संस्कृतम्', textField: 'sanskrit' },
-    { code: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी', textField: 'hindi' },
-    { code: 'en', label: 'English', nativeLabel: 'English', textField: 'english' },
-    { code: 'ta', label: 'Tamil', nativeLabel: 'தமிழ்', textField: null }
+    { code: 'sa', label: 'Sanskrit', nativeLabel: 'संस्कृतम्', textField: 'sanskrit',
+      speech: { lang: 'sa-IN', match: ['sa-in', 'sa'] } },
+    { code: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी', textField: 'hindi',
+      speech: { lang: 'hi-IN', match: ['hi-in', 'hi'] } },
+    { code: 'en', label: 'English', nativeLabel: 'English', textField: 'english',
+      speech: { lang: 'en-IN', match: ['en-in', 'en-gb', 'en-us', 'en'] } },
+    { code: 'ta', label: 'Tamil', nativeLabel: 'தமிழ்', textField: null,
+      speech: { lang: 'ta-IN', match: ['ta-in', 'ta'] } }
   ],
   resolutionOrder: ['verse', 'chapter', 'book'],
   tracks: {
@@ -183,19 +187,152 @@ ok('a nonsense duration is discarded',
     tracks: { 'book:b': { en: { available: true, audioUrl: 'a.mp3', durationSeconds: -5 } } }
   }), { bookId: 'b' }, 'en').durationSeconds === null);
 
-// --- No Web Speech anywhere in shipped code ---------------------------------
+// --- Voice resolution -------------------------------------------------------
 
-group('No Web Speech API in shipped narration code');
+group('Voice resolution');
 
-const SPEECH_PATTERN = /speechSynthesis|SpeechSynthesisUtterance|onvoiceschanged|voiceschanged|getVoices\s*\(/;
-for (const file of ['narration.js', 'library.js', 'library.html']) {
-  const src = fs.readFileSync(path.join(__dirname, file), 'utf8');
-  const hits = src.split('\n')
-    .map((line, i) => ({ line: line.trim(), n: i + 1 }))
-    .filter(l => SPEECH_PATTERN.test(l.line));
-  hits.slice(0, 5).forEach(h => console.log('         ' + file + ':' + h.n + '  ' + h.line));
-  ok(file + ' contains no Web Speech API reference', hits.length === 0);
-}
+const V = (lang, name) => ({ lang, name: name || lang + ' voice' });
+const catalogue = code => manifest.languages.find(l => l.code === code);
+
+ok('no voices installed resolves to null, not a default voice',
+  N.resolveVoice(catalogue('en'), []) === null);
+
+ok('an exact tag is matched',
+  N.resolveVoice(catalogue('hi'), [V('en-US'), V('hi-IN')]).lang === 'hi-IN');
+
+ok('Google is preferred over Microsoft at the same tag',
+  N.resolveVoice(catalogue('hi'), [V('hi-IN', 'Microsoft Kalpana'), V('hi-IN', 'Google हिन्दी')]).name === 'Google हिन्दी');
+
+// Chromium's pause()/resume() do not take on network voices, and a remote
+// voice is silent offline -- so an on-device voice wins even against Google.
+ok('a local voice is preferred over a network voice',
+  N.resolveVoice(catalogue('en'), [
+    { lang: 'en-US', name: 'Google US English', localService: false },
+    { lang: 'en-US', name: 'Microsoft Zira', localService: true }
+  ]).name === 'Microsoft Zira');
+
+ok('a network voice is still used when no local one exists',
+  N.resolveVoice(catalogue('hi'), [
+    { lang: 'hi-IN', name: 'Google हिन्दी', localService: false }
+  ]).name === 'Google हिन्दी');
+
+ok('underscore-style locale tags are normalised',
+  N.resolveVoice(catalogue('hi'), [V('hi_IN')]).lang === 'hi_IN');
+
+ok('English falls back through en-IN, en-GB, en-US, then any en',
+  N.resolveVoice(catalogue('en'), [V('en-AU')]).lang === 'en-AU');
+
+ok('catalogue order decides which English voice wins',
+  N.resolveVoice(catalogue('en'), [V('en-US'), V('en-IN')]).lang === 'en-IN');
+
+ok('a language with no matching voice resolves to null',
+  N.resolveVoice(catalogue('ta'), [V('en-US'), V('hi-IN')]) === null);
+
+// The rule that keeps narration honest about provenance.
+ok('Sanskrit is NOT satisfied by a Hindi voice',
+  N.resolveVoice(catalogue('sa'), [V('hi-IN'), V('en-US')]) === null);
+
+ok('Sanskrit accepts a genuine Sanskrit voice',
+  N.resolveVoice(catalogue('sa'), [V('sa-IN')]).lang === 'sa-IN');
+
+ok('a prefix match cannot bleed across languages (sa must not match sat-IN)',
+  N.resolveVoice(catalogue('sa'), [V('sat-IN')]) === null);
+
+// --- Text selection ---------------------------------------------------------
+
+group('Text to speak');
+
+const verse = { id: 'v1', sanskrit: 'कर्मण्येवाधिकारस्ते', hindi: 'तेरा अधिकार कर्म में है', english: 'Your right is to action alone.' };
+
+ok('Sanskrit reads the sanskrit field', N.textFor(verse, catalogue('sa')) === 'कर्मण्येवाधिकारस्ते');
+ok('Hindi reads the hindi field', N.textFor(verse, catalogue('hi')) === 'तेरा अधिकार कर्म में है');
+ok('English reads the english field', N.textFor(verse, catalogue('en')) === 'Your right is to action alone.');
+ok('a language with no text field yields null', N.textFor(verse, catalogue('ta')) === null);
+ok('a blank field yields null', N.textFor({ english: '   ' }, catalogue('en')) === null);
+
+// --- The plan the player acts on --------------------------------------------
+
+group('Narration plan: recording first, then browser voice, then refusal');
+
+const enVoices = [V('en-US'), V('en-IN')];
+const hiVoices = [V('hi-IN')];
+
+ok('a recording is preferred over an available voice',
+  N.planNarration(index, gitaVerse, 'sa', verse, [V('sa-IN')]).mode === 'audio');
+
+// Hindi has no recording anywhere in the fixture, so it exercises the
+// fallback; English deliberately does have one and must not.
+ok('with no recording but a voice, the plan is speech',
+  N.planNarration(index, gitaVerse, 'hi', verse, hiVoices).mode === 'speech');
+
+ok('the speech plan carries the resolved voice and the text',
+  (() => {
+    const p = N.planNarration(index, gitaVerse, 'hi', verse, hiVoices);
+    return p.voice.lang === 'hi-IN' && p.text === 'तेरा अधिकार कर्म में है';
+  })());
+
+ok('with no recording and no voice, the plan is unavailable',
+  N.planNarration(index, gitaVerse, 'hi', verse, []).mode === 'unavailable');
+
+ok('the unavailable reason distinguishes "no voices at all"',
+  N.planNarration(index, gitaVerse, 'hi', verse, []).reason === 'no-voices');
+
+ok('the unavailable reason distinguishes "no voice for this language"',
+  N.planNarration(index, gitaVerse, 'hi', verse, enVoices).reason === 'no-voice-for-language');
+
+ok('the unavailable reason distinguishes "no text to read"',
+  N.planNarration(index, gitaVerse, 'ta', verse, [V('ta-IN')]).reason === 'no-text');
+
+ok('Sanskrit with only a Hindi voice and no recording refuses rather than substituting',
+  (() => {
+    const bare = N.createIndex({ languages: manifest.languages, tracks: {} });
+    const p = N.planNarration(bare, gitaVerse, 'sa', verse, hiVoices);
+    return p.mode === 'unavailable' && p.reason === 'no-voice-for-language';
+  })());
+
+ok('an unknown language is reported, not guessed',
+  N.planNarration(index, gitaVerse, 'zz', verse, enVoices).reason === 'unknown-language');
+
+// --- Availability now includes speech ---------------------------------------
+
+group('Language availability includes browser voices');
+
+const withVoices = N.languagesFor(index, gitaVerse, verse, [V('en-IN'), V('hi-IN')]);
+
+ok('a language with only a voice still counts as available',
+  withVoices.find(l => l.code === 'hi').available === true &&
+  withVoices.find(l => l.code === 'hi').hasAudio === false &&
+  withVoices.find(l => l.code === 'hi').hasSpeech === true);
+
+ok('a language with a recording is flagged hasAudio',
+  withVoices.find(l => l.code === 'sa').hasAudio === true);
+
+ok('a language with neither is unavailable and carries a reason',
+  (() => {
+    const ta = withVoices.find(l => l.code === 'ta');
+    return ta.available === false && ta.speechReason === 'no-voice-for-language';
+  })());
+
+eq('only narratable languages are offered',
+  N.availableLanguages(index, gitaVerse, verse, [V('en-IN')]).map(l => l.code).sort(),
+  ['en', 'sa']);
+
+ok('a preferred language reachable only by voice is kept',
+  N.chooseLanguage(index, gitaVerse, 'en', verse, [V('en-IN')]) === 'en');
+
+ok('with no voices at all, only recorded languages remain',
+  N.chooseLanguage(index, gitaVerse, 'ta', verse, []) === 'sa');
+
+// --- Web Speech must be wired into the shipped player -----------------------
+
+group('Web Speech is present in the player');
+
+const librarySrc = fs.readFileSync(path.join(__dirname, 'library.js'), 'utf8');
+ok('library.js uses SpeechSynthesisUtterance', /new SpeechSynthesisUtterance\(/.test(librarySrc));
+ok('library.js reads getVoices()', /getVoices\s*\(/.test(librarySrc));
+ok('library.js handles asynchronous voice loading', /'voiceschanged'/.test(librarySrc));
+ok('library.js cancels before speaking again', /cancel\s*\(\s*\)/.test(librarySrc));
+ok('library.js supports pause and resume', /\.pause\s*\(\s*\)/.test(librarySrc) && /\.resume\s*\(\s*\)/.test(librarySrc));
 
 // --- The real, generated manifest -------------------------------------------
 
@@ -255,6 +392,182 @@ if (!fs.existsSync(manifestPath)) {
     (covered.join(', ') || '(none)'));
 
   ok('at least one real recording is present for end-to-end testing', declared.length > 0);
+}
+
+// --- Deterministic asset paths ----------------------------------------------
+
+group('Deterministic asset paths (manuscript + language -> one path)');
+
+eq('a book id maps to exactly one folder slug',
+  ['bhagavad_gita', 'rigveda', 'katha_upanishad'].map(N.manuscriptSlug),
+  ['bhagavad-gita', 'rigveda', 'katha-upanishad']);
+
+eq('manuscript + language yields one book-level path',
+  N.expectedAudioPath('bhagavad_gita', 'sa'),
+  'audio/manuscripts/bhagavad-gita/sa.mp3');
+
+eq('the default extension is mp3, and an explicit one is honoured',
+  [N.expectedAudioPath('rigveda', 'hi'), N.expectedAudioPath('rigveda', 'hi', 'wav'), N.expectedAudioPath('rigveda', 'hi', '.ogg')],
+  ['audio/manuscripts/rigveda/hi.mp3', 'audio/manuscripts/rigveda/hi.wav', 'audio/manuscripts/rigveda/hi.ogg']);
+
+eq('chapter and verse paths are equally deterministic',
+  [N.expectedChapterAudioPath('bhagavad_gita', 'bg_ch_02', 'sa'),
+   N.expectedVerseAudioPath('bhagavad_gita', 'bg_2_47', 'sa')],
+  ['audio/manuscripts/bhagavad-gita/chapters/bg_ch_02.sa.mp3',
+   'audio/manuscripts/bhagavad-gita/verses/bg_2_47.sa.mp3']);
+
+eq('expectedAudioPaths lists every honoured location, most specific first',
+  N.expectedAudioPaths({ bookId: 'bhagavad_gita', chapterId: 'bg_ch_02', verseId: 'bg_2_47' }, 'en')
+    .map(p => p.scope),
+  ['verse', 'chapter', 'book']);
+
+ok('path building is total — missing inputs yield null, not a malformed path',
+  N.expectedAudioPath(null, 'sa') === null &&
+  N.expectedAudioPath('rigveda', null) === null &&
+  N.expectedVerseAudioPath('rigveda', null, 'sa') === null);
+
+// The builder and the resolver must agree, or a correctly-placed file would be
+// scanned into a key the player never looks up.
+{
+  const live = JSON.parse(fs.readFileSync(path.join(__dirname, 'audio', 'manifest.json'), 'utf8'));
+  const mismatches = [];
+  for (const [key, byLang] of Object.entries(live.tracks)) {
+    if (!key.startsWith('book:')) continue;
+    const bookId = key.slice('book:'.length);
+    for (const [lang, track] of Object.entries(byLang)) {
+      const ext = path.extname(track.audioUrl).slice(1);
+      const expected = N.expectedAudioPath(bookId, lang, ext);
+      if (track.audioUrl !== expected) mismatches.push(track.audioUrl + ' != ' + expected);
+    }
+  }
+  mismatches.forEach(m => console.log('         ' + m));
+  ok('the generated manifest agrees with the deterministic resolver', mismatches.length === 0);
+}
+
+// --- Production-asset lifecycle ---------------------------------------------
+
+group('Production-asset lifecycle (ElevenLabs drop-in)');
+
+{
+  const catalogueLangs = manifest.languages;
+  const scope = { bookId: 'rigveda', chapterId: 'rv_ch1', verseId: 'rv_1_1' };
+  const rvVerse = { id: 'rv_1_1', sanskrit: 'अग्निमीळे पुरोहितं', hindi: 'मैं अग्नि की स्तुति करता हूँ', english: 'I praise Agni, the household priest.' };
+  const enVoice = [{ lang: 'en-US', name: 'Microsoft Zira', localService: true }];
+  const hiVoice = [{ lang: 'hi-IN', name: 'Google हिन्दी', localService: false }];
+  const noVoices = [];
+
+  const withRecording = code => N.createIndex({
+    languages: catalogueLangs,
+    tracks: { 'book:rigveda': { [code]: { available: true, audioUrl: N.expectedAudioPath('rigveda', code) } } }
+  });
+  const bare = N.createIndex({ languages: catalogueLangs, tracks: {} });
+
+  // 1. An existing recording is selected, even when a voice is also available.
+  {
+    const p = N.planNarration(withRecording('en'), scope, 'en', rvVerse, enVoice);
+    ok('existing recording -> recorded audio is selected over an available voice',
+      p.mode === 'audio' && p.track.audioUrl === 'audio/manuscripts/rigveda/en.mp3', p.track && p.track.audioUrl);
+  }
+
+  // 2. Missing English recording falls back to browser speech.
+  {
+    const p = N.planNarration(bare, scope, 'en', rvVerse, enVoice);
+    ok('missing English recording -> browser TTS fallback',
+      p.mode === 'speech' && p.voice.name === 'Microsoft Zira' && p.text === rvVerse.english,
+      p.mode + ' / ' + (p.voice && p.voice.name));
+  }
+
+  // 3. Missing Hindi recording falls back to browser speech.
+  {
+    const p = N.planNarration(bare, scope, 'hi', rvVerse, hiVoice);
+    ok('missing Hindi recording -> browser TTS fallback',
+      p.mode === 'speech' && p.voice.name === 'Google हिन्दी' && p.text === rvVerse.hindi,
+      p.mode + ' / ' + (p.voice && p.voice.name));
+  }
+
+  // 4. Missing Sanskrit recording is an honest refusal, never a substitution.
+  {
+    const p = N.planNarration(bare, scope, 'sa', rvVerse, hiVoice.concat(enVoice));
+    ok('missing Sanskrit recording -> unavailable, recording required',
+      p.mode === 'unavailable' && p.reason === 'no-voice-for-language', p.mode + ' / ' + p.reason);
+    ok('Sanskrit refusal does not borrow the Hindi voice',
+      N.resolveVoice(catalogueLangs.find(l => l.code === 'sa'), hiVoice) === null);
+    ok('the fix for Sanskrit is a file at one known path',
+      N.expectedAudioPath('rigveda', 'sa') === 'audio/manuscripts/rigveda/sa.mp3');
+  }
+
+  // 5. Adding the Sanskrit recording flips it to recorded, with no other change.
+  {
+    const p = N.planNarration(withRecording('sa'), scope, 'sa', rvVerse, noVoices);
+    ok('adding a Sanskrit recording -> immediately selected, with no voices at all',
+      p.mode === 'audio' && p.track.audioUrl === 'audio/manuscripts/rigveda/sa.mp3', p.track && p.track.audioUrl);
+
+    const langs = N.languagesFor(withRecording('sa'), scope, rvVerse, noVoices);
+    ok('the picker relabels Sanskrit from unavailable to recorded',
+      langs.find(l => l.code === 'sa').hasAudio === true &&
+      langs.find(l => l.code === 'sa').available === true);
+  }
+}
+
+// --- End-to-end: a real file is discovered by the builder -------------------
+
+group('End-to-end: a newly added file is discovered and selected');
+
+{
+  // Writes a real file into audio/manuscripts/, rebuilds the manifest from
+  // disk, asserts the player would choose it, then removes it and rebuilds.
+  // Nothing is left behind -- see the finally block.
+  const builder = require('./build_narration_manifest.js');
+  const rel = N.expectedAudioPath('rigveda', 'sa');
+  const abs = path.join(__dirname, rel);
+  const dir = path.dirname(abs);
+  const dirExisted = fs.existsSync(dir);
+  let created = false;
+
+  try {
+    if (fs.existsSync(abs)) {
+      ok('a real Sanskrit recording is already present (skipping the synthetic drop-in)', true, rel);
+    } else {
+      fs.mkdirSync(dir, { recursive: true });
+      // Not audio and never played -- only the discovery path is under test.
+      fs.writeFileSync(abs, Buffer.from('ID3      ', 'binary'));
+      created = true;
+
+      const rebuilt = builder.build();
+      const idx = N.createIndex(rebuilt);
+      const scope = { bookId: 'rigveda' };
+      const track = N.resolveTrack(idx, scope, 'sa');
+
+      ok('the builder discovers a file dropped at the expected path',
+        track !== null, track ? track.audioUrl : 'not found');
+      ok('the discovered track carries the right path and MIME type',
+        track && track.audioUrl === rel && track.mimeType === 'audio/mpeg',
+        track ? track.audioUrl + ' / ' + track.mimeType : 'n/a');
+      ok('duration is null for a compressed format, never guessed',
+        track && track.durationSeconds === null, track ? String(track.durationSeconds) : 'n/a');
+
+      const verse = { id: 'rv_1_1', sanskrit: 'अग्निमीळे', hindi: 'x', english: 'y' };
+      const plan = N.planNarration(idx, scope, 'sa', verse, []);
+      ok('Sanskrit switches from unavailable to recorded with no code change',
+        plan.mode === 'audio', plan.mode);
+
+      const langs = N.languagesFor(idx, scope, verse, []);
+      ok('only Sanskrit changed — other languages are untouched',
+        langs.find(l => l.code === 'sa').hasAudio === true &&
+        langs.find(l => l.code === 'hi').hasAudio === false &&
+        langs.find(l => l.code === 'en').hasAudio === false);
+    }
+  } finally {
+    if (created) {
+      fs.unlinkSync(abs);
+      if (!dirExisted) { try { fs.rmdirSync(dir); } catch { /* not empty */ } }
+      builder.build();
+      ok('the synthetic file was removed and the manifest restored',
+        !fs.existsSync(abs) &&
+        N.resolveTrack(N.createIndex(JSON.parse(fs.readFileSync(path.join(__dirname, 'audio', 'manifest.json'), 'utf8'))),
+          { bookId: 'rigveda' }, 'sa') === null);
+    }
+  }
 }
 
 // --- Summary ----------------------------------------------------------------

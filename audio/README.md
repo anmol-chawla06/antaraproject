@@ -1,13 +1,21 @@
 # Narration audio
 
-Antara's narration is **prepared audio files only.** There is no text-to-speech
-anywhere in the player, so a passage sounds identical on every machine — or the
-Library says plainly that no recording exists yet. It never depends on which
-voices a reader happens to have installed.
+Antara narrates from **prepared audio files where they exist**, and falls back to
+a **browser voice** where they do not.
 
 ```
-Manuscript  →  Language  →  Audio asset  →  HTML5 <audio>
+Manuscript  →  Language  →  recorded audio asset  →  HTML5 <audio>
+                         →  else browser voice    →  Web Speech
+                         →  else honest refusal
 ```
+
+A recording always wins: it sounds identical on every machine. Everything in this
+folder exists to replace browser voices, one language at a time.
+
+> **Adding production narration?** Read
+> **[`docs/NARRATION_ASSETS.md`](../docs/NARRATION_ASSETS.md)** — it is the full
+> pipeline guide. Run `npm run narration:expected` to see every path still
+> waiting for a file.
 
 ---
 
@@ -83,8 +91,8 @@ the manifest entirely:
 ```
 
 `available: false` means *not recorded yet*. It is treated exactly like a
-missing entry: the language is disabled in the picker and nothing plays. It
-never falls through to another language, and never to synthesis.
+missing entry: the language falls through to a browser voice. It never falls
+through to another language's recording.
 
 ---
 
@@ -94,8 +102,14 @@ never falls through to another language, and never to synthesis.
 - **Duration, position and the progress bar come from the media element**, never
   from the manifest. `durationSeconds` in the manifest is metadata for tooling;
   if it disagrees with the decoded file, the decoded file wins.
-- **A language with no audio is disabled in the picker**, labelled *no
-  recording*, and cannot be selected.
+- **Web Speech never fakes a duration.** The transport shows `—` and an animated
+  speaking state; the bar advances only on real word-boundary positions.
+- **A language is offered when it has either a recording or a usable voice**, and
+  the picker labels which — *recorded* or *browser voice*.
+- **Never speak without a resolved voice.** Chromium accepts an unbound utterance
+  and emits silence without error, so an unresolved voice is reported instead.
+- **Sanskrit matches only genuine `sa` voices.** A Hindi voice reading Devanagari
+  is not Sanskrit narration.
 - **A declared file that will not load reports an error.** It does not fall back
   to another language and does not silently stall.
 
@@ -108,7 +122,10 @@ fixtures**, not narration. They were rendered offline so the audio pipeline
 could be tested end to end, and they say so out loud when played. Replace them
 with real recordings — no code or manifest edits needed beyond a rebuild.
 
-No real narration has been recorded for Antara yet.
+**No real narration has been recorded for Antara yet.** Everything a reader
+currently hears outside those two fixtures is a browser voice, which varies by
+machine and by which voices the reader has installed. That is the gap this
+folder exists to close.
 
 ---
 

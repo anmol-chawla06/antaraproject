@@ -80,9 +80,17 @@ function createSandbox() {
       createBiquadFilter() { return { connect() {}, frequency: { setValueAtTime() {}, value: 0 }, type: '' }; }
       resume() { return Promise.resolve(); }
     },
-    // No speechSynthesis mock on purpose. Narration is recorded audio only, so
-    // if library.js ever reaches for the Web Speech API again this sandbox will
-    // throw instead of quietly passing.
+    // Narration falls back to Web Speech when no recording exists, so the
+    // sandbox provides the API. getVoices() returns [] deliberately: that is
+    // the "browser has no voices" path, and library.js must survive it without
+    // throwing rather than assuming a voice is always present.
+    SpeechSynthesisUtterance: class { constructor(text) { this.text = text; } },
+    speechSynthesis: {
+      speaking: false, pending: false, paused: false,
+      getVoices: () => [],
+      speak() {}, cancel() {}, pause() {}, resume() {},
+      addEventListener() {}, removeEventListener() {}
+    },
     Image: class {},
     performance: { now: () => 0 },
     getComputedStyle: () => ({ getPropertyValue: () => '' }),

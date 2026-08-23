@@ -26,20 +26,41 @@ const AUDIO_DIR = path.join(ROOT, 'audio');
 const MANUSCRIPTS_DIR = path.join(AUDIO_DIR, 'manuscripts');
 const DB_PATH = path.join(ROOT, 'texts_database.json');
 
-// The language catalogue. `textField` names the verse field carrying the text
-// this narration corresponds to, or null when the database has no such text
-// yet -- a language can ship audio before it ships translations.
+// The language catalogue.
+//
+// `textField` names the verse field carrying the text this narration
+// corresponds to, or null when the database has no such text yet -- a language
+// can ship audio before it ships translations, and browser speech can only read
+// a language whose text actually exists.
+//
+// `speech` drives the Web Speech fallback used when no recorded file exists:
+// `lang` is the BCP-47 tag requested from the engine, `match` lists acceptable
+// voice-tag prefixes in priority order.
+//
+// Sanskrit deliberately matches ONLY genuine `sa` voices. A Hindi voice reading
+// Devanagari is not Sanskrit narration, and presenting it as such would be a
+// lie about provenance -- when no Sanskrit voice exists the player says so.
 const LANGUAGE_CATALOGUE = [
-  { code: 'sa', label: 'Sanskrit',  nativeLabel: 'संस्कृतम्',  textField: 'sanskrit' },
-  { code: 'hi', label: 'Hindi',     nativeLabel: 'हिन्दी',     textField: 'hindi'    },
-  { code: 'en', label: 'English',   nativeLabel: 'English',    textField: 'english'  },
-  { code: 'ta', label: 'Tamil',     nativeLabel: 'தமிழ்',      textField: null       },
-  { code: 'te', label: 'Telugu',    nativeLabel: 'తెలుగు',      textField: null       },
-  { code: 'gu', label: 'Gujarati',  nativeLabel: 'ગુજરાતી',    textField: null       },
-  { code: 'mr', label: 'Marathi',   nativeLabel: 'मराठी',      textField: null       },
-  { code: 'bn', label: 'Bengali',   nativeLabel: 'বাংলা',      textField: null       },
-  { code: 'kn', label: 'Kannada',   nativeLabel: 'ಕನ್ನಡ',      textField: null       },
-  { code: 'ml', label: 'Malayalam', nativeLabel: 'മലയാളം',     textField: null       }
+  { code: 'sa', label: 'Sanskrit',  nativeLabel: 'संस्कृतम्',  textField: 'sanskrit',
+    speech: { lang: 'sa-IN', match: ['sa-in', 'sa'] } },
+  { code: 'hi', label: 'Hindi',     nativeLabel: 'हिन्दी',     textField: 'hindi',
+    speech: { lang: 'hi-IN', match: ['hi-in', 'hi'] } },
+  { code: 'en', label: 'English',   nativeLabel: 'English',    textField: 'english',
+    speech: { lang: 'en-IN', match: ['en-in', 'en-gb', 'en-us', 'en'] } },
+  { code: 'ta', label: 'Tamil',     nativeLabel: 'தமிழ்',      textField: null,
+    speech: { lang: 'ta-IN', match: ['ta-in', 'ta'] } },
+  { code: 'te', label: 'Telugu',    nativeLabel: 'తెలుగు',      textField: null,
+    speech: { lang: 'te-IN', match: ['te-in', 'te'] } },
+  { code: 'gu', label: 'Gujarati',  nativeLabel: 'ગુજરાતી',    textField: null,
+    speech: { lang: 'gu-IN', match: ['gu-in', 'gu'] } },
+  { code: 'mr', label: 'Marathi',   nativeLabel: 'मराठी',      textField: null,
+    speech: { lang: 'mr-IN', match: ['mr-in', 'mr'] } },
+  { code: 'bn', label: 'Bengali',   nativeLabel: 'বাংলা',      textField: null,
+    speech: { lang: 'bn-IN', match: ['bn-in', 'bn'] } },
+  { code: 'kn', label: 'Kannada',   nativeLabel: 'ಕನ್ನಡ',      textField: null,
+    speech: { lang: 'kn-IN', match: ['kn-in', 'kn'] } },
+  { code: 'ml', label: 'Malayalam', nativeLabel: 'മലയാളം',     textField: null,
+    speech: { lang: 'ml-IN', match: ['ml-in', 'ml'] } }
 ];
 
 const MIME_BY_EXT = {
@@ -55,7 +76,10 @@ const MIME_BY_EXT = {
 };
 
 const LANG_CODES = new Set(LANGUAGE_CATALOGUE.map(l => l.code));
-const bookSlug = id => String(id).replace(/_/g, '-');
+
+// One slug rule for the whole project. narration.js owns it so the builder,
+// the player, the tests and the docs cannot drift apart.
+const { manuscriptSlug: bookSlug, expectedAudioPath } = require('./narration.js');
 
 /**
  * Exact duration for PCM/WAV by reading the RIFF header. Compressed formats
@@ -234,5 +258,65 @@ function build() {
   return manifest;
 }
 
-if (require.main === module) build();
-module.exports = { build, LANGUAGE_CATALOGUE, wavDurationSeconds };
+/**
+ * Coverage report: for every manuscript and language, the one path a recording
+ * must occupy, and whether it is there yet. This is the worksheet for
+ * commissioning narration -- run it, generate the missing files, drop them in.
+ *
+ *   node build_narration_manifest.js --expected
+ *   node build_narration_manifest.js --expected sa,hi,en
+ */
+function reportExpected(only) {
+  const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+  const codes = only && only.length
+    ? LANGUAGE_CATALOGUE.filter(l => only.includes(l.code))
+    : LANGUAGE_CATALOGUE;
+
+  let present = 0;
+  let missing = 0;
+  const rows = [];
+
+  for (const book of db.books) {
+    for (const lang of codes) {
+      const rel = expectedAudioPath(book.id, lang.code);
+      // Any browser-playable container satisfies the slot; .mp3 is the default.
+      const found = Object.keys(MIME_BY_EXT)
+        .map(ext => rel.replace(/\.mp3$/, ext))
+        .find(candidate => fs.existsSync(path.join(ROOT, candidate)));
+      if (found) present++; else missing++;
+      rows.push({
+        book: book.title,
+        lang: lang.code,
+        path: rel,
+        status: found ? 'present' : 'MISSING',
+        actual: found && found !== rel ? found : null
+      });
+    }
+  }
+
+  const width = Math.max(...rows.map(r => r.path.length));
+  console.log('Expected narration assets  (' + present + ' present, ' + missing + ' missing)\n');
+  let lastBook = null;
+  for (const r of rows) {
+    if (r.book !== lastBook) { console.log('  ' + r.book); lastBook = r.book; }
+    console.log('    ' + (r.status === 'present' ? '[x]' : '[ ]') + ' ' +
+      r.path.padEnd(width) + '  ' + r.status + (r.actual ? '  (as ' + path.extname(r.actual) + ')' : ''));
+  }
+  console.log('\n  Drop a file at any path above and run: npm run build:narration');
+  console.log('  Languages without a recording fall back to a browser voice, except');
+  console.log('  Sanskrit, for which no browser ships a voice -- see docs/NARRATION_ASSETS.md');
+  return { present, missing, rows };
+}
+
+if (require.main === module) {
+  const argv = process.argv.slice(2);
+  const expectedIdx = argv.indexOf('--expected');
+  if (expectedIdx !== -1) {
+    const filter = (argv[expectedIdx + 1] || '').split(',').map(s => s.trim()).filter(Boolean);
+    reportExpected(filter);
+  } else {
+    build();
+  }
+}
+
+module.exports = { build, reportExpected, LANGUAGE_CATALOGUE, wavDurationSeconds };

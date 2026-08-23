@@ -1580,6 +1580,33 @@ button, input, select, textarea {
   transform: translateY(-50%) scale(1);
 }
 
+/* Browser speech reports no duration, so the track shows an honest "speaking"
+   state instead of a progress bar timed against a guess. Where the engine does
+   report word boundaries, .progress-bar-fill still advances on real position. */
+.progress-bar-container.is-speaking {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--accent-gold) 45%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  animation: narration-speaking 1.6s linear infinite;
+}
+
+@keyframes narration-speaking {
+  from { background-position: -40% 0; }
+  to   { background-position: 140% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar-container.is-speaking {
+    animation: none;
+    background-position: 50% 0;
+  }
+}
+
 /* Right Audio Settings */
 .audio-settings-right {
   display: flex;
