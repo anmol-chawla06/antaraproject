@@ -60,7 +60,11 @@ const LANGUAGE_CATALOGUE = [
   { code: 'kn', label: 'Kannada',   nativeLabel: 'ಕನ್ನಡ',      textField: null,
     speech: { lang: 'kn-IN', match: ['kn-in', 'kn'] } },
   { code: 'ml', label: 'Malayalam', nativeLabel: 'മലയാളം',     textField: null,
-    speech: { lang: 'ml-IN', match: ['ml-in', 'ml'] } }
+    speech: { lang: 'ml-IN', match: ['ml-in', 'ml'] } },
+  { code: 'pa', label: 'Punjabi',   nativeLabel: 'ਪੰਜਾਬੀ',      textField: null,
+    speech: { lang: 'pa-IN', match: ['pa-in', 'pa'] } },
+  { code: 'or', label: 'Odia',      nativeLabel: 'ଓଡ଼ିଆ',       textField: null,
+    speech: { lang: 'or-IN', match: ['or-in', 'or'] } }
 ];
 
 const MIME_BY_EXT = {

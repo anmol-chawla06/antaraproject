@@ -222,11 +222,61 @@ ok('underscore-style locale tags are normalised',
 ok('English falls back through en-IN, en-GB, en-US, then any en',
   N.resolveVoice(catalogue('en'), [V('en-AU')]).lang === 'en-AU');
 
-ok('catalogue order decides which English voice wins',
+ok('the Indian English variant wins over other English variants',
   N.resolveVoice(catalogue('en'), [V('en-US'), V('en-IN')]).lang === 'en-IN');
 
 ok('a language with no matching voice resolves to null',
   N.resolveVoice(catalogue('ta'), [V('en-US'), V('hi-IN')]) === null);
+
+/* Locale vs locality. This is an Indian heritage archive, so the Indian
+   variant wins outright; locality only decides among voices that are equally
+   Indian, or when no Indian variant exists at all. */
+ok('en-IN beats a LOCAL en-US, because the Indian variant wins outright',
+  N.resolveVoice(catalogue('en'), [
+    { lang: 'en-US', name: 'Microsoft Zira', localService: true },
+    { lang: 'en-IN', name: 'Google Indian English', localService: false }
+  ]).lang === 'en-IN');
+
+ok('among two en-IN voices the local one wins',
+  N.resolveVoice(catalogue('en'), [
+    { lang: 'en-IN', name: 'Net Indian', localService: false },
+    { lang: 'en-IN', name: 'Local Indian', localService: true }
+  ]).name === 'Local Indian');
+
+ok('with no en-IN, a local en-US still beats a network en-GB',
+  N.resolveVoice(catalogue('en'), [
+    { lang: 'en-GB', name: 'Google UK English Female', localService: false },
+    { lang: 'en-US', name: 'Microsoft Zira', localService: true }
+  ]).name === 'Microsoft Zira');
+
+ok('hi-IN is preferred over a bare hi voice',
+  N.resolveVoice(catalogue('hi'), [
+    { lang: 'hi', name: 'Generic Hindi', localService: true },
+    { lang: 'hi-IN', name: 'Google Hindi', localService: false }
+  ]).lang === 'hi-IN');
+
+/* Every Indian language the brief names must be in the SHIPPED catalogue (not
+   the fixture above), so a browser that ships one of these voices is actually
+   offered it. */
+const shipped = require('./audio/manifest.json');
+const shippedLang = code => shipped.languages.find(l => l.code === code);
+['sa','hi','en','ta','te','gu','mr','bn','kn','ml','pa','or'].forEach(code => {
+  ok('the shipped catalogue carries ' + code, !!shippedLang(code));
+});
+
+ok('Punjabi resolves a pa-IN voice when one exists',
+  N.resolveVoice(shippedLang('pa'), [V('pa-IN')]).lang === 'pa-IN');
+ok('Odia resolves an or-IN voice when one exists',
+  N.resolveVoice(shippedLang('or'), [V('or-IN')]).lang === 'or-IN');
+ok('Punjabi is not satisfied by a Hindi voice',
+  N.resolveVoice(shippedLang('pa'), [V('hi-IN')]) === null);
+
+/* A language with a voice but no transcript must stay unavailable rather than
+   read English text and call it Tamil. */
+ok('a voice without matching text does not make a language available',
+  N.speechAvailability(shippedLang('ta'), { english: 'text', sanskrit: 's' }, [V('ta-IN')]).ok === false);
+ok('and the reason given is the missing text',
+  N.speechAvailability(shippedLang('ta'), { english: 'text', sanskrit: 's' }, [V('ta-IN')]).reason === 'no-text');
 
 // The rule that keeps narration honest about provenance.
 ok('Sanskrit is NOT satisfied by a Hindi voice',

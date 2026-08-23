@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-23T08:25:43.112Z",
+  "generatedAt": "2026-08-23T15:49:43.593Z",
   "generatedBy": "build_narration_manifest.js",
   "note": "Generated file - do not hand-edit. Add audio under audio/manuscripts/ and re-run npm run build:narration.",
   "languages": [
@@ -133,6 +133,32 @@
         "match": [
           "ml-in",
           "ml"
+        ]
+      }
+    },
+    {
+      "code": "pa",
+      "label": "Punjabi",
+      "nativeLabel": "ਪੰਜਾਬੀ",
+      "textField": null,
+      "speech": {
+        "lang": "pa-IN",
+        "match": [
+          "pa-in",
+          "pa"
+        ]
+      }
+    },
+    {
+      "code": "or",
+      "label": "Odia",
+      "nativeLabel": "ଓଡ଼ିଆ",
+      "textField": null,
+      "speech": {
+        "lang": "or-IN",
+        "match": [
+          "or-in",
+          "or"
         ]
       }
     }

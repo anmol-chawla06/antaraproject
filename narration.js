@@ -242,9 +242,28 @@
     }
     if (ranked.length === 0) return null;
 
-    // Locality outranks tag order across the whole candidate set: a local
-    // en-US voice beats a network en-GB one, because pause()/resume() work on
-    // it and it still speaks with no connection.
+    /* Two rules, in order.
+     *
+     * 1. The Indian variant wins outright. This is an Indian heritage archive:
+     *    a listener who picks English should hear en-IN when the browser has
+     *    it, not en-US. `match[0]` is always the Indian tag.
+     *
+     * 2. Otherwise locality wins over tag order, because pause()/resume() only
+     *    work on local voices and they still speak with no connection. A local
+     *    en-US therefore beats a network en-GB — but never beats en-IN.
+     *
+     * Locality also breaks ties inside each group.
+     */
+    const indianTag = prefixes.length ? prefixes[0] : null;
+    if (indianTag) {
+      const indian = ranked.filter(v => {
+        const tag = tagOf(v);
+        return tag === indianTag || tag.startsWith(indianTag + '-');
+      });
+      if (indian.length) {
+        return indian.find(v => v.localService === true) || preferByName(indian);
+      }
+    }
     return ranked.find(v => v.localService === true) || preferByName(ranked);
   }
 

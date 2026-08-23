@@ -2,7 +2,7 @@
 
 > Living development tracker. Updated continuously as the project evolves.
 
-**Last audited:** 2026-08-23 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 211 assertions, exit 0
+**Last audited:** 2026-08-23 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 232 assertions, exit 0
 
 Every status below was established by inspecting the repository and exercising the running
 application. Where something was *not* executed, it is marked 🟠 NEEDS VERIFICATION rather
@@ -17,14 +17,14 @@ than assumed.
 | Core Application | ✅ COMPLETE | Four front ends + one Express backend, all serving 200, zero console/network errors |
 | Heritage Map | 🟡 IN PROGRESS | 40 destinations, search, filters, gallery + lightbox. **137 Commons images added — 37/40 sites now rich, 0 hero-only.** **Line-art removed globally; Visual India state galleries added.** Region filter and mobile tap targets still open |
 | Library | ✅ COMPLETE | 142 verses, 10 manuscripts, layered text, bookmarks, search |
-| Narration | 🟡 IN PROGRESS | Hybrid engine verified in Chrome: recorded audio first, browser voice fallback. **No production recordings exist** — audible narration is browser TTS, which varies by machine |
+| Narration | 🟡 IN PROGRESS | Hybrid engine **re-verified in headed Chrome 151, 2026-08-23**: recorded audio first, Web Speech fallback second, honest unavailable third. English + Hindi speak; 10 catalogued languages correctly disabled for want of a voice. **No production recordings exist** — audible narration is browser TTS, which varies by machine |
 | Festivals | ✅ COMPLETE | 14 festivals, all fields populated, calendar + detail + map deep-links |
 | Travel | 🟡 IN PROGRESS | Visitor info complete for all 40 sites. **Booking audited 2026-08-23: 24 verified official portals, 16 honest visitor-info states, 19 broken/wrong links removed.** External handoff only — no payment code |
 | Heritage AI | ✅ COMPLETE | Verified end-to-end against live OpenAI, rate limiting confirmed |
 | Contact | ✅ COMPLETE | Verified end-to-end; flat-file storage is a known production limitation |
 | Security | ✅ COMPLETE | Secrets and PII purged from history; all controls tested live |
-| Testing | 🟡 IN PROGRESS | 211 automated assertions; no API or backend test suite |
-| Product Polish | 🟡 IN PROGRESS | One confirmed mobile overflow bug; accessibility partially addressed |
+| Testing | 🟡 IN PROGRESS | 232 automated assertions; no API or backend test suite |
+| Product Polish | 🟡 IN PROGRESS | **UI refinement pass 2026-08-23: one palette and one type system across all 5 pages; WCAG AA met on every page in both themes; 0 overflow at 4 widths.** Mobile tap targets still open |
 
 ---
 
@@ -419,20 +419,61 @@ Manuscript → Language → recorded audio → HTML5 <audio>
 
 ### Per-language status
 
-Verified on this machine (Chrome 151, Windows 11) — **22 voices detected, 18 language tags**:
+Re-verified end-to-end in **headed Chrome 151 on Windows 11, 2026-08-23**, with
+`speechSynthesis.speak/cancel/pause/resume` instrumented to prove what was actually spoken.
+That browser exposes **22 voices across 14 language prefixes**; only two are usable here.
 
-| Language | Status | Evidence |
+| Language | Status | Evidence on the test browser |
 |---|---|---|
-| English | 🟡 IN PROGRESS | **Speaks** via `Microsoft David` (local, en-US). Two **placeholder fixtures** exist for Bhagavad Gita and announce themselves as fixtures. No production recording |
-| Hindi | 🟡 IN PROGRESS | **Speaks** via `Google हिन्दी` (network, hi-IN). No recording. Network-dependent and cannot pause mid-sentence |
-| Sanskrit | 🔴 BLOCKED | **No Sanskrit voice exists in any mainstream browser.** Correctly refuses rather than substituting Hindi. Only a real recording can unblock this |
-| Tamil | ⚪ NOT STARTED | No voice on this machine, no recording, and no Tamil text in the database |
-| Telugu | ⚪ NOT STARTED | As Tamil |
-| Gujarati / Marathi / Bengali / Kannada / Malayalam | ⚪ NOT STARTED | Catalogued; no voice, no recording, no text |
+| English | 🟡 TTS WORKING | **Recording wins where one exists** — Bhagavad Gita plays `en.wav` with 0 TTS calls. Elsewhere (e.g. Rigveda) it **speaks** via `Microsoft David` (en-US, **local**). Only 2 placeholder fixtures exist; no production recording |
+| Hindi | 🟡 TTS WORKING | **Speaks** via `Google हिन्दी` (hi-IN, **network**) — one utterance, `start` → `end`, no error when left uninterrupted. No recording |
+| Sanskrit | 🔴 BLOCKED | No Sanskrit voice in any mainstream browser. Offered but **disabled**: *"Sanskrit (संस्कृतम्) — no voice installed"*. Correctly refuses rather than borrowing Hindi |
+| Tamil, Telugu, Gujarati, Marathi, Bengali, Kannada, Malayalam | ⚪ NO VOICE | Catalogued and detected at runtime; **this browser ships none of them**, so each is shown disabled as *"no voice installed"*. No transcript exists either |
+| Punjabi, Odia | ⚪ NO VOICE | **Added to the catalogue 2026-08-23** — they were missing, so a browser shipping `pa-IN`/`or-IN` could never have been offered them |
+
+**Nothing is hardcoded as available.** The catalogue lists 12 languages; availability is
+computed per language at runtime from `speechSynthesis.getVoices()`, refreshed on
+`voiceschanged`, and a language is offered only when **both** a matching voice and matching
+text exist. On this machine that yields exactly **English and Hindi** enabled, 10 disabled.
 
 **No production narration has been recorded for Antara.** What a reader hears today is a
 browser voice, so it is not identical across machines — that is the accepted trade for the
 current release.
+
+### Voice-selection fix — 2026-08-23
+
+The resolver preferred **locality over locale**, a rule added earlier so `pause()` would work
+(Chromium cannot pause network voices). That rule was too broad: with `en-IN` present it
+still chose a local `en-US`, so an Indian heritage archive would read English in an American
+voice even when the browser had an Indian one.
+
+Now, in order:
+1. **The Indian variant wins outright** (`en-IN` over `en-US`, even a local one).
+2. **Otherwise locality wins over tag order** — a local `en-US` still beats a network `en-GB`,
+   preserving working pause/resume where no Indian variant exists.
+3. Locality breaks ties inside each group; `Google` still beats `Microsoft` at equal rank.
+
+Sanskrit still resolves to `null` against a Hindi voice, and `sa` still cannot match `sat`
+(Santali). Locked in by 8 new assertions.
+
+### Narration priority — confirmed working, not a regression
+
+The fallback chain was reported as removed by the UI refinement pass. It was not: `library.js`,
+`narration.js`, `build_narration_manifest.js` and `audio/` were **untouched** by that pass
+(`git diff` clean), which changed only fonts, stylesheet links and 9 `aria-label`s in
+`library.html`. Verified live:
+
+```
+recorded asset exists?  ── yes ──▶  play the recording   (Gita English → en.wav, 0 TTS calls)
+        │
+        no
+        ▼
+usable voice + text?    ── yes ──▶  Web Speech            (Hindi → Google हिन्दी, hi-IN)
+        │
+        no
+        ▼
+honest unavailable state                                  (Sanskrit → "no voice installed")
+```
 
 ### Player — ✅ COMPLETE (verified in real Chrome, not asserted)
 
@@ -794,7 +835,7 @@ These render honest visitor information today; none of them shows a booking butt
 
 ## 11. Testing
 
-**Latest verified run: 2026-08-23 — `npm test` → 211 assertions, 0 failures, exit 0.**
+**Latest verified run: 2026-08-23 — `npm test` → 232 assertions, 0 failures, exit 0.**
 
 ### Completed
 - [x] `validate_db.js` — every one of 142 verses has all required multi-language fields; sample
@@ -828,7 +869,7 @@ These render honest visitor information today; none of them shows a booking butt
       (state → Explore Site → site page → Explore more from → state → Explore on Map →
       focused map). Lightbox open/←→/Escape at each width. **0 console errors, 0 exceptions,
       0 HTTP 4xx, 0 failed images**
-- [x] `validate_narration.js` — **86 assertions**: scope resolution, voice resolution and
+- [x] `validate_narration.js` — **111 assertions**: scope resolution, voice resolution and
       ranking, Sanskrit strictness, text selection, the audio/speech/refusal plan, language
       availability, duration handling, manifest integrity, deterministic asset paths, the
       production-asset lifecycle, and that Web Speech is actually wired into the shipped player
@@ -892,6 +933,90 @@ These render honest visitor information today; none of them shows a booking butt
 
 ---
 
+## 12b. UI / UX Refinement Pass — ✅ COMPLETE & VERIFIED (2026-08-23)
+
+A polish pass over the finished product. No new features, no architecture changes, no
+heritage data touched.
+
+### What the audit found
+
+Antara had grown as four independent front ends, and each had invented its own identity.
+Measured in the browser across 7 views × 2 themes × 4 widths:
+
+| | Before | After |
+|---|---|---|
+| Dark grounds in use | **4** (`#0A0A0A`, `#111111`, `#070509`, violet-black) | **1** |
+| Golds in use | **4** (`#C9A86A`, `#C49F74`, `#d4af37`, `#dfb743`) | **1** |
+| Typefaces in use | **8** | **5**, each with a reason |
+| Pages honouring the theme toggle | **4 of 5** | **5 of 5** |
+| Text failing WCAG AA | **~46 distinct combinations** | **0** |
+| Horizontal overflow | 91px on landing @390px | **0 everywhere** |
+
+### Shared token layer
+- [x] **`antara-tokens.css`** — one palette, one type system, one shape and motion scale,
+      for both themes. Each page's stylesheet keeps its own variable names and **all** of
+      its layout rules; it simply points those names at the shared tokens, so nothing was
+      rewritten and everything now agrees.
+- [x] Wired into all five pages: landing, map, Visual India, library, festivals
+
+### Typography
+- [x] **Display: Playfair Display** across landing, map, Visual India and festivals.
+      Lora, Cormorant Garamond and Marcellus removed.
+- [x] **Interface: Inter** everywhere, including the library. Montserrat removed.
+- [x] **The archive keeps its reading voice** — Cinzel for manuscript titles, Crimson Pro
+      for scripture, **Noto Serif Devanagari for Sanskrit**, all verified still rendering.
+
+### Genuine bugs fixed
+- [x] **The theme did not follow the user.** The landing page stored its choice under
+      `theme` while every other page used `antara_theme`, so choosing light on the map and
+      navigating home landed you back in the dark. One key now, with a migration for an
+      existing choice, plus a blocking head script so the theme paints before first render
+      instead of flashing.
+- [x] **Landing page overflowed 91px at 390px** — `.footer-links` and `.map-controls` did
+      not wrap. Now 0px at all four widths.
+- [x] **The site guide left the map exposed behind it.** Opening a heritage site now marks
+      the map `inert` + `aria-hidden`, so a screen reader meets one page heading instead of
+      two and Tab cannot wander onto markers hidden under the overlay. Verified: 1 exposed
+      `h1` with a site open, cleanly restored on close.
+- [x] **14 festival carousel images had no `alt` attribute at all** — they now carry real
+      festival names, and the ambient carousel is hidden from assistive tech rather than
+      announcing 14 names nobody can control.
+- [x] **9 Dhyana volume sliders were unlabelled** — each now names its own track.
+- [x] **A mojibake ellipsis** (`statesΓÇª`) in the map's search placeholder, live since the
+      original screenshot report.
+- [x] **A dead nav item** — the map's "About" only fired a toast; replaced with links to
+      Visual India and the Archive.
+
+### Contrast — WCAG AA met on every page, both themes
+The muted-ink token measured **4.18:1 in dark and 3.12:1 in light** and was used for small
+text across the whole product; the site footer's provenance line used a *border* tint as
+text at **2.0:1**. Because the tokens are now shared, three values fixed it everywhere.
+Re-measured on rendered pixels: **0 failures across all 7 views in both themes.**
+
+### Buttons and navigation
+- [x] One primary action — solid gold, `--antara-radius-md`, same rhythm on every page.
+      The landing page had a cream near-square primary while the map had a gold pill.
+- [x] Filter chips share one shape across landing and map (they were 0px/27px vs 20px/36px)
+- [x] **Visual India was unreachable** from the landing page and the map. Now in both navs,
+      desktop and mobile, with an active state on its own page.
+
+### Verified, not asserted
+`npm test` → **211 assertions, exit 0**. Browser: 7 views × 2 themes × 4 widths
+(390 / 768 / 1024 / 1440), plus all 40 site pages, 6 state galleries and an 8-state
+navigation round-trip. **0 console errors, 0 exceptions, 0 HTTP 4xx, 0 broken assets,
+0 horizontal overflow, 0 dead CTAs, 0 contrast failures.**
+
+### Not addressed this pass
+- 🔴 **Mobile tap targets** — 53 on the map, 50 on a site page, 9 on the landing page still
+      measure under 24px at 390px. Fixing these means re-spacing the map controls, which is
+      more than a polish change.
+- 🔴 **No skip-to-content link** on any page.
+- 🟠 The library's 31 pill-shaped controls are chips, toggles and badges — internally
+      consistent and appropriate, so left alone.
+- 🟠 The landing page footer still exposes an **Admin** link publicly.
+
+---
+
 ## 13. Product Roadmap
 
 ### Current Release
@@ -937,27 +1062,28 @@ Explicitly **not** counted toward current completion:
 
 | Issue | Severity | Status | Notes |
 |---|---|---|---|
-| Landing page overflows horizontally at 390px | **High** | 🔴 OPEN | `.nav-container` measures **481px inside a 390px viewport**, forcing 91px of document scroll. Reproduced in headless Chrome 151. Other three pages: 0px |
+| Landing page overflows horizontally at 390px | **High** | ✅ FIXED 2026-08-23 | Root cause was `.footer-links` / `.map-controls` not wrapping. Now **0px at 390 / 768 / 1024 / 1440**, both themes |
 | No production narration audio exists | **High** | 🟡 OPEN | Only two placeholder fixtures. Everything else audible is a browser voice, so narration is **not identical across machines** — accepted for this release |
 | 3 sites still have only 1–2 supporting images | Low | 🟡 OPEN | Padmanabhaswamy, Golconda Fort, Bhoramdeo — their Commons categories hold too few usable files. A source-material limit |
 | 14 site heroes use opaque `imgi_*` filenames | Medium | 🟠 OPEN | They display and now sit alongside properly sourced supporting imagery, but the hero's own provenance is unverifiable |
 | Pre-existing `photos sites/` is 31 MB, files up to 1.4 MB | Medium | 🟠 OPEN | The 137 new images are WebP at ~222 KB; the older JPEGs still need re-encoding |
 | Sanskrit cannot be narrated at all | **High** | 🔴 OPEN | No mainstream browser ships a Sanskrit voice. The player refuses rather than substituting Hindi. Only a recording unblocks it |
-| Network voices cannot pause mid-sentence | Medium | 🟠 OPEN | Chromium limitation. Local voices are preferred where available; a failed pause is detected and converted to a stop rather than a dead button. Hindi has only a network voice on this machine |
+| Network voices cannot pause mid-sentence | Medium | 🟠 OPEN | **Chromium limitation, not an Antara bug** — `speechSynthesis.pause()` has no effect on a remote voice. A failed pause is detected within 250ms and converted to an honest stop (*“this browser voice cannot pause mid-sentence…”*) rather than a dead button. Local voices are preferred wherever no Indian variant exists. **Hindi has only a network voice (`Google हिन्दी`) on this machine**, so Hindi TTS cannot pause here. Pause/resume on **recorded** audio is unaffected and verified working |
 | Web Speech tested in Chrome only | Medium | 🟠 OPEN | Firefox, Safari and Android expose different voice sets and were not exercised |
 | `WORKFLOW.md` / `TECHSTACK.md` describe the retired Telegram bot | Medium | 🔴 OPEN | 9 stale references total. Flagged in CLAUDE.md but content not rewritten |
 | Pre-rewrite commits still fetchable from GitHub by SHA | Medium | 🟠 OPEN | Inherent to GitHub until GC. Needs Support or repo recreation |
 | Collaborators must re-clone after history rewrite | Medium | 🟠 OPEN | `axmitk` pushes directly to `main`. Merging an old clone reintroduces purged blobs |
-| 53 tap targets under 24px on the map at 390px | Medium | 🔴 OPEN | Functional but uncomfortable on touch |
-| No skip links; sparse `alt` text (4 total) | Medium | 🔴 OPEN | Keyboard and screen-reader users affected |
+| 53 tap targets under 24px on the map at 390px | Medium | 🔴 OPEN | Unchanged this pass: 53 on the map, 50 on a site page, 9 on the landing page. Functional but uncomfortable on touch |
+| No skip links | Medium | 🔴 OPEN | No page offers skip-to-content. Not addressed this pass |
+| Sparse `alt` text | Low | ✅ FIXED 2026-08-23 | The 14 festival carousel images had **no `alt` attribute at all**; they now carry real names and the ambient carousel is `aria-hidden`. 0 images product-wide lack `alt` |
 | Contact storage is an unlocked flat file | Medium | 🟡 OPEN | Concurrent writes can interleave; will not survive an ephemeral filesystem |
 | `landing-page` test script is a stub | Medium | 🔴 OPEN | `echo "No tests..." && exit 0` — backend has no automated coverage |
 | Heritage AI is stateless per request | Low | 🟡 OPEN | No multi-turn context; model cannot follow up on its own answer |
 | Narration fixtures are WAV, not MP3 | Low | 🟡 OPEN | 1.7 MB in-tree. No encoder on the dev machine; `mimeType` already data-driven |
 | Projection constants duplicated in three files | Low | 🟠 OPEN | `gen.py`, `map-data.js`, `app.js` agree today; nothing enforces it |
-| Stray files: empty `f.id`, untracked `Screenshot_to_fix/` | Low | 🔴 OPEN | `f.id` is 0 bytes and referenced nowhere |
+| Stray file: empty `f.id` | Low | 🔴 OPEN | 0 bytes and referenced nowhere |
 | No sitemap; OG tags only on the landing page | Low | 🔴 OPEN | `robots.txt` notes a Sitemap line is needed once a domain exists |
-| Narration work uncommitted | Low | 🟡 OPEN | 8 modified + 3 untracked paths on `fix/core-narration-stabilization` |
+| UI refinement uncommitted | Low | 🟡 OPEN | Working tree carries the refinement pass on `fix/core-narration-stabilization`; not committed by request |
 
 ---
 
@@ -971,6 +1097,9 @@ Explicitly **not** counted toward current completion:
 | 2026-08-23 | Built the production-asset pipeline: deterministic path resolver, `npm run narration:expected` coverage report, `docs/NARRATION_ASSETS.md`, and an end-to-end drop-in test | ✅ Done |
 | 2026-08-23 | Restored Web Speech as the fallback when no recording exists; recorded audio still wins. Verified 24/24 in headed Chrome | ✅ Done |
 | 2026-08-23 | Voice ranking now prefers local over network voices — fixed `pause()` silently failing on `Google UK English Female` | ✅ Fixed |
+| 2026-08-23 | **Re-verified the narration fallback chain end-to-end in headed Chrome 151** after a reported regression. `narration.js`, `library.js`, `build_narration_manifest.js` and `audio/` were untouched by the UI pass; recorded→TTS→unavailable all working. **Not a regression** | ✅ Verified |
+| 2026-08-23 | **Refined voice ranking: the Indian variant now wins outright** (`en-IN` over even a local `en-US`); locality still beats tag order below that, so a local `en-US` beats a network `en-GB` and pause keeps working | ✅ Fixed |
+| 2026-08-23 | **Added Punjabi (`pa`) and Odia (`or`) to the language catalogue** — they were absent, so a browser shipping `pa-IN`/`or-IN` could never be offered them. Catalogue is now 12 languages | ✅ Fixed |
 | 2026-08-23 | Fixed stale duration bleeding from a stopped recording into a speech session's transport | ✅ Fixed |
 | 2026-08-23 | Created `PROJECT_PROGRESS.md` after a full repository audit | ✅ Done |
 | 2026-08-23 | Responsive sweep, 4 pages × 3 widths — found landing-page overflow at 390px | 🔴 Issue logged |
@@ -990,7 +1119,7 @@ Explicitly **not** counted toward current completion:
 - [x] **No secrets in repository** — pattern scan clean; token purged from history and revoked
 - [x] **No PII in repository** — `contact_messages.json` untracked and purged from history
 - [x] **Security audit complete** — every control exercised against the running server
-- [x] **Tests passing** — 211 assertions, exit 0, 2026-08-23
+- [x] **Tests passing** — 232 assertions, exit 0, 2026-08-23
 - [x] **Map works** — verified serving, routing, and data integrity
 - [x] **Library works** — 142/142 verses complete, page loads and executes cleanly
 - [x] **Festivals work** — 14/14 populated, all deep-links resolve
