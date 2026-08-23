@@ -2,6 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project status tracker — read and update this
+
+`PROJECT_PROGRESS.md` is the single source of truth for what is actually built, verified,
+blocked, or unstarted. **Read it before assuming a feature's state, and update it in the same
+task whenever you implement, fix, verify, remove, block, or re-architect something** — update the
+item's status, add a row to Recent Changes, and never mark unrelated items complete. Never record
+something as tested that was not actually executed.
+
 ## What this repository is
 
 Antara is a static, framework-free cultural heritage platform for India. It is actually **four independent front ends** sharing one repo, plus **two separate Node backends**, plus a **Python/Node data pipeline**. There is no bundler, no build step, and no shared component system — each HTML page loads its own plain `<script>` files directly.
@@ -42,10 +50,17 @@ python build_all.py
 ```
 This regenerates both `texts_database.json` and `texts_data.js` (a `window.ANTARA_HERITAGE_DB = {...}` wrapper around the same JSON, needed so `library.html` can load it via `<script>` instead of `fetch`, avoiding `file://` CORS issues). Always regenerate — never hand-edit `texts_data.js` directly, it is a generated artifact mirroring `texts_database.json`.
 
+Rebuild the narration manifest after adding or removing audio under `audio/manuscripts/`:
+```bash
+npm run build:narration     # node build_narration_manifest.js
+```
+
 Validate after generating/editing library data (no formal test framework — these are the "tests"):
 ```bash
-node validate_db.js     # loads texts_data.js in a Node vm sandbox, checks every verse has required fields, runs sample searches
-node validate_app.js    # loads texts_data.js + app.js in a mocked-DOM vm sandbox to catch syntax/runtime errors
+npm test                    # runs all three below, in order
+node validate_db.js         # loads texts_data.js in a Node vm sandbox, checks every verse has required fields, runs sample searches
+node validate_app.js        # loads each page's real script bundle in a mocked-DOM vm sandbox to catch syntax/runtime errors
+node validate_narration.js  # narration track resolution, manifest integrity, and the no-Web-Speech guarantee
 ```
 
 Regenerate the India state SVG path data used by `map.html` (fetches a GeoJSON source and re-projects/simplifies it):
@@ -71,7 +86,12 @@ Every app is built around **zero external API calls for core content** — all c
 - Source of truth for scripture content is Python: `data_builders/gita.py`, `upanishads.py`, `rigveda.py`, `classics.py` each expose a `get_*()` function returning book objects (categories: `vedas_upanishads`, `epics_itihasa`, `philosophy_darshana`, `classical_shastras`).
 - `build_all.py` imports all of these, assembles/validates the full DB (asserts every verse has `id`, `verse_number`, `citation`, `sanskrit`, `transliteration`, `word_meanings`, `english`, `hindi`, `commentary`), then writes both `texts_database.json` and `texts_data.js`.
 - `download_and_integrate.js` is a Node-side resync utility that regenerates `texts_data.js` from an already-written `texts_database.json` (use `build_all.py` when adding/editing content in `data_builders/`; use this only if `texts_database.json` was edited directly and `texts_data.js` needs to catch up).
-- **Narration is browser text-to-speech, not recorded audio.** `verse.audio` is empty for all 142 verses and no audio files ship in this repo. `narration.js` holds the pure decision logic (language registry, voice resolution, recorded-vs-synthesis precedence) and is unit-tested by `validate_narration.js`; `library.js` owns the player and all side effects. The critical invariant: **if no matching voice is installed, refuse to speak and show an "unavailable" state** — Chromium accepts an utterance with no bound voice, emits no sound, and never fires `onerror`, so a player that trusts `onstart` will animate over silence. Adding a language = one entry in `NARRATION_LANGS` plus an `<option>` in `library.html`.
+- **Narration is prepared audio files only — there is no Web Speech API anywhere, and adding one back is a regression.** `validate_narration.js` greps `narration.js`, `library.js` and `library.html` for `speechSynthesis`/`SpeechSynthesisUtterance`/`getVoices` and fails the build on a hit; `validate_app.js` deliberately omits a `speechSynthesis` mock so any reintroduced call throws in the sandbox. The chain is `Manuscript → Language → Audio asset → HTML5 <audio>`.
+- Which recordings exist is declared in `audio/manifest.json` (+ its browser twin `audio/narration_manifest.js`), **generated** by `build_narration_manifest.js` from a scan of `audio/manuscripts/` — never hand-edit either. `npm run build:narration`. See `audio/README.md` for the folder convention.
+- `narration.js` holds pure resolution logic (manifest indexing, **verse → chapter → book** precedence, inline `verse.narration` overrides, language availability) and is unit-tested; `library.js` owns the player and all side effects. Adding a language = one entry in `LANGUAGE_CATALOGUE` in `build_narration_manifest.js` plus files on disk. The `<select id="voiceSelect">` in `library.html` is populated at runtime from the manifest — do not hardcode `<option>`s back into it.
+- Invariants: **a language with no recording is disabled in the picker and plays nothing** — it never falls through to another language; **duration and progress come from the media element, never the manifest** (`durationSeconds` there is advisory tooling metadata); nothing is generated at page load.
+- The legacy flat `verse.audio` field (empty for all 142 verses) is no longer read. Per requirement, narration lives in the manifest and **not** in `texts_database.json`, keeping manuscript text and verified translations separate from audio.
+- `audio/manuscripts/bhagavad-gita/*.wav` are **placeholder test fixtures**, rendered offline so the pipeline could be tested end to end — they announce that when played. No real narration has been recorded. `narration-selftest.html` is a browser harness that exercises a real `HTMLAudioElement` (duration, play, pause, seek, volume, byte-range, missing-file).
 - `library.js` drives an `AppState` object (active book/chapter/verse, theme, language mode, per-layer visibility toggles for Devanagari/IAST/Anvaya/English/Hindi/commentary, bookmarks) persisted to `localStorage`, plus a dual-mode audio recitation engine (`html5` playback vs. Web Audio `synth` fallback) with configurable loop counts (1/3/9/21/108/∞ — mirrors japa/mala repetition conventions).
 
 ### Destinations map (`map.html` + `data.js` + `map-data.js` + `app.js`)

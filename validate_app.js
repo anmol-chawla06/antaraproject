@@ -11,7 +11,7 @@ const vm = require('vm');
 // map-data.js and data.js, so order matters here exactly as it does in map.html.
 const bundles = [
   { page: 'map.html', files: ['map-data.js', 'data.js', 'app.js'] },
-  { page: 'library.html', files: ['texts_data.js', 'narration.js', 'library.js'] }
+  { page: 'library.html', files: ['texts_data.js', 'audio/narration_manifest.js', 'narration.js', 'library.js'] }
 ];
 
 function makeElement() {
@@ -80,12 +80,9 @@ function createSandbox() {
       createBiquadFilter() { return { connect() {}, frequency: { setValueAtTime() {}, value: 0 }, type: '' }; }
       resume() { return Promise.resolve(); }
     },
-    SpeechSynthesisUtterance: class { constructor(text) { this.text = text; } },
-    speechSynthesis: {
-      getVoices: () => [],
-      speak() {}, cancel() {}, pause() {}, resume() {},
-      addEventListener() {}, removeEventListener() {}
-    },
+    // No speechSynthesis mock on purpose. Narration is recorded audio only, so
+    // if library.js ever reaches for the Web Speech API again this sandbox will
+    // throw instead of quietly passing.
     Image: class {},
     performance: { now: () => 0 },
     getComputedStyle: () => ({ getPropertyValue: () => '' }),

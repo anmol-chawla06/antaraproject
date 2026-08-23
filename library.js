@@ -32,18 +32,16 @@
     audio: {
       isPlaying: false,
       isPaused: false,
-      mode: 'idle', // 'html5' or 'synth'
+      mode: 'idle', // 'idle' or 'html5' -- recorded audio is the only mode
       queue: [],
       queueIndex: 0,
       loopMode: 1, // 1, 3, 9, 21, 108, Infinity
       currentLoopCount: 0,
       playbackRate: 1.0,
       volume: 0.9,
-      voiceEngine: 'sa_hi', // 'sa_hi', 'en', 'auto'
-      synthUtterance: null,
-      synthProgressTimer: null,
-      synthElapsed: 0,
-      synthEstimatedDuration: 8,
+      // Narration language code from the manifest catalogue (sa, hi, en, ta...).
+      narrationLang: localStorage.getItem('antara_narration_lang') || 'sa',
+      currentTrack: null,
       tanpuraActive: false
     },
     
@@ -1402,10 +1400,6 @@
     setupEventListeners();
     initVisualizer();
 
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.getVoices();
-    }
-
     try {
       // 1. Direct synchronous read from window.ANTARA_HERITAGE_DB (Eliminates file:// CORS errors)
       if (window.ANTARA_HERITAGE_DB && window.ANTARA_HERITAGE_DB.books) {
@@ -1746,6 +1740,11 @@
       DOM.audioSnippet.textContent = firstVerse.sanskrit.split('\n')[0];
     }
 
+    // Narration availability is per-manuscript, so re-offer the languages that
+    // actually have recordings for the chapter now on screen.
+    refreshNarrationLanguageOptions();
+    refreshNarrationAvailabilityNote();
+
     // Scroll reader to top
     DOM.readerMain.scrollTop = 0;
   }
@@ -1988,21 +1987,42 @@
   }
 
   // -------------------------------------------------------------------------
-  // DUAL-MODE AUDIO & TEXT-TO-SPEECH CONTROLLER
+  // RECORDED-AUDIO NARRATION CONTROLLER
+  //
+  // Narration is prepared audio files only. There is no speech-synthesis path:
+  // if no recording exists for the selected language, the player says so and
+  // stops. That keeps narration identical on every machine instead of varying
+  // with whatever voices the reader happens to have installed.
   // -------------------------------------------------------------------------
-  const NARRATION_LANGS = window.AntaraNarration.LANGS;
+  const NarrationIndex = window.AntaraNarration.createIndex(
+    window.ANTARA_NARRATION_MANIFEST
+  );
 
-  function narrationLangFor(engine) {
-    return window.AntaraNarration.langFor(engine, AppState.langPreference);
+  function currentNarrationScope() {
+    return {
+      bookId: AppState.activeBookId,
+      chapterId: AppState.activeChapterId,
+      verseId: AppState.activeVerseId
+    };
   }
 
-  function resolveNarrationVoice(langDef) {
-    const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-    return window.AntaraNarration.resolveVoice(langDef, voices);
+  function scopeForVerse(verse) {
+    return {
+      bookId: AppState.activeBookId,
+      chapterId: AppState.activeChapterId,
+      verseId: verse ? verse.id : null
+    };
   }
 
-  function resolveVerseAudioUrl(verse, langKey) {
-    return window.AntaraNarration.resolveAudioUrl(verse, langKey);
+  function narrationLabel(code) {
+    const lang = NarrationIndex.languageByCode.get(code);
+    return lang ? lang.label : code;
+  }
+
+  function resolveNarrationTrack(verse, lang) {
+    return window.AntaraNarration.resolveTrack(
+      NarrationIndex, scopeForVerse(verse), lang, verse
+    );
   }
 
   function setNarrationStatus(message, kind) {
@@ -2012,15 +2032,19 @@
     DOM.audioStatusNote.hidden = !message;
   }
 
-  function reportNarrationUnavailable(langDef, reason) {
+  function reportNarrationUnavailable(lang, reason) {
     stopCurrentAudio();
-    clearInterval(AppState.audio.synthProgressTimer);
     AppState.audio.mode = 'idle';
+    AppState.audio.currentTrack = null;
     updatePlayPauseButtonUI();
     DOM.progressBarFill.style.width = '0%';
     DOM.audioCurrentTime.textContent = formatTime(0);
-    setNarrationStatus('Narration unavailable — ' + reason, 'unavailable');
-    showToast(langDef.label + ' narration unavailable on this device', '✕');
+    DOM.audioTotalTime.textContent = formatTime(0);
+    setNarrationStatus(
+      'Narration unavailable' + (reason ? ' — ' + reason : ''),
+      'unavailable'
+    );
+    showToast(narrationLabel(lang) + ' narration unavailable', '✕');
   }
 
   function playSingleVerse(verse) {
@@ -2030,171 +2054,113 @@
     DOM.audioCitation.textContent = verse.citation;
     DOM.audioSnippet.textContent = verse.sanskrit.split('\n')[0];
 
-    const langDef = narrationLangFor(AppState.audio.voiceEngine);
-    const recorded = resolveVerseAudioUrl(verse, langDef.key);
+    const lang = AppState.audio.narrationLang;
+    const track = resolveNarrationTrack(verse, lang);
 
-    if (recorded) {
-      playHtml5Audio(recorded, verse, langDef);
-    } else {
-      playSpeechSynthesis(verse, langDef);
+    if (!track) {
+      reportNarrationUnavailable(
+        lang,
+        'no ' + narrationLabel(lang) + ' recording exists for this passage yet'
+      );
+      return;
     }
+
+    playRecordedNarration(track, verse);
   }
 
-  function playHtml5Audio(src, verse, langDef) {
+  function playRecordedNarration(track, verse) {
     stopCurrentAudio();
     AppState.audio.mode = 'html5';
-    DOM.htmlAudioPlayer.src = src;
+    AppState.audio.currentTrack = track;
+
+    // Times stay blank until loadedmetadata reports the real duration, so the
+    // transport never shows a number that playback has not confirmed.
+    DOM.audioCurrentTime.textContent = formatTime(0);
+    DOM.audioTotalTime.textContent = formatTime(0);
+    DOM.progressBarFill.style.width = '0%';
+
+    DOM.htmlAudioPlayer.src = track.audioUrl;
     DOM.htmlAudioPlayer.playbackRate = AppState.audio.playbackRate;
     DOM.htmlAudioPlayer.volume = AppState.audio.volume;
+
+    const scopeNote = track.scope === 'verse' ? 'this verse'
+      : track.scope === 'chapter' ? 'this chapter'
+      : 'this manuscript';
 
     DOM.htmlAudioPlayer.play()
       .then(() => {
         AppState.audio.isPlaying = true;
         AppState.audio.isPaused = false;
         updatePlayPauseButtonUI();
-        setNarrationStatus('Recorded narration', 'recorded');
+        setNarrationStatus(
+          narrationLabel(track.lang) + ' narration — recorded for ' + scopeNote,
+          'recorded'
+        );
       })
-      .catch(() => {
-        // The file is declared but unplayable (missing, wrong MIME type, blocked
-        // autoplay). Fall back to synthesis rather than stalling on a dead src.
-        playSpeechSynthesis(verse, langDef);
+      .catch((err) => {
+        // A declared file that will not play: missing, wrong MIME type, or
+        // autoplay blocked. Report it -- never substitute a synthesised voice.
+        const blocked = err && err.name === 'NotAllowedError';
+        reportNarrationUnavailable(
+          track.lang,
+          blocked
+            ? 'the browser blocked playback until you interact with the page'
+            : 'the recording could not be played'
+        );
       });
   }
 
-  function playSpeechSynthesis(verse, langDef, attempt = 0) {
-    stopCurrentAudio();
-    langDef = langDef || narrationLangFor(AppState.audio.voiceEngine);
-
-    if (!('speechSynthesis' in window)) {
-      reportNarrationUnavailable(langDef, 'this browser has no speech engine');
-      return;
-    }
-
-    AppState.audio.mode = 'synth';
-    window.speechSynthesis.cancel(); // Clear any pending
-
-    // Voices load asynchronously and are often empty on the first call. Retry a
-    // bounded number of times: the previous version recursed with no cap, which
-    // looped once a second forever on machines with no TTS engine installed.
-    if (window.speechSynthesis.getVoices().length === 0) {
-      if (attempt >= 3) {
-        reportNarrationUnavailable(langDef, 'no speech voices are installed on this device');
-        return;
-      }
-      let retried = false;
-      const retry = () => {
-        if (retried) return;
-        retried = true;
-        window.speechSynthesis.removeEventListener('voiceschanged', retry);
-        playSpeechSynthesis(verse, langDef, attempt + 1);
-      };
-      window.speechSynthesis.addEventListener('voiceschanged', retry);
-      setTimeout(retry, 1000);
-      return;
-    }
-
-    const selectedVoice = resolveNarrationVoice(langDef);
-
-    // Root cause of the original silent failure: with no voice bound, Chromium
-    // fires onstart then onend, produces no sound, and never fires onerror.
-    // Refuse to start rather than animate a progress bar over silence.
-    if (!selectedVoice) {
-      reportNarrationUnavailable(langDef, 'no ' + langDef.label + ' voice is installed on this device');
-      return;
-    }
-
-    const textToSpeak = langDef.text(verse) || '';
-    if (!textToSpeak.trim()) {
-      reportNarrationUnavailable(langDef, 'this verse has no text in the selected language');
-      return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    // Set a meditative, pleasant cadence
-    utterance.rate = Math.max(0.6, Math.min(1.5, AppState.audio.playbackRate * 0.82));
-    utterance.pitch = 0.94; // Resonant, natural pitch
-    utterance.volume = AppState.audio.volume;
-    utterance.voice = selectedVoice;
-    utterance.lang = selectedVoice.lang;
-
-    // Estimate duration for progress animation
-    const words = textToSpeak.split(/\s+/).length;
-    AppState.audio.synthEstimatedDuration = Math.max(3, (words / (1.5 * AppState.audio.playbackRate)));
-    AppState.audio.synthElapsed = 0;
-
-    let startedAt = 0;
-
-    utterance.onstart = () => {
-      startedAt = Date.now();
-      AppState.audio.isPlaying = true;
-      AppState.audio.isPaused = false;
-      updatePlayPauseButtonUI();
-      startSynthProgressSimulation();
-      setNarrationStatus('Browser narration — ' + selectedVoice.name, 'synth');
-      // Ensure visual sync: highlight card and scroll
-      highlightActiveVerseCard(verse.id);
-    };
-
-    utterance.onend = () => {
-      clearInterval(AppState.audio.synthProgressTimer);
-      // Speaking a full verse cannot complete in a few hundred milliseconds. If
-      // it did, the engine accepted the utterance and emitted nothing - the
-      // silent-failure case - so report it instead of advancing the queue.
-      if (startedAt && Date.now() - startedAt < 400 && textToSpeak.length > 20) {
-        reportNarrationUnavailable(langDef, 'the speech engine produced no audio');
-        return;
-      }
-      handleAudioTrackEnded();
-    };
-
-    utterance.onerror = (e) => {
-      clearInterval(AppState.audio.synthProgressTimer);
-      AppState.audio.isPlaying = false;
-      updatePlayPauseButtonUI();
-      // 'canceled'/'interrupted' fire whenever we intentionally stop/replace
-      // an utterance (switching verses, closing the page) - not real failures.
-      if (e.error !== 'canceled' && e.error !== 'interrupted') {
-        reportNarrationUnavailable(langDef, e.error || 'the speech engine reported an error');
-      }
-    };
-
-    AppState.audio.synthUtterance = utterance;
-    window.speechSynthesis.speak(utterance);
-  }
-
-  // Grey out voice options this device cannot actually narrate, so the picker
-  // never advertises a language that will fail.
-  function refreshVoiceOptionAvailability() {
+  // Rebuild the language picker from the manifest. Languages with no recorded
+  // audio for the current manuscript are disabled and labelled, so the picker
+  // can never advertise narration that does not exist.
+  function refreshNarrationLanguageOptions() {
     if (!DOM.voiceSelect) return;
-    Array.from(DOM.voiceSelect.options).forEach(opt => {
-      const langDef = opt.value === 'auto' ? null : NARRATION_LANGS[opt.value];
-      if (!langDef) return;
-      const available = !!resolveNarrationVoice(langDef);
-      opt.disabled = !available;
-      const base = opt.dataset.baseLabel || (opt.dataset.baseLabel = opt.textContent);
-      opt.textContent = available ? base : base + ' — unavailable';
+
+    const scope = currentNarrationScope();
+    const langs = window.AntaraNarration.languagesFor(NarrationIndex, scope);
+    const previous = AppState.audio.narrationLang;
+
+    DOM.voiceSelect.textContent = '';
+    langs.forEach(function (l) {
+      const opt = document.createElement('option');
+      opt.value = l.code;
+      opt.textContent = l.nativeLabel && l.nativeLabel !== l.label
+        ? l.label + ' (' + l.nativeLabel + ')'
+        : l.label;
+      if (!l.available) {
+        opt.disabled = true;
+        opt.textContent += ' — no recording';
+      }
+      DOM.voiceSelect.appendChild(opt);
     });
+
+    const resolved = window.AntaraNarration.chooseLanguage(NarrationIndex, scope, previous);
+    if (resolved) {
+      AppState.audio.narrationLang = resolved;
+      DOM.voiceSelect.value = resolved;
+      DOM.voiceSelect.disabled = false;
+    } else {
+      // Nothing recorded for this manuscript in any language.
+      DOM.voiceSelect.value = previous;
+      DOM.voiceSelect.disabled = true;
+    }
+    return resolved;
   }
 
-  function startSynthProgressSimulation() {
-    clearInterval(AppState.audio.synthProgressTimer);
-    const duration = AppState.audio.synthEstimatedDuration;
-    DOM.audioTotalTime.textContent = formatTime(duration);
+  // Announce the narration situation for the manuscript now on screen, without
+  // starting playback.
+  function refreshNarrationAvailabilityNote() {
+    const scope = currentNarrationScope();
+    const available = window.AntaraNarration.availableLanguages(NarrationIndex, scope);
 
-    const stepMs = 100;
-    AppState.audio.synthProgressTimer = setInterval(() => {
-      if (AppState.audio.isPaused) return;
-
-      AppState.audio.synthElapsed += stepMs / 1000;
-      const progress = Math.min(1, AppState.audio.synthElapsed / duration);
-
-      DOM.audioCurrentTime.textContent = formatTime(AppState.audio.synthElapsed);
-      DOM.progressBarFill.style.width = `${progress * 100}%`;
-
-      if (AppState.audio.synthElapsed >= duration) {
-        clearInterval(AppState.audio.synthProgressTimer);
-      }
-    }, stepMs);
+    if (available.length === 0) {
+      setNarrationStatus('Narration unavailable — no recordings exist for this manuscript yet', 'unavailable');
+      return;
+    }
+    setNarrationStatus(
+      'Narration available in ' + available.map(function (l) { return l.label; }).join(', '),
+      'recorded'
+    );
   }
 
   function handleAudioTrackEnded() {
@@ -2227,10 +2193,6 @@
   }
 
   function stopCurrentAudio() {
-    clearInterval(AppState.audio.synthProgressTimer);
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
     if (DOM.htmlAudioPlayer) {
       DOM.htmlAudioPlayer.pause();
       DOM.htmlAudioPlayer.currentTime = 0;
@@ -2248,9 +2210,14 @@
       return;
     }
 
-    if (AppState.audio.mode === 'html5') {
+    if (AppState.audio.mode === 'html5' && DOM.htmlAudioPlayer.src) {
       if (DOM.htmlAudioPlayer.paused) {
-        DOM.htmlAudioPlayer.play();
+        DOM.htmlAudioPlayer.play().catch(() => {
+          reportNarrationUnavailable(
+            AppState.audio.narrationLang,
+            'the recording could not be resumed'
+          );
+        });
         AppState.audio.isPlaying = true;
         AppState.audio.isPaused = false;
       } else {
@@ -2259,23 +2226,12 @@
         AppState.audio.isPaused = true;
       }
       updatePlayPauseButtonUI();
-    } else {
-      // Speech Synthesis mode
-      if (AppState.audio.isPlaying && !AppState.audio.isPaused) {
-        window.speechSynthesis.pause();
-        AppState.audio.isPlaying = false;
-        AppState.audio.isPaused = true;
-        updatePlayPauseButtonUI();
-      } else if (AppState.audio.isPaused) {
-        window.speechSynthesis.resume();
-        AppState.audio.isPlaying = true;
-        AppState.audio.isPaused = false;
-        updatePlayPauseButtonUI();
-      } else {
-        const verse = findVerseById(AppState.activeVerseId);
-        if (verse) playSingleVerse(verse);
-      }
+      return;
     }
+
+    // Idle, or the last attempt found no recording: try to (re)start.
+    const verse = findVerseById(AppState.activeVerseId);
+    if (verse) playSingleVerse(verse);
   }
 
   function updatePlayPauseButtonUI() {
@@ -2885,26 +2841,33 @@
     DOM.audioLoopBtn.addEventListener('click', cycleLoopMode);
     DOM.audioSpeedBtn.addEventListener('click', cyclePlaybackSpeed);
 
-    // Audio Voice Selector
+    // Narration language selector, driven entirely by the manifest.
     DOM.voiceSelect.addEventListener('change', (e) => {
-      AppState.audio.voiceEngine = e.target.value;
-      setNarrationStatus('', null);
-      const langDef = narrationLangFor(e.target.value);
-      if (resolveNarrationVoice(langDef)) {
-        showToast(`Recitation Voice: ${e.target.options[e.target.selectedIndex].text}`, '◎');
-      } else {
-        setNarrationStatus(
-          'Narration unavailable — no ' + langDef.label + ' voice is installed on this device',
-          'unavailable'
+      const lang = e.target.value;
+      AppState.audio.narrationLang = lang;
+      localStorage.setItem('antara_narration_lang', lang);
+
+      const verse = AppState.activeVerseId ? findVerseById(AppState.activeVerseId) : null;
+      const track = verse
+        ? resolveNarrationTrack(verse, lang)
+        : window.AntaraNarration.resolveTrack(NarrationIndex, currentNarrationScope(), lang);
+
+      if (!track) {
+        reportNarrationUnavailable(
+          lang,
+          'no ' + narrationLabel(lang) + ' recording exists for this passage yet'
         );
+        return;
+      }
+
+      showToast(`Narration: ${narrationLabel(lang)}`, '◎');
+      // Restart in the new language only if something was already playing.
+      if (verse && AppState.audio.mode === 'html5') {
+        playSingleVerse(verse);
+      } else {
+        refreshNarrationAvailabilityNote();
       }
     });
-
-    // Voices arrive asynchronously, so re-check availability when they land.
-    refreshVoiceOptionAvailability();
-    if (window.speechSynthesis) {
-      window.speechSynthesis.addEventListener('voiceschanged', refreshVoiceOptionAvailability);
-    }
 
     // Volume Slider & Mute
     DOM.volumeSlider.addEventListener('input', (e) => {
@@ -2942,23 +2905,41 @@
       const clickX = e.clientX - rect.left;
       const ratio = Math.max(0, Math.min(1, clickX / rect.width));
 
-      if (AppState.audio.mode === 'html5' && DOM.htmlAudioPlayer.duration) {
-        DOM.htmlAudioPlayer.currentTime = ratio * DOM.htmlAudioPlayer.duration;
-      } else if (AppState.audio.mode === 'synth') {
-        AppState.audio.synthElapsed = ratio * AppState.audio.synthEstimatedDuration;
-        DOM.progressBarFill.style.width = `${ratio * 100}%`;
+      // Seeking is only meaningful against a real decoded duration. With no
+      // recording loaded there is nothing to seek, and the bar stays put
+      // rather than pretending to move.
+      const duration = DOM.htmlAudioPlayer.duration;
+      if (AppState.audio.mode === 'html5' && Number.isFinite(duration) && duration > 0) {
+        DOM.htmlAudioPlayer.currentTime = ratio * duration;
       }
     });
 
-    // HTML5 Audio Events
+    // HTML5 Audio Events. Every number shown by the transport comes from the
+    // media element itself -- decoded duration and real playback position --
+    // so the progress bar cannot drift from what is actually being heard.
+    DOM.htmlAudioPlayer.addEventListener('loadedmetadata', () => {
+      const dur = DOM.htmlAudioPlayer.duration;
+      DOM.audioTotalTime.textContent =
+        Number.isFinite(dur) && dur > 0 ? formatTime(dur) : formatTime(0);
+    });
+
     DOM.htmlAudioPlayer.addEventListener('timeupdate', () => {
-      if (DOM.htmlAudioPlayer.duration) {
-        const cur = DOM.htmlAudioPlayer.currentTime;
-        const dur = DOM.htmlAudioPlayer.duration;
-        DOM.audioCurrentTime.textContent = formatTime(cur);
-        DOM.audioTotalTime.textContent = formatTime(dur);
-        DOM.progressBarFill.style.width = `${(cur / dur) * 100}%`;
-      }
+      const dur = DOM.htmlAudioPlayer.duration;
+      if (!Number.isFinite(dur) || dur <= 0) return;
+      const cur = DOM.htmlAudioPlayer.currentTime;
+      DOM.audioCurrentTime.textContent = formatTime(cur);
+      DOM.audioTotalTime.textContent = formatTime(dur);
+      DOM.progressBarFill.style.width = `${(cur / dur) * 100}%`;
+    });
+
+    // A file listed in the manifest that will not decode must surface, not
+    // silently stall the transport.
+    DOM.htmlAudioPlayer.addEventListener('error', () => {
+      if (AppState.audio.mode !== 'html5' || !DOM.htmlAudioPlayer.src) return;
+      reportNarrationUnavailable(
+        AppState.audio.narrationLang,
+        'the recording could not be loaded'
+      );
     });
 
     DOM.htmlAudioPlayer.addEventListener('ended', handleAudioTrackEnded);
@@ -2997,14 +2978,6 @@
       const cat = activeTag ? (activeTag.dataset.filter || 'all') : 'all';
       performSearch(e.target.value, cat);
     });
-
-    // Asynchronous Voice Loading Fix
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.addEventListener('voiceschanged', () => {
-        // Trigger a call to populate local voice list cache
-        window.speechSynthesis.getVoices();
-      });
-    }
 
     // Keyboard Shortcuts
     document.addEventListener('keydown', (e) => {
