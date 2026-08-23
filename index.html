@@ -15,59 +15,64 @@
     })();
   </script>
 
+  <link rel="stylesheet" href="antara-tokens.css?v=9">
+
   <style>
-    /* Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@300;400;500;600&family=Noto+Serif+Devanagari:wght@400;600&display=swap');
+    /* Google Fonts. Cinzel, Cormorant Garamond and Montserrat were three faces
+       used on this page alone; the calendar now shares the product's pairing. */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+Devanagari:wght@400;600&display=swap');
 
     :root {
-      /* Dark Cosmic Palette (Default) */
-      --bg-primary: #070509;
-      --bg-secondary: rgba(18, 13, 26, 0.75);
-      --bg-panel-left: rgba(7, 5, 9, 0.65);
-      --bg-panel-right: rgba(7, 5, 9, 0.75);
-      --bg-card: rgba(18, 13, 26, 0.65);
-      --bg-card-hover: rgba(223, 183, 67, 0.12);
-      --bg-overlay: radial-gradient(circle at 30% 50%, rgba(7, 5, 9, 0.85) 0%, rgba(7, 5, 9, 0.98) 100%);
-      
-      --text-primary: #e2dfeb;
-      --text-secondary: #a39eb8;
-      --text-muted: #847e99;
-      
-      --accent-gold: #dfb743;
-      --accent-gold-light: #fcf6ba;
-      --accent-gold-dark: #bf953f;
-      
-      --border-color: rgba(223, 183, 67, 0.2);
-      --border-color-strong: rgba(223, 183, 67, 0.4);
-      --shadow-main: rgba(0, 0, 0, 0.6);
-      --btn-bg: linear-gradient(135deg, rgba(18, 13, 26, 0.9), rgba(7, 5, 9, 0.9));
+      /* Colour comes from antara-tokens.css so the calendar sits on the same
+         ground as the map and the archive. It used to have its own violet-black
+         (#070509) and its own gold (#dfb743). */
+      --bg-primary: var(--antara-bg);
+      --bg-secondary: rgba(28, 27, 24, 0.75);
+      --bg-panel-left: rgba(10, 10, 10, 0.65);
+      --bg-panel-right: rgba(10, 10, 10, 0.75);
+      --bg-card: rgba(28, 27, 24, 0.65);
+      --bg-card-hover: var(--antara-gold-glow);
+      --bg-overlay: radial-gradient(circle at 30% 50%, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0.98) 100%);
 
-      --font-display: 'Cinzel', serif;
-      --font-serif: 'Cormorant Garamond', serif;
-      --font-sans: 'Montserrat', sans-serif;
-      --font-sanskrit: 'Noto Serif Devanagari', 'Cormorant Garamond', serif;
+      --text-primary: var(--antara-ink);
+      --text-secondary: var(--antara-ink-70);
+      --text-muted: var(--antara-ink-45);
+
+      --accent-gold: var(--antara-gold);
+      --accent-gold-light: var(--antara-gold-bright);
+      --accent-gold-dark: var(--antara-gold-dim);
+
+      --border-color: var(--antara-border-subtle);
+      --border-color-strong: var(--antara-border-accent);
+      --shadow-main: rgba(0, 0, 0, 0.6);
+      --btn-bg: linear-gradient(135deg, rgba(28, 27, 24, 0.9), rgba(10, 10, 10, 0.9));
+
+      --font-display: var(--antara-font-display);
+      --font-serif: var(--antara-font-display);
+      --font-sans: var(--antara-font-sans);
+      --font-sanskrit: var(--antara-font-devanagari);
     }
 
     [data-theme="light"] {
       /* Refined Warm Ivory / Heritage Light Palette */
-      --bg-primary: #FDFBF7;
+      --bg-primary: var(--antara-bg);
       --bg-secondary: rgba(245, 240, 230, 0.85);
       --bg-panel-left: rgba(253, 251, 247, 0.78);
       --bg-panel-right: rgba(253, 251, 247, 0.88);
       --bg-card: rgba(255, 255, 255, 0.82);
-      --bg-card-hover: rgba(184, 141, 51, 0.12);
+      --bg-card-hover: var(--antara-gold-glow);
       --bg-overlay: radial-gradient(circle at 30% 50%, rgba(253, 251, 247, 0.88) 0%, rgba(245, 240, 230, 0.96) 100%);
-      
-      --text-primary: #1C1921;
-      --text-secondary: #4A4453;
-      --text-muted: #6C6677;
-      
-      --accent-gold: #9B7829;
-      --accent-gold-light: #C89D3C;
-      --accent-gold-dark: #7A5C1B;
-      
-      --border-color: rgba(155, 120, 41, 0.25);
-      --border-color-strong: rgba(155, 120, 41, 0.45);
+
+      --text-primary: var(--antara-ink);
+      --text-secondary: var(--antara-ink-70);
+      --text-muted: var(--antara-ink-45);
+
+      --accent-gold: var(--antara-gold);
+      --accent-gold-light: var(--antara-gold-bright);
+      --accent-gold-dark: var(--antara-gold-dim);
+
+      --border-color: var(--antara-border-subtle);
+      --border-color-strong: var(--antara-border-accent);
       --shadow-main: rgba(80, 60, 30, 0.12);
       --btn-bg: linear-gradient(135deg, #FAF7F0, #EDE4D3);
     }
@@ -684,18 +689,27 @@
     function initCarousel() {
       const carousel = document.getElementById('carousel');
       
-      // Extract all valid images
+      // Extract all valid images, keeping each one's festival so the image can
+      // carry real alt text instead of none at all.
       const images = allFestivals
-        .map(f => f.image_placeholder)
-        .filter(src => src && src.trim() !== "");
-        
+        .filter(f => f.image_placeholder && f.image_placeholder.trim() !== "")
+        .map(f => ({ src: f.image_placeholder, name: f.name }));
+
       if (images.length === 0) return;
 
-      images.forEach((src, idx) => {
+      // An ambient backdrop that cycles on a timer and cannot be controlled, so
+      // it is hidden from assistive tech; every festival it shows is named in
+      // the calendar below.
+      carousel.setAttribute('aria-hidden', 'true');
+
+      images.forEach((item, idx) => {
         const img = document.createElement('img');
-        img.src = src;
+        img.src = item.src;
+        img.alt = item.name ? item.name + ' — festival photograph' : '';
+        img.decoding = 'async';
+        if (idx > 0) img.loading = 'lazy';
         img.className = 'carousel-img';
-        img.onerror = () => { img.style.display = 'none'; }; 
+        img.onerror = () => { img.style.display = 'none'; };
         if (idx === 0) img.classList.add('active');
         carousel.appendChild(img);
       });

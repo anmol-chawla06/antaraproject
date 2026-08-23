@@ -1,44 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 
+/* Local names, product-wide values. See antara-tokens.css — it must load
+   first. Both themes come from there, so the map, the landing page and the
+   library can no longer drift apart. */
 :root {
-  --bg: #0A0A0A;
-  --bg-warm: #0F0E0C;
-  --surface: #161614;
-  --surface-raised: #1C1B18;
-  --surface-glass: rgba(22, 22, 20, 0.85);
-  --cream: #F7F3EC;
-  --gold: #C9A86A;
-  --gold-dim: #8B7545;
-  --terracotta: #C86B3C;
-  --crimson: #8D3028;
-  --ink-90: rgba(247, 243, 236, 0.90);
-  --ink-70: rgba(247, 243, 236, 0.70);
-  --ink-45: rgba(247, 243, 236, 0.45);
-  --ink-25: rgba(247, 243, 236, 0.25);
-  --ink-10: rgba(247, 243, 236, 0.10);
-  --ink-05: rgba(247, 243, 236, 0.05);
+  --bg: var(--antara-bg);
+  --bg-warm: var(--antara-bg-warm);
+  --surface: var(--antara-surface);
+  --surface-raised: var(--antara-surface-raised);
+  --surface-glass: var(--antara-glass);
+  --cream: var(--antara-ink);
+  --gold: var(--antara-gold);
+  --gold-dim: var(--antara-gold-dim);
+  --terracotta: var(--antara-terracotta);
+  --crimson: var(--antara-crimson);
+  --ink-90: var(--antara-ink-90);
+  --ink-70: var(--antara-ink-70);
+  --ink-45: var(--antara-ink-45);
+  --ink-25: var(--antara-ink-25);
+  --ink-10: var(--antara-ink-10);
+  --ink-05: var(--antara-ink-05);
 
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Playfair Display', serif;
-}
-
-[data-theme="light"] {
-  --bg: #FDFBF7;
-  --bg-warm: #F5F0E6;
-  --surface: #FFFFFF;
-  --surface-raised: #F5F0E6;
-  --surface-glass: rgba(255, 255, 255, 0.85);
-  --cream: #1C1921;
-  --gold: #9B7829;
-  --gold-dim: #7A5C1B;
-  --terracotta: #B4552C;
-  --crimson: #7A2820;
-  --ink-90: rgba(28, 25, 33, 0.90);
-  --ink-70: rgba(28, 25, 33, 0.70);
-  --ink-45: rgba(28, 25, 33, 0.45);
-  --ink-25: rgba(28, 25, 33, 0.25);
-  --ink-10: rgba(28, 25, 33, 0.10);
-  --ink-05: rgba(28, 25, 33, 0.05);
+  --font-sans: var(--antara-font-sans);
+  --font-serif: var(--antara-font-display);
 }
 
 html {
@@ -170,19 +154,23 @@ button {
   cursor: pointer;
 }
 
+/* The product's one primary action. Same shape, fill and rhythm on the landing
+   page, the map, Visual India and the archive. */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
+  gap: 8px;
+  padding: 12px 22px;
   background: var(--gold);
-  color: var(--bg);
+  color: var(--antara-ink-inverse);
+  font-family: var(--font-sans);
   font-weight: 500;
-  border-radius: 30px;
+  border-radius: var(--antara-radius-md);
   transition: transform 0.2s, background 0.2s;
 }
 .btn-primary:hover {
-  background: var(--cream);
+  background: var(--antara-gold-bright);
   transform: translateY(-2px);
 }
 
@@ -1661,7 +1649,9 @@ button {
   padding: 40px 20px;
   text-align: center;
   font-size: 12px;
-  color: var(--ink-25);
+  /* Was --ink-25, a border tint used as text: 2.0:1. Provenance and the
+     verification date are exactly the text a reader must be able to read. */
+  color: var(--ink-45);
   border-top: 1px solid var(--ink-05);
 }
 

@@ -47,6 +47,8 @@
   white-space: nowrap;
 }
 .vi-top-link:hover { color: var(--cream); border-bottom-color: var(--gold); }
+/* Where you are, stated rather than implied. */
+.vi-top-link.is-current { color: var(--cream); border-bottom-color: var(--gold); }
 
 /* --- masthead --------------------------------------------------------- */
 

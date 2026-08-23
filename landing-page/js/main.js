@@ -95,15 +95,28 @@ document.addEventListener('DOMContentLoaded', () => {
             themeToggleBtn.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
         };
 
+        // One key for the whole product. The map, library, festivals and Visual
+        // India all read `antara_theme`; this page used to keep its own `theme`,
+        // so a visitor who chose light on the map arrived here in the dark.
+        const THEME_KEY = 'antara_theme';
+        const readStored = () => {
+            try {
+                // Migrate a choice made before the keys were unified.
+                const legacy = localStorage.getItem('theme');
+                if (legacy && !localStorage.getItem(THEME_KEY)) localStorage.setItem(THEME_KEY, legacy);
+                return localStorage.getItem(THEME_KEY);
+            } catch (e) { return null; }
+        };
+
         // Honour the visitor's system setting until they choose for themselves.
-        const stored = localStorage.getItem('theme');
+        const stored = readStored();
         const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
         applyTheme(stored || (prefersLight ? 'light' : 'dark'));
 
         themeToggleBtn.addEventListener('click', () => {
             const nowLight = document.documentElement.getAttribute('data-theme') !== 'light';
             applyTheme(nowLight ? 'light' : 'dark');
-            localStorage.setItem('theme', nowLight ? 'light' : 'dark');
+            try { localStorage.setItem(THEME_KEY, nowLight ? 'light' : 'dark'); } catch (e) {}
         });
     }
 

@@ -903,6 +903,19 @@ function openLightbox(media, index, dest){
   LIGHTBOX.open(media.gallery, index, MEDIA.altFor(dest));
 }
 
+/* The site guide covers the map completely. While it is open the map beneath
+   it is inert: it stays in the DOM but is removed from the accessibility tree
+   and the tab order, so a screen reader does not meet two page headings at
+   once and Tab cannot wander onto markers hidden behind the overlay. */
+function setMapInert(inert){
+  ['nav', 'stage', 'filter-bar', 'bottom-sheet', 'drawer', 'search-overlay'].forEach(id => {
+    const node = document.getElementById(id);
+    if(!node) return;
+    if(inert){ node.setAttribute('aria-hidden', 'true'); node.setAttribute('inert', ''); }
+    else { node.removeAttribute('aria-hidden'); node.removeAttribute('inert'); }
+  });
+}
+
 function openDestination(id, opts){
   opts = opts || {};
   const dest = byId.get(id); if(!dest) return;
@@ -913,6 +926,7 @@ function openDestination(id, opts){
   requestAnimationFrame(()=> el.destPage.classList.add('is-open'));
   el.destPage.scrollTop = 0;
   document.body.style.overflow = 'hidden';
+  setMapInert(true);
   if(!opts.silent) updateHash(dest.state, id);
 }
 function closeDestination(opts){
@@ -921,6 +935,7 @@ function closeDestination(opts){
   el.destPage.classList.remove('is-open');
   document.body.style.overflow = '';
   AppState.destId = null;
+  setMapInert(false);
   setTimeout(()=>{ if(!AppState.destId) el.destPage.style.display='none'; }, REDUCED_MOTION?10:640);
   if(!opts.silent) updateHash(AppState.state, null);
 }
@@ -1100,9 +1115,6 @@ document.getElementById('nav-states').addEventListener('click', () => {
   const chip = el.filterBar.querySelector('[data-cat="All"]');
   if(chip) chip.click();
   toast('Hover or tap any state to begin exploring');
-});
-document.getElementById('nav-about').addEventListener('click', () => {
-  toast('Antara — a cartographic guide to India\u2019s heritage, built for exploration.');
 });
 
 /* ---------------------------------------------------------------------- */

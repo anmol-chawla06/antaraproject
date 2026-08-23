@@ -8,6 +8,18 @@
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
+    <!-- Paint the chosen theme before first render, as every other Antara page
+         does, so arriving from the map in light mode does not flash dark. -->
+    <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('antara_theme') || localStorage.getItem('theme');
+        if (!t) t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+      } catch (e) {}
+    })();
+    </script>
+
     <!-- Social sharing. og:url and a canonical link need the production domain;
          add them here (or set SITE_URL and template them) once one exists. -->
     <meta property="og:type" content="website">
@@ -22,8 +34,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../antara-tokens.css?v=9">
+    <link rel="stylesheet" href="css/styles.css?v=9">
 </head>
 <body>
     
@@ -34,6 +47,7 @@
             </div>
             <div class="nav-links">
                 <a href="#map-section">Explore</a>
+                <a href="../visual-india.html#/">Visual India</a>
                 <a href="#knowledge-section">Knowledge</a>
                 <a href="#travel-section">Travel</a>
                 <a href="#festival-section">Festivals</a>
@@ -53,6 +67,7 @@
 
     <div class="mobile-nav" id="mobileNav">
         <a href="#map-section">Explore</a>
+        <a href="../visual-india.html#/">Visual India</a>
         <a href="#knowledge-section">Knowledge</a>
         <a href="#travel-section">Travel</a>
         <a href="#festival-section">Festivals</a>
