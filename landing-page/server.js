@@ -72,6 +72,31 @@ app.use('/data', (req, res) => res.status(404).end());
 // that the landing page links out to.
 const ROOT_DIR = path.join(__dirname, '..');
 
+/* This directory is a child of ROOT_DIR, so the repo-root static mount at the
+ * bottom of this file served every file in it a second time under the
+ * "/landing-page/" prefix — a path the /admin and /data guards above never
+ * see. That quietly published the raw contact store (names, e-mail addresses
+ * and message bodies), the admin shell, the auth middleware and server.js
+ * itself to anyone who asked.
+ *
+ * Only the landing page's own public assets may be reached by that prefix.
+ * Anything else under it is answered 404, exactly as if it were not there. */
+const LANDING_PUBLIC_FILES = new Set(['', 'index.html', 'favicon.svg', 'robots.txt']);
+const LANDING_PUBLIC_DIRS = ['css', 'js', 'assets'];
+
+app.use('/landing-page', (req, res, next) => {
+    let rel;
+    try {
+        rel = decodeURIComponent(req.path).replace(/\\/g, '/').replace(/^\/+/, '');
+    } catch (err) {
+        return res.status(404).end();          // malformed escape sequence
+    }
+    if (rel.split('/').includes('..')) return res.status(404).end();
+    if (LANDING_PUBLIC_FILES.has(rel)) return next();
+    if (LANDING_PUBLIC_DIRS.some(dir => rel === dir || rel.startsWith(dir + '/'))) return next();
+    return res.status(404).end();
+});
+
 // Both the landing page and the festival portal ship a file named
 // index.html. The landing page owns bare "/"; any explicit request for
 // "/index.html" (e.g. the "../index.html" links from the landing page)

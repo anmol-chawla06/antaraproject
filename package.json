@@ -8,7 +8,7 @@
     "build:map": "python gen.py",
     "build:narration": "node build_narration_manifest.js",
     "narration:expected": "node build_narration_manifest.js --expected",
-    "test": "node validate_db.js && node validate_app.js && node validate_narration.js && node validate_media.js && node validate_visit.js && node validate_visual_india.js",
+    "test": "node validate_db.js && node validate_app.js && node validate_narration.js && node validate_media.js && node validate_visit.js && node validate_visual_india.js && node validate_server.js",
     "test:links": "node validate_visit.js --live"
   },
   "keywords": [

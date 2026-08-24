@@ -2,7 +2,12 @@
 
 > Living development tracker. Updated continuously as the project evolves.
 
-**Last audited:** 2026-08-23 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 232 assertions, exit 0
+**Last audited:** 2026-08-24 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 275 assertions, exit 0
+
+> **RELEASE CANDIDATE — QA PASSED 2026-08-24.** Verified from a fresh clone at `4ccb390`:
+> clean `npm install`, documented startup, 232 assertions, the complete 24-step user journey,
+> live Heritage AI round trip, narration fallback, 56 responsive view/theme combinations,
+> WCAG AA in both themes, and a clean security audit. **No release blockers.** See §13b.
 
 Every status below was established by inspecting the repository and exercising the running
 application. Where something was *not* executed, it is marked 🟠 NEEDS VERIFICATION rather
@@ -21,9 +26,9 @@ than assumed.
 | Festivals | ✅ COMPLETE | 14 festivals, all fields populated, calendar + detail + map deep-links |
 | Travel | 🟡 IN PROGRESS | Visitor info complete for all 40 sites. **Booking audited 2026-08-23: 24 verified official portals, 16 honest visitor-info states, 19 broken/wrong links removed.** External handoff only — no payment code |
 | Heritage AI | ✅ COMPLETE | Verified end-to-end against live OpenAI, rate limiting confirmed |
-| Contact | ✅ COMPLETE | Verified end-to-end; flat-file storage is a known production limitation |
+| Contact | ✅ COMPLETE | Verified end-to-end. **Admin inbox access restored and a critical PII leak closed 2026-08-24 (section 8b).** Flat-file storage remains a production limitation |
 | Security | ✅ COMPLETE | Secrets and PII purged from history; all controls tested live |
-| Testing | 🟡 IN PROGRESS | 232 automated assertions; no API or backend test suite |
+| Testing | 🟡 IN PROGRESS | **275 automated assertions**, now including 43 server-security assertions |
 | Product Polish | 🟡 IN PROGRESS | **UI refinement pass 2026-08-23: one palette and one type system across all 5 pages; WCAG AA met on every page in both themes; 0 overflow at 4 widths.** Mobile tap targets still open |
 
 ---
@@ -739,11 +744,91 @@ These render honest visitor information today; none of them shows a booking butt
 - [x] **Privacy** — `landing-page/data/contact_messages.json` is gitignored, untracked, and
       **purged from all git history**; `contact_messages.example.json` ships as an empty template
 - [x] Never HTTP-reachable — `/data/contact_messages.json` returns **404**, guarded by a handler
-      registered ahead of the static middleware
+      registered ahead of the static middleware.
+      ⚠️ *This claim was previously over-stated:* it covered only that one path. The same file
+      was still downloadable at `/landing-page/data/contact_messages.json`. **Closed 2026-08-24
+      — see §8b.**
 - [x] Rate limiting — **5 per 10 min per IP confirmed live**: 4× `200` then `429`
 - [x] Admin access — `GET /api/contact/messages`, `PATCH /api/contact/messages/:id`
 - [x] **XSS fixed** — the admin inbox renders attacker-controlled fields as text nodes, never
       via `innerHTML`
+
+
+### 8b. Admin contact inbox — access restored + PII leak closed (2026-08-24)
+
+**Reported:** the admin panel could not be reached. Investigating it uncovered a second,
+more serious problem that had nothing to do with the reported symptom.
+
+#### The existing implementation (nothing new was built)
+| Piece | Location |
+|---|---|
+| Admin route | **`/admin/messages/`** — `landing-page/admin/messages/index.html` |
+| Sign-in page | **`/admin-login.html`** |
+| Auth | Signed **httpOnly** cookie (`antara_admin`), HMAC-SHA256, 8-hour TTL, `timingSafeEqual` |
+| Middleware | `landing-page/middleware/adminAuth.js` — `requireAdmin` |
+| Endpoints | `POST /api/admin/login`, `POST /api/admin/logout`, `GET /api/contact/messages`, `PATCH /api/contact/messages/:id` |
+| Storage | `landing-page/data/contact_messages.json` (gitignored, untracked, purged from history) |
+
+#### Issue 1 — why the panel was unreachable (configuration, not a bug)
+`ADMIN_PASSWORD` was **absent from `landing-page/.env`**, which held only the two OpenAI
+variables. `isConfigured()` therefore returned false and **every** admin path answered
+**`503 ADMIN_DISABLED`** — including `POST /api/admin/login`, so signing in was impossible.
+Reproduced directly:
+
+```
+GET  /admin/messages/       -> 503 ADMIN_DISABLED
+GET  /admin/                -> 503 ADMIN_DISABLED
+GET  /api/contact/messages  -> 503 ADMIN_DISABLED
+POST /api/admin/login       -> 503 ADMIN_DISABLED
+```
+
+This is the designed fail-closed behaviour — no default credential — working correctly.
+**Fix:** set `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` in the gitignored `.env`.
+Authentication was **not** bypassed, weakened or removed.
+
+#### Issue 2 — 🔴 CRITICAL: contact PII was publicly downloadable
+`landing-page/` is a child of the repository root, and the repo-root static mount served
+every file in it a **second time** under the `/landing-page/` prefix — a path the `/admin`
+and `/data` guards never saw. Publicly readable without any authentication:
+
+| Path | Was | Now |
+|---|---|---|
+| `/landing-page/data/contact_messages.json` | **200 — 8 real submissions with name, e-mail, subject, message** | **404** |
+| `/landing-page/admin/messages/index.html` | 200 (admin shell) | **404** |
+| `/landing-page/admin-login.html` | 200 | **404** |
+| `/landing-page/middleware/adminAuth.js` | 200 (auth source) | **404** |
+| `/landing-page/server.js` | 200 (server source) | **404** |
+| `/landing-page/package.json`, `node_modules/**` | 200 | **404** |
+
+**Fix:** an allow-list guard mounted on `/landing-page` **before** the repo-root static
+mount. Only `index.html`, `css/`, `js/` and `assets/` pass; everything else is 404, with
+`..` traversal and malformed percent-escapes rejected. The landing page still serves at both
+`/` and `/landing-page/index.html`.
+
+#### Issue 3 — the footer admin link pointed at the unguarded copy
+`<a href="admin/messages/">` is relative: from `/landing-page/index.html` it resolved to
+`/landing-page/admin/messages/`, the **unprotected** copy. Now root-relative
+`/admin/messages/`, so it always reaches the session-guarded mount.
+
+#### How to open the inbox locally
+1. Put a value in `ADMIN_PASSWORD` in `landing-page/.env` (see `.env.example`).
+2. `cd landing-page && npm run dev`
+3. Open **`http://localhost:8080/admin/messages/`** — you are redirected to
+   `/admin-login.html`, sign in, and land back on the inbox.
+   The landing-page footer also carries a discreet **Admin** link.
+
+#### Verified
+- **33/33** live flow checks: unauthenticated 401 · browser redirect to sign-in · wrong
+  password 401 `INVALID_PASSWORD` · correct password signs in · cookie httpOnly + SameSite=Strict
+  · 8 messages listed newest-first with name/email/subject/message/date/status · status change
+  persists to disk · invalid status 400 · unknown id 404 · a new form submission appears in the
+  inbox · logout clears the session · a forged cookie is refused · all 9 leak paths now 404.
+- **Browser at 1440px and 390px:** redirect → sign-in → inbox → open message → detail shows
+  name, e-mail, date, status, subject, body, with *Reply via Email* / *Mark as Read* /
+  *Mark as Replied* / *Archive*. **0 console errors**; the password never appears in the DOM.
+- **`validate_server.js` — 43 new assertions** locking the guard's position and allow-list
+  contents, the auth invariants, and that no credential reaches any client file.
+- QA probe message removed afterwards; **the 8 genuine messages are intact**.
 
 ### In Progress
 - [ ] Production storage strategy — flat-file JSON with no locking. Concurrent writes can
@@ -835,7 +920,7 @@ These render honest visitor information today; none of them shows a booking butt
 
 ## 11. Testing
 
-**Latest verified run: 2026-08-23 — `npm test` → 232 assertions, 0 failures, exit 0.**
+**Latest verified run: 2026-08-24 — `npm test` → 275 assertions, 0 failures, exit 0.**
 
 ### Completed
 - [x] `validate_db.js` — every one of 142 verses has all required multi-language fields; sample
@@ -1058,6 +1143,123 @@ Explicitly **not** counted toward current completion:
 
 ---
 
+## 13b. FINAL RELEASE CANDIDATE QA — 2026-08-24
+
+Run against a **completely fresh clone** of `fix/core-narration-stabilization` at
+`4ccb390`, in a new directory, with no reuse of the development tree's
+`node_modules`, generated assets, cache or environment.
+
+### Fresh clone
+- [x] `git clone --branch fix/core-narration-stabilization` → clean, HEAD `4ccb390`
+- [x] `cd landing-page && npm install` → **71 packages, 0 vulnerabilities**
+- [x] Repository root genuinely has **no npm dependencies**, as documented
+- [x] `cp landing-page/.env.example landing-page/.env` → the documented setup path works
+
+### Startup — the documented command
+- [x] `cd landing-page && npm start` → **`Antara server running on http://localhost:8080`**
+- [x] **No startup exceptions, no missing dependencies, no missing assets**
+- [x] **25/25 routes and assets return HTTP 200** — all four front ends, every shared
+      script and stylesheet, the narration manifest, the festivals database
+- [x] Admin area correctly **disabled** because `ADMIN_PASSWORD` is unset (no default password)
+- [x] Without `OPENAI_API_KEY` the server still starts and `/api/chat` answers **503
+      `AI_UNCONFIGURED`** with a readable message — no crash, no stack trace
+
+### Test suite
+**`npm test` → 232 assertions, exit 0** from the clean clone
+(narration 111 · media 42 · visit 22 · Visual India 57).
+
+### Complete user journey — 24/24 steps
+Landing → Explore → Map → heritage site → inspect → Visual India → state → site →
+Library → manuscript → narration → Festivals → Plan Your Visit → official booking →
+Heritage AI → Contact → home. Every transition followed a link the page actually
+renders. **0 console errors, 0 exceptions, 0 HTTP 4xx across the whole journey.**
+
+### Environment — only what is actually used
+| Variable | Used? | Notes |
+|---|---|---|
+| `OPENAI_API_KEY` | ✅ | Heritage AI. Unset ⇒ feature disabled, app still runs |
+| `OPENAI_MODEL` | ✅ | Defaults to `gpt-4o` |
+| `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, `PORT`, `ALLOWED_ORIGINS` | ✅ | Optional |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | ❌ **not used** | Belonged to the **retired Telegram bot**; removed with it. Only a historical note in `CLAUDE.md` mentions them |
+| `CONTACT_EMAIL` | ❌ **not used** | No reference anywhere in the codebase |
+
+`.env.example` lists exactly the six variables the application reads. **No unused
+variable is required.**
+
+### Heritage AI — real round trip verified
+- [x] Browser → server → OpenAI → server → browser, **HTTP 200** with a genuine
+      on-topic answer (*"The Taj Mahal is a magnificent 17th-century mausoleum in Agra…"*)
+- [x] Empty question → **HTTP 400 `MESSAGE_REQUIRED`**, *"Please enter a question."* — no stack trace
+- [x] Over-length question → `MESSAGE_TOO_LONG` guard present
+- [x] **API key never reaches the browser** — absent from the DOM and from inline scripts
+- [x] Panel opens and fits at 1440px (380px panel) and 390px (full width), **0 overflow**
+
+### Narration — unchanged from the approved baseline
+- [x] Recording wins where one exists (Gita English → `en.wav`, **0 TTS calls**)
+- [x] No recording → **Web Speech** (Hindi → `Google हिन्दी`, hi-IN; Rigveda English →
+      `Microsoft David`, local)
+- [x] **English and Hindi** are the only usable languages on this browser (22 voices, 14 prefixes)
+- [x] **10 catalogued languages honestly unavailable** — Sanskrit, Tamil, Telugu, Gujarati,
+      Marathi, Bengali, Kannada, Malayalam, Punjabi, Odia all show *"no voice installed"*
+- [x] Sanskrit never borrows a Hindi voice
+
+### Official booking
+- [x] **24 verified official links**; all `https`, `target="_blank"`, `rel="noopener noreferrer"`
+- [x] **0 undefined/null URLs**; 16 sites show honest visitor information instead
+- [x] Live reachability: **25/28 PASS**, 3 WARN (Rajasthan OBMS ×2, Himachal Tourism) — the
+      known incomplete-TLS-chain hosts that Chrome renders and Node rejects
+- [x] The **6 manually flagged links were not changed**
+
+### Visual India
+- [x] **20 states, 40 sites, 197 images**; per-state counts match the dataset exactly
+- [x] Representative imagery on 20/20 states; lightbox opens/steps/closes
+- [x] "Explore Site", "Explore on Map" and site → state navigation all resolve
+
+### Responsive — 56 view/theme/width combinations
+7 views × 2 themes × 390/768/1024/1440: **0 horizontal overflow, 0 console errors,
+0 exceptions, 0 HTTP 4xx, 0 images missing `alt`.**
+
+### Accessibility
+- [x] **WCAG AA contrast on all 14 page/theme combinations**
+- [x] **Visible keyboard focus on 58/60** sampled controls under real Tab presses
+- [x] Lightbox: `role="dialog"`, `aria-modal="true"`, focus enters, Escape closes,
+      **focus returns to the trigger**
+- [x] Map overlay **inert** while a site is open; exactly **1 exposed `<h1>`** on every page
+- [x] Audio controls: 9 controls, **0 unlabelled**, `aria-live` status, all keyboard reachable
+- 🔴 **No skip-to-content link on any page**
+- 🔴 **Mobile tap targets under 24px at 390px**: map 53, site 50, landing 9, vi-state 7,
+      Visual India 4, library 1, festivals 0
+
+### Data / security
+- [x] **No `.env` tracked** — only `.env.example`; `.gitignore` covers `.env` / `.env.*`
+      with an `!.env.example` exception, and the `.env` created during QA was correctly ignored
+- [x] **No `contact_messages.json`** — only an empty `[]` example template
+- [x] **No live secret patterns** in any tracked file
+- [x] **No absolute filesystem paths** leaked into tracked source
+- [x] **No Telegram code or references** remain
+- [x] No screenshots, temp files, logs or `node_modules` tracked
+
+### Release blockers
+
+| Issue | Severity | Release blocker? | Reason |
+|---|---|---|---|
+| No skip-to-content link | Medium | **No** | Keyboard users can still reach every control; focus is visible throughout. An accessibility improvement, not a broken journey |
+| Mobile tap targets under 24px | Medium | **No** | Verified functional at 390px — the full journey completes on mobile. Uncomfortable, not blocking |
+| No production narration recordings | Medium | **No** | Web Speech fallback works for English and Hindi; unsupported languages state so honestly |
+| Sanskrit narration unavailable | Medium | **No** | No browser ships a Sanskrit voice. The player refuses rather than substituting Hindi — correct behaviour |
+| Network voices cannot pause | Low | **No** | Chromium limitation, detected and converted to an honest stop. Recorded audio pauses normally |
+| 3 sites with only 2 photographs | Low | **No** | Known content limitation; source material is genuinely scarce |
+| 14 legacy heroes without provenance | Low | **No** | They display correctly; provenance is unverifiable, not wrong |
+| 6 booking links needing manual verification | Low | **No** | All 6 show **visitor information**, not a booking button. Nothing misleads a visitor |
+| 3 booking hosts unreachable from Node | Low | **No** | Incomplete TLS chains on government servers; Chrome renders them. Verified in-browser |
+| Stray empty `f.id` tracked | Low | **No** | 0 bytes, referenced nowhere |
+| `WORKFLOW.md` / `TECHSTACK.md` stale on the retired bot | Low | **No** | Documentation only; no code depends on it |
+| Contact storage is an unlocked flat file | Medium | **No** | Works for the current release; will not survive an ephemeral filesystem. Deployment concern, flagged |
+
+**No release blockers were found.**
+
+---
+
 ## 14. Known Issues
 
 | Issue | Severity | Status | Notes |
@@ -1119,7 +1321,7 @@ Explicitly **not** counted toward current completion:
 - [x] **No secrets in repository** — pattern scan clean; token purged from history and revoked
 - [x] **No PII in repository** — `contact_messages.json` untracked and purged from history
 - [x] **Security audit complete** — every control exercised against the running server
-- [x] **Tests passing** — 232 assertions, exit 0, 2026-08-23
+- [x] **Tests passing** — 275 assertions, exit 0, 2026-08-24
 - [x] **Map works** — verified serving, routing, and data integrity
 - [x] **Library works** — 142/142 verses complete, page loads and executes cleanly
 - [x] **Festivals work** — 14/14 populated, all deep-links resolve

@@ -257,7 +257,11 @@
                 <a href="#map-section">Explore</a>
                 <a href="#knowledge-section">Knowledge</a>
                 <a href="#travel-section">Journey</a>
-                <a href="admin/messages/" id="btnAdminPanel">Admin</a>
+                <!-- Root-relative on purpose: the landing page is served both at "/"
+                     and at "/landing-page/index.html", and the old relative href
+                     resolved to /landing-page/admin/messages/ from the second one,
+                     which is not the session-guarded mount. -->
+                <a href="/admin/messages/" id="btnAdminPanel">Admin</a>
             </div>
         </div>
         <div class="footer-bottom">
