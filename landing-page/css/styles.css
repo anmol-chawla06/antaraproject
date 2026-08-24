@@ -1,51 +1,41 @@
 /* ==========================================================================
    Design Tokens & CSS Variables (Theme System)
    ========================================================================== */
+/* Local names, product-wide values. Both themes come from antara-tokens.css,
+   which loads first — this page used its own #111111 ground, its own gold and
+   Lora, so arriving from the map felt like arriving at a different product. */
 :root {
-    /* DEFAULT: DARK MODE */
-    --clr-bg-primary: #111111;    
-    --clr-bg-secondary: #161616;  
-    --clr-bg-surface: #1A1A1A;    
-    
-    --clr-text-primary: #ECE9E1;  
-    --clr-text-secondary: #99958C;
-    --clr-text-muted: #66635D;
-    
-    --clr-accent-terracotta: #B95A40;
-    --clr-accent-sandstone: #C49F74;
+    --clr-bg-primary: var(--antara-bg);
+    --clr-bg-secondary: var(--antara-bg-warm);
+    --clr-bg-surface: var(--antara-surface-raised);
+
+    --clr-text-primary: var(--antara-ink);
+    --clr-text-secondary: var(--antara-ink-70);
+    --clr-text-muted: var(--antara-ink-45);
+
+    --clr-accent-terracotta: var(--antara-terracotta);
+    --clr-accent-sandstone: var(--antara-gold);
     --clr-accent-forest: #2A4A3B;
 
-    --clr-border: rgba(236, 233, 225, 0.12);
+    --clr-border: var(--antara-border-subtle);
     --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.3);
     --shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.5);
-    
-    --font-serif: 'Lora', serif;
-    --font-sans: 'Inter', sans-serif;
-    
+
+    --font-serif: var(--antara-font-display);
+    --font-sans: var(--antara-font-sans);
+
     --space-xs: 0.5rem;
     --space-sm: 1.5rem;
     --space-md: 3rem;
     --space-lg: 6rem;
     --space-xl: 10rem;
-    
+
     --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 [data-theme='light'] {
-    /* LIGHT MODE: Warm Archival Paper */
-    --clr-bg-primary: #F7F5F0;    /* Warm ivory/parchment */
-    --clr-bg-secondary: #F0EBE1;  /* Slightly deeper sandstone */
-    --clr-bg-surface: #FFFFFF;    
-    
-    --clr-text-primary: #1A1A1A;  /* Deep charcoal */
-    --clr-text-secondary: #5A5752;
-    --clr-text-muted: #8C8880;
-    
-    --clr-accent-terracotta: #A5442A; /* Slightly deeper for contrast */
-    --clr-accent-sandstone: #AF8552;
+    /* Only what light genuinely changes beyond the shared tokens. */
     --clr-accent-forest: #1F382B;
-
-    --clr-border: rgba(26, 26, 26, 0.12);
     --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.05);
     --shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
@@ -127,25 +117,37 @@ button {
 /* ==========================================================================
    Buttons
    ========================================================================== */
+/* One button vocabulary, shared with the rest of Antara: a solid gold primary,
+   an outlined secondary, and a text-link tertiary. This page used to give its
+   primary a cream fill and a 2px radius while the map used a gold pill. */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 2.5rem;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    font-family: var(--antara-font-sans);
     font-size: 0.9rem;
     font-weight: 500;
-    border-radius: 2px;
+    border-radius: var(--antara-radius-md);
     transition: var(--transition-smooth);
 }
 
 .btn-primary {
-    background-color: var(--clr-text-primary);
-    color: var(--clr-bg-primary);
+    background-color: var(--antara-gold);
+    color: var(--antara-ink-inverse);
 }
 
 .btn-primary:hover {
-    background-color: var(--clr-accent-sandstone);
+    background-color: var(--antara-gold-bright);
 }
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--clr-text-primary);
+    border: 1px solid var(--antara-border-medium);
+}
+.btn-secondary:hover { border-color: var(--antara-gold); color: var(--antara-gold); }
 
 .btn-link {
     display: inline-flex;
@@ -367,23 +369,37 @@ button {
 
 .map-controls {
     display: flex;
-    gap: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
     margin-bottom: var(--space-md);
     border-bottom: 1px solid var(--clr-border);
     padding-bottom: 1rem;
 }
 
+/* The same chip the map uses for the same job, so the two pages read as one
+   product — and tall enough to be a comfortable tap target. */
 .map-filter {
-    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    font-size: 0.85rem;
     color: var(--clr-text-secondary);
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid transparent;
+    white-space: nowrap;
     transition: var(--transition-smooth);
 }
 
-.map-filter.active, .map-filter:hover {
+.map-filter:hover {
     color: var(--clr-text-primary);
-    border-color: var(--clr-accent-sandstone);
+    background: var(--antara-ink-05);
+}
+
+.map-filter.active {
+    color: var(--clr-text-primary);
+    border-color: var(--antara-border-accent);
+    background: var(--antara-gold-glow);
 }
 
 .map-container {
@@ -460,14 +476,20 @@ button {
 }
 
 .lang-btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 4px 2px;
     font-size: 0.85rem;
     color: var(--clr-text-secondary);
+    border-bottom: 1px solid transparent;
 }
+
+.lang-btn:hover { color: var(--clr-text-primary); }
 
 .lang-btn.active {
     color: var(--clr-text-primary);
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    border-bottom-color: var(--antara-gold);
 }
 
 .sanskrit-text {
@@ -629,6 +651,10 @@ button {
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
+    /* Without wrapping, the brand and the four links forced the document
+       91px wider than a 390px viewport and every full-width element with it. */
+    flex-wrap: wrap;
+    gap: var(--space-sm);
     margin-bottom: var(--space-md);
 }
 
@@ -638,7 +664,8 @@ button {
 
 .footer-links {
     display: flex;
-    gap: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
 }
 .footer-links a {
     color: var(--clr-text-secondary);
@@ -988,4 +1015,25 @@ button {
         height: auto;
         flex: 1;
     }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   Scroll reveals resolve immediately instead of fading, so content is never
+   withheld from a visitor who has asked for less motion.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

@@ -64,191 +64,8 @@ function toast(msg){
   toastTimer = setTimeout(()=> t.classList.remove('is-visible'), 2400);
 }
 
-/* ---------------------------------------------------------------------- */
-/* ART PLATES — original line-art "etchings", no photography dependency   */
-/* ---------------------------------------------------------------------- */
-function artSVG(motif, accent, caption){
-  accent = accent || '#C9A86A';
-  const id = 'g'+Math.random().toString(36).slice(2,8);
-  const bg = `<defs>
-      <radialGradient id="${id}bg" cx="50%" cy="30%" r="85%">
-        <stop offset="0%" stop-color="#1c1c1c"/>
-        <stop offset="100%" stop-color="#0c0c0c"/>
-      </radialGradient>
-      <pattern id="${id}dots" width="14" height="14" patternUnits="userSpaceOnUse">
-        <circle cx="1" cy="1" r="0.6" fill="rgba(247,243,236,0.05)"/>
-      </pattern>
-    </defs>
-    <rect width="400" height="300" fill="url(#${id}bg)"/>
-    <rect width="400" height="300" fill="url(#${id}dots)"/>`;
-  const ground = `<line x1="0" y1="248" x2="400" y2="248" stroke="${accent}" stroke-width="1" opacity=".35"/>`;
-  let art = '';
-
-  switch(motif){
-    case 'dome-minarets': {
-      art = `
-        <g fill="none" stroke="${accent}" stroke-width="1.5" stroke-linejoin="round">
-          <rect x="120" y="205" width="160" height="14" opacity=".8"/>
-          <rect x="140" y="150" width="120" height="55" opacity=".8"/>
-          <path d="M140 150 Q140 95 200 95 Q260 95 260 150" />
-          <ellipse cx="200" cy="90" rx="34" ry="30"/>
-          <path d="M200 60 Q182 40 200 20 Q218 40 200 60" fill="${accent}" opacity=".9" stroke="none"/>
-          <line x1="200" y1="20" x2="200" y2="8"/>
-          <g opacity=".85">
-            <rect x="75" y="120" width="12" height="128" />
-            <rect x="313" y="120" width="12" height="128" />
-            <circle cx="81" cy="112" r="9"/>
-            <circle cx="319" cy="112" r="9"/>
-          </g>
-          <g opacity=".55">
-            <rect x="30" y="150" width="10" height="98"/>
-            <rect x="360" y="150" width="10" height="98"/>
-          </g>
-        </g>
-        <g opacity=".18" stroke="${accent}" stroke-width="1">
-          <path d="M140 250 Q200 262 260 250" fill="none"/>
-        </g>`;
-      break;
-    }
-    case 'minar-tower': {
-      art = `
-        <g fill="none" stroke="${accent}" stroke-width="1.5">
-          <path d="M172 248 L182 70 Q200 55 218 70 L228 248 Z"/>
-          <line x1="176" y1="205" x2="224" y2="205"/>
-          <line x1="180" y1="162" x2="220" y2="162"/>
-          <line x1="184" y1="119" x2="216" y2="119"/>
-          <g opacity=".7">
-            <line x1="188" y1="248" x2="192" y2="70" stroke-width="1"/>
-            <line x1="200" y1="248" x2="200" y2="66" stroke-width="1"/>
-            <line x1="212" y1="248" x2="208" y2="70" stroke-width="1"/>
-          </g>
-          <ellipse cx="200" cy="62" rx="14" ry="8"/>
-          <line x1="200" y1="54" x2="200" y2="34"/>
-          <circle cx="200" cy="30" r="3" fill="${accent}" stroke="none"/>
-        </g>
-        <g opacity=".4" stroke="${accent}" stroke-width="1">
-          <path d="M60 248 L96 248 L96 200 L60 200 Z"/>
-          <path d="M304 248 L340 248 L340 210 L304 210 Z"/>
-        </g>`;
-      break;
-    }
-    case 'garden-tomb': {
-      art = `
-        <g fill="none" stroke="${accent}" stroke-width="1.5">
-          <rect x="110" y="170" width="180" height="12"/>
-          <path d="M128 170 L142 140 L258 140 L272 170 Z"/>
-          <rect x="150" y="110" width="100" height="30"/>
-          <path d="M150 110 Q150 66 200 66 Q250 66 250 110"/>
-          <ellipse cx="200" cy="62" rx="26" ry="22"/>
-          <line x1="200" y1="40" x2="200" y2="26"/>
-          <g opacity=".7">
-            <rect x="118" y="126" width="10" height="44"/>
-            <rect x="272" y="126" width="10" height="44"/>
-          </g>
-        </g>
-        <g opacity=".45" stroke="${accent}" stroke-width="1">
-          <line x1="60" y1="248" x2="340" y2="248"/>
-          <line x1="60" y1="230" x2="340" y2="230"/>
-          <line x1="130" y1="182" x2="130" y2="248"/>
-          <line x1="270" y1="182" x2="270" y2="248"/>
-          <line x1="200" y1="182" x2="200" y2="248"/>
-        </g>`;
-      break;
-    }
-    case 'fort-ramparts': {
-      art = `
-        <g fill="none" stroke="${accent}" stroke-width="1.6" stroke-linejoin="round">
-          <rect x="40" y="200" width="320" height="48"/>
-          <g>
-            ${[40,70,100,130,300,330].map(x=>`<rect x="${x}" y="182" width="18" height="18"/>`).join('')}
-          </g>
-          <path d="M170 248 L170 195 Q200 175 230 195 L230 248"/>
-          <circle cx="90" cy="150" r="26"/>
-          <rect x="76" y="150" width="28" height="60"/>
-          <circle cx="310" cy="158" r="22"/>
-          <rect x="298" y="158" width="24" height="52"/>
-          <g opacity=".6">
-            ${[64,120,280,336].map(x=>`<rect x="${x}" y="188" width="10" height="12"/>`).join('')}
-          </g>
-        </g>`;
-      break;
-    }
-    case 'gateway-arch': {
-      art = `
-        <g fill="none" stroke="${accent}" stroke-width="1.6">
-          <rect x="60" y="220" width="280" height="28"/>
-          <path d="M100 220 L100 140 Q100 90 160 90 L240 90 Q300 90 300 140 L300 220"/>
-          <path d="M150 220 L150 150 Q150 118 200 118 Q250 118 250 150 L250 220"/>
-          <g opacity=".65">
-            <rect x="70" y="150" width="16" height="70"/>
-            <rect x="314" y="150" width="16" height="70"/>
-          </g>
-        </g>
-        <g opacity=".4" stroke="${accent}" stroke-width="1">
-          <path d="M40 248 Q200 236 360 248"/>
-        </g>`;
-      break;
-    }
-    case 'jharokha-facade': {
-      let wins = '';
-      for(let row=0; row<5; row++){
-        const y = 80 + row*32;
-        const count = 7 - Math.abs(2-row);
-        const startX = 200 - (count*26)/2;
-        for(let c=0;c<count;c++){
-          const x = startX + c*26;
-          wins += `<path d="M${x} ${y+22} L${x} ${y+8} Q${x+6.5} ${y} ${x+13} ${y} Q${x+19.5} ${y} ${x+19.5} ${y+8} L${x+19.5} ${y+22} Z"/>`;
-        }
-      }
-      art = `<g fill="none" stroke="${accent}" stroke-width="1.1">${wins}</g>
-        <rect x="70" y="235" width="260" height="13" fill="none" stroke="${accent}" stroke-width="1.5"/>`;
-      break;
-    }
-    case 'gopuram': {
-      let tiers = '';
-      const levels = 9; const baseW = 190; const baseY = 246; const topY = 40;
-      for(let i=0;i<levels;i++){
-        const t = i/(levels-1);
-        const w = baseW * (1 - t*0.72);
-        const y = baseY - t*(baseY-topY);
-        const h = (baseY-topY)/levels + 4;
-        tiers += `<path d="M${200-w/2} ${y} L${200-w/2+8} ${y-h} L${200+w/2-8} ${y-h} L${200+w/2} ${y} Z" opacity="${0.55+ t*0.4}"/>`;
-      }
-      art = `<g fill="none" stroke="${accent}" stroke-width="1.3">${tiers}
-        <rect x="60" y="246" width="280" height="10"/>
-        <path d="M170 246 L170 210 Q200 194 230 210 L230 246"/>
-      </g>`;
-      break;
-    }
-    case 'palace-dome': {
-      art = `
-        <g fill="none" stroke="${accent}" stroke-width="1.5">
-          <rect x="70" y="190" width="260" height="30"/>
-          <g opacity=".8">
-            ${[90,130,170,210,250,290].map(x=>`<path d="M${x} 190 L${x} 155 Q${x+10} 140 ${x+20} 155 L${x+20} 190"/>`).join('')}
-          </g>
-          <rect x="150" y="120" width="100" height="70"/>
-          <path d="M150 120 Q150 78 200 78 Q250 78 250 120"/>
-          <ellipse cx="200" cy="74" rx="24" ry="20"/>
-          <line x1="200" y1="54" x2="200" y2="38"/>
-          <circle cx="120" cy="150" r="14"/>
-          <path d="M106 150 Q106 128 120 128 Q134 128 134 150"/>
-          <circle cx="280" cy="150" r="14"/>
-          <path d="M266 150 Q266 128 280 128 Q294 128 294 150"/>
-        </g>`;
-      break;
-    }
-    default: art = `<circle cx="200" cy="150" r="60" fill="none" stroke="${accent}" stroke-width="2"/>`;
-  }
-
-  return `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-    ${bg}${ground}${art}
-    ${caption ? `<text x="16" y="284" font-family="Inter, sans-serif" font-size="9" letter-spacing="1.5" fill="rgba(247,243,236,.5)" font-weight="600">${caption.toUpperCase()}</text>` : ''}
-  </svg>`;
-}
 function photoOrArt(dest, captionOverride, extraClass){
   if(!dest) return '';
-  const cap = captionOverride !== undefined ? captionOverride : (dest.city || dest.state);
   if(dest.image){
     const cls = extraClass ? ` ${extraClass}` : '';
     if(dest.imageFit === 'contain'){
@@ -261,10 +78,151 @@ function photoOrArt(dest, captionOverride, extraClass){
       <img src="${dest.image}" class="photo-img" alt="${dest.name}" loading="lazy">
     </div>`;
   }
-  return artSVG(dest.motif, dest.accent, cap);
+  return mediaPlaceholder(dest);
 }
 function artFor(dest, captionOverride){
   return photoOrArt(dest, captionOverride);
+}
+
+/* ---------------------------------------------------------------------- */
+/* SITE MEDIA                                                             */
+/*                                                                        */
+/* All heritage imagery goes through AntaraSiteMedia, so a site that gains */
+/* an `images` block later renders it with no change here. Every <img>     */
+/* below is lazy, carries real alt text built from the site's own name and */
+/* location, reserves its aspect ratio so nothing reflows, and degrades to */
+/* a quiet named placeholder panel if the file fails to load -- a broken photo */
+/* must never leave an empty box.                                          */
+/* ---------------------------------------------------------------------- */
+const MEDIA = window.AntaraSiteMedia;
+
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function mediaOf(dest){ return MEDIA.resolveMedia(dest); }
+
+/* Heritage status is derived, not guessed. `unesco.status` holds four
+   different kinds of value in this dataset -- an actual World Heritage
+   inscription, a Tentative List entry, a plain heritage label such as
+   "Sacred pilgrimage site", or nothing -- so treating any truthy value as
+   "UNESCO" would award listings to sites that do not have one. One rule,
+   shared with Visual India, decides. */
+const HERITAGE = window.AntaraVisualIndia;
+function isUnesco(dest){ return HERITAGE.isUnescoListed(dest); }
+
+/* The state slug the Visual India gallery is keyed by. Derived from the same
+   STATES_META the map router uses, so the two can never drift. */
+function stateSlugOf(dest){
+  const meta = dest && window.STATES_META ? window.STATES_META[dest.state] : null;
+  return meta ? meta.slug : null;
+}
+
+/* The intentional fallback: a quiet tinted panel carrying the site's own name
+   and an honest label. Never a stock photo, never another site's picture, and
+   never a decorative drawing standing in for a photograph. */
+function mediaPlaceholder(dest, label){
+  const name = (dest && dest.name) || 'Heritage site';
+  const tint = (dest && dest.accent) || '#C9A86A';
+  return `<div class="media-placeholder" role="img" aria-label="${esc(name)} — no photograph available yet" style="--placeholder-tint:${esc(tint)}">
+    <span class="media-placeholder-name">${esc(name)}</span>
+    <span class="media-placeholder-note">${esc(label || 'Visual archive coming soon')}</span>
+  </div>`;
+}
+
+/* One <img> with loading state, aspect ratio, and a placeholder fallback on error. */
+function mediaImg(img, dest, opts){
+  opts = opts || {};
+  if(!img || !img.src) return mediaPlaceholder(dest, opts.placeholder);
+  const ratio = opts.ratio || '4 / 3';
+  const eager = opts.eager === true;
+  const idx = opts.index != null ? ` data-gallery-index="${opts.index}"` : '';
+  const cls = opts.className ? ` ${opts.className}` : '';
+  return `<figure class="media-figure${cls}" style="--media-ratio:${ratio}">
+    <div class="media-frame is-loading"${idx}>
+      <img src="${esc(img.src)}" alt="${esc(img.alt || MEDIA.altFor(dest))}"
+           ${eager ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"'}
+           onload="this.parentNode.classList.remove('is-loading')"
+           onerror="window.__antaraImgFallback&&window.__antaraImgFallback(this)">
+    </div>
+    ${img.caption || img.credit || img.license ? `<figcaption>${img.caption ? esc(img.caption) : ''}${mediaCredit(img)}</figcaption>` : ''}
+  </figure>`;
+}
+
+/* CC BY and CC BY-SA require the creator and licence to be shown wherever the
+   image appears, so credit is rendered on the page, not merely recorded in
+   data/media-sources.json. One implementation, in lightbox.js, so a figure
+   caption and the image viewer can never disagree about who took a photo. */
+function mediaCredit(img){
+  return window.AntaraLightbox.creditHTML(img);
+}
+
+/* Swap a failed photo for the placeholder panel rather than leaving a hole. */
+window.__antaraImgFallback = function(imgEl){
+  const frame = imgEl.parentNode;
+  if(!frame) return;
+  const destId = frame.closest('[data-site-id]');
+  const dest = destId ? byId.get(destId.dataset.siteId) : null;
+  frame.classList.remove('is-loading');
+  frame.classList.add('is-failed');
+  frame.innerHTML = mediaPlaceholder(dest, 'Image unavailable');
+};
+
+/* Plan Your Visit call-to-action.
+
+   Antara never sells tickets. A site shows a booking button only when the
+   audit found a booking URL belonging to that site's own authority; every
+   other site gets real visitor information instead, so we never render a
+   button that goes nowhere useful. */
+function planCta(p){
+  if(!p) return '';
+
+  if(p.bookingUrl){
+    const registration = p.bookingKind === 'registration';
+    const label = registration ? 'Register for Your Visit' : 'Book Official Tickets';
+    const via = p.bookingProvider
+      ? `You'll be redirected to the official booking portal — ${esc(p.bookingProvider)}.`
+      : `You'll be redirected to the official booking portal.`;
+    return `<div class="plan-cta reveal">
+      <a class="btn-primary btn-booking" href="${esc(p.bookingUrl)}" target="_blank" rel="noopener noreferrer">
+        <span aria-hidden="true">🎟️</span> ${label}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <span class="plan-cta-note">${via} Antara does not sell tickets or process payments.</span>
+    </div>`;
+  }
+
+  // No verified portal — say what a visitor actually needs to do instead.
+  const info = p.ticketNote
+    ? `<p class="plan-info-text">${esc(p.ticketNote)}</p>`
+    : `<p class="plan-info-text">No official online booking portal is available for this site. Tickets, where required, are issued at the entrance.</p>`;
+  const authority = p.authorityUrl
+    ? `<a class="plan-info-link" href="${esc(p.authorityUrl)}" target="_blank" rel="noopener noreferrer">
+         Visitor information from ${esc(p.authorityLabel || 'the site authority')}
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>`
+    : '';
+  return `<div class="plan-info reveal">
+    <div class="plan-info-head">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+      <b>Visiting this site</b>
+    </div>
+    ${info}
+    ${authority}
+  </div>`;
+}
+
+/* Small square thumbnail for search results, nearby items and the drawer.
+   Falls back to a tinted initial so list rows never collapse. */
+function mediaThumb(dest){
+  const m = mediaOf(dest);
+  if(!m.hero){
+    const name = (dest && dest.name) || '';
+    return `<span class="thumb-fallback" aria-hidden="true" style="--placeholder-tint:${esc((dest && dest.accent) || '#C9A86A')}">${esc(name.trim().charAt(0) || '·')}</span>`;
+  }
+  return `<img src="${esc(m.hero.src)}" alt="${esc(MEDIA.altFor(dest))}" class="thumb-img"
+    loading="lazy" decoding="async"
+    onerror="this.style.display='none';this.parentNode.classList.add('thumb-failed')">`;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -533,7 +491,7 @@ function renderPreview(dest){
   el.previewCard.innerHTML = `
     <div class="art">${artFor(dest)}</div>
     <div class="body">
-      <div class="kicker">${dest.unesco && dest.unesco.status ? '<span class="badge">UNESCO</span>' : ''}<span class="badge" style="background:rgba(200,107,60,.1);color:var(--terracotta)">${dest.category[0]}</span></div>
+      <div class="kicker">${isUnesco(dest) ? '<span class="badge">UNESCO</span>' : ''}<span class="badge" style="background:rgba(200,107,60,.1);color:var(--terracotta)">${dest.category[0]}</span></div>
       <h3>${dest.name}</h3>
       <div class="loc">${dest.city}, ${dest.state}</div>
       <p>${dest.shortDescription}</p>
@@ -588,7 +546,7 @@ function openSheet(dest){
     <div class="sheet-handle"></div>
     <div class="sheet-art art">${artFor(dest)}</div>
     <div class="sheet-body">
-      <div class="kicker">${dest.unesco && dest.unesco.status ? '<span class="badge">UNESCO</span>' : ''}</div>
+      <div class="kicker">${isUnesco(dest) ? '<span class="badge">UNESCO</span>' : ''}</div>
       <h3 class="display-s">${dest.name}</h3>
       <div class="loc" style="font-size:12px;color:var(--ink-45);margin:4px 0 10px;">${dest.city}, ${dest.state}</div>
       <p style="font-size:13.5px;color:var(--ink-70);margin-bottom:16px;">${dest.shortDescription}</p>
@@ -621,158 +579,276 @@ function buildMiniMap(dest){
 }
 
 function renderDestination(dest){
-  let nearby = (dest.nearby||[]).map(id=>byId.get(id)).filter(Boolean);
-  if(!nearby.length){
-    nearby = (byState.get(dest.state)||[]).filter(d=>d.id!==dest.id).slice(0,3);
-  }
+  const media = mediaOf(dest);
+  /* Images already shown in a dedicated slot, so a supporting image is never
+     the same picture twice on one page. */
+  const usedImages = new Set(media.hero ? [media.hero.src] : []);
+
+  /* Related heritage, from real dataset properties only: the site's own
+     `nearby` list, then others in the same state, then others sharing a
+     category. Each row says why it is being shown. */
+  const related = [];
+  const seenRelated = new Set([dest.id]);
+  const addRelated = (d, reason) => {
+    if(!d || seenRelated.has(d.id) || related.length >= 6) return;
+    seenRelated.add(d.id);
+    related.push({ dest: d, reason });
+  };
+  (dest.nearby || []).forEach(id => addRelated(byId.get(id), 'Nearby'));
+  (byState.get(dest.state) || []).forEach(d => addRelated(d, 'Also in ' + dest.state));
+  (dest.category || []).forEach(cat => {
+    DESTS.filter(d => (d.category || []).includes(cat)).forEach(d => addRelated(d, 'Also a ' + cat));
+  });
+
   const fav = isFav(dest.id);
+  const hasUnesco = isUnesco(dest);
+  const hotspots = (dest.lookCloser && dest.lookCloser.hotspots) || [];
+
+  /* Sections are numbered by what actually renders, so a site missing data
+     never shows a gap in the sequence. */
+  let n = 0;
+  const num = () => String(++n).padStart(2, '0');
+  const head = (title) => `<div class="section-head"><span class="section-num">${num()}</span><h2>${esc(title)}</h2></div>`;
+  const sections = [];
+
+  /* --- Overview ------------------------------------------------------- */
+  if(dest.overview){
+    sections.push(`
+      <section class="dest-section" id="sec-overview">
+        ${head('Overview')}
+        <div class="overview-grid">
+          <p class="reveal">${esc(dest.overview)}</p>
+          <div class="fact-list reveal">
+            ${factRow('City', dest.city)}
+            ${factRow('State', dest.state)}
+            ${factRow('Heritage status', HERITAGE.heritageStatus(dest) || 'Not UNESCO-listed')}
+            ${factRow('Type', (dest.category || []).join(', '))}
+          </div>
+        </div>
+      </section>`);
+  }
+
+  /* --- Why Visit, with a cultural image beside it --------------------- */
+  if((dest.whyVisit || []).length){
+    const cultureImg = MEDIA.pickSectionImage(media, usedImages);
+    sections.push(`
+      <section class="dest-section" id="sec-why">
+        ${head('Why Visit')}
+        <div class="split-media ${cultureImg ? '' : 'no-media'}">
+          <div class="reason-grid">
+            ${dest.whyVisit.map((r,i)=>`<div class="reason reveal"><span class="n">${String(i+1).padStart(2,'0')}</span><h3>${esc(r.title)}</h3><p>${esc(r.text)}</p></div>`).join('')}
+          </div>
+          ${cultureImg ? `<div class="split-media-img reveal">${mediaImg(cultureImg, dest, {ratio:'3 / 4', index: media.gallery.indexOf(cultureImg)})}</div>` : ''}
+        </div>
+      </section>`);
+  }
+
+  /* --- History, image alongside the timeline -------------------------- */
+  if((dest.history || []).length){
+    const historyImg = MEDIA.pickSectionImage(media, usedImages);
+    sections.push(`
+      <section class="dest-section" id="sec-history">
+        ${head('History')}
+        <p class="section-lede reveal">Documented dates from Archaeological Survey of India and UNESCO records — traditions and legends are marked separately from verified history.</p>
+        <div class="split-media reverse ${historyImg ? '' : 'no-media'}">
+          ${historyImg ? `<div class="split-media-img reveal">${mediaImg(historyImg, dest, {ratio:'3 / 4', index: media.gallery.indexOf(historyImg)})}</div>` : ''}
+          <div class="timeline" id="timeline">
+            ${dest.history.map(h=>`<div class="t-item reveal"><div class="yr">${esc(h.year)}</div><p>${esc(h.text)}</p>${h.legend?'<span class="legend-tag">Tradition, not verified history</span>':''}</div>`).join('')}
+          </div>
+        </div>
+      </section>`);
+  }
+
+  /* --- Explore ---------------------------------------------------------- */
+  if((dest.explore || []).length){
+    sections.push(`
+      <section class="dest-section" id="sec-explore">
+        ${head('Explore')}
+        <div class="explore-grid">
+          ${dest.explore.map(x=>{
+            const img = x.image ? MEDIA.toImage(x.image, MEDIA.altFor(dest, x.name), x.name) : null;
+            if(img) usedImages.add(img.src);
+            return `<div class="explore-card reveal${img ? '' : ' is-textonly'}">
+              ${img ? mediaImg(img, dest, {ratio:'4 / 3', index: media.gallery.findIndex(g=>g.src===img.src)}) : ''}
+              <h3>${esc(x.name)}</h3><p>${esc(x.text)}</p>
+              ${x.notice ? `<div class="notice">${esc(x.notice)}</div>` : ''}
+            </div>`;
+          }).join('')}
+        </div>
+      </section>`);
+  }
+
+  /* --- Don't Miss ------------------------------------------------------- */
+  if((dest.dontMiss || []).length){
+    sections.push(`
+      <section class="dest-section" id="sec-miss">
+        ${head("Don't Miss")}
+        <div class="miss-list">
+          ${dest.dontMiss.map((m,i)=>{
+            const img = m.image ? MEDIA.toImage(m.image, MEDIA.altFor(dest, m.title), m.title) : null;
+            if(img) usedImages.add(img.src);
+            return `<div class="miss-item reveal"><span class="n">${String(i+1).padStart(2,'0')}</span>
+              ${img ? `<div class="miss-media">${mediaImg(img, dest, {ratio:'4 / 3', index: media.gallery.findIndex(g=>g.src===img.src)})}</div>` : ''}
+              <div><h3>${esc(m.title)}</h3><p>${esc(m.text)}</p></div></div>`;
+          }).join('')}
+        </div>
+      </section>`);
+  }
+
+  /* --- Gallery: only where the site genuinely has spare imagery -------- */
+  const galleryImgs = media.gallery.filter(g => !usedImages.has(g.src) && (!media.hero || g.src !== media.hero.src));
+  if(galleryImgs.length){
+    sections.push(`
+      <section class="dest-section" id="sec-gallery">
+        ${head('Gallery')}
+        <p class="section-lede reveal">${galleryImgs.length} more ${galleryImgs.length === 1 ? 'photograph' : 'photographs'} of ${esc(dest.name)}. Select any image to view it larger.</p>
+        <div class="gallery-strip reveal">
+          ${galleryImgs.map(g => mediaImg(g, dest, {ratio:'4 / 3', className:'gallery-item', index: media.gallery.indexOf(g)})).join('')}
+        </div>
+      </section>`);
+  }
+
+  /* --- Look Closer ------------------------------------------------------
+     Hotspot coordinates were authored against a specific detail photograph.
+     Without that photograph there is nothing truthful to point at — the
+     coordinates would land on arbitrary parts of some other picture — so the
+     section is omitted entirely rather than illustrated with a stand-in. */
+  if(dest.lookCloser && hotspots.length && dest.lookCloser.image){
+    sections.push(`
+      <section class="dest-section" id="sec-closer">
+        ${head('Look Closer')}
+        ${dest.lookCloser.intro ? `<p class="section-lede reveal">${esc(dest.lookCloser.intro)}</p>` : ''}
+        <div class="closer-wrap reveal">
+          <div class="art"><div class="photo-art-wrap"><img src="${esc(dest.lookCloser.image)}" class="photo-img" alt="${esc(MEDIA.altFor(dest, 'Detail'))}" loading="lazy" decoding="async"></div></div>
+          ${hotspots.map((h,i)=>`<button class="hotspot" data-i="${i}" style="left:${h.x}%;top:${h.y}%" aria-label="${esc(h.title)}"></button>`).join('')}
+          ${hotspots.map((h,i)=>`<div class="hotspot-card" data-i="${i}" style="left:${Math.min(h.x+4,68)}%;top:${Math.max(h.y-6,4)}%"><div class="k">${esc(h.title)}</div><p>${esc(h.text)}</p></div>`).join('')}
+        </div>
+      </section>`);
+  }
+
+  /* --- Best Experience -------------------------------------------------- */
+  const be = dest.bestExperience;
+  if(be && ((be.route||[]).length || (be.tips||[]).length)){
+    sections.push(`
+      <section class="dest-section" id="sec-best">
+        ${head('Best Experience')}
+        <div class="route-wrap">
+          ${(be.route||[]).length ? `<div class="route-steps reveal">${be.route.map(s=>`<div class="route-step"><b>${esc(s.title)}</b><span>${esc(s.note)}</span></div>`).join('')}</div>` : ''}
+          ${(be.tips||[]).length ? `<div class="exp-tips reveal">${be.tips.map(t=>`<div class="exp-tip"><div class="k">${esc(t.k)}</div><p>${esc(t.text)}</p></div>`).join('')}</div>` : ''}
+        </div>
+      </section>`);
+  }
+
+  /* --- Plan Your Visit -------------------------------------------------- */
+  const p = dest.plan || {};
+  const planCards = [
+    p.hours       ? `<div class="plan-card"><div class="k">Opening hours</div><div class="v">${esc(p.hours)}</div>${p.closedDay?`<div class="sub">${esc(p.closedDay)}</div>`:''}</div>` : '',
+    p.bestTime    ? `<div class="plan-card"><div class="k">Best time</div><div class="v">${esc(p.bestTime)}</div></div>` : '',
+    p.duration    ? `<div class="plan-card"><div class="k">Time needed</div><div class="v">${esc(p.duration)}</div></div>` : '',
+    p.entryIndian ? `<div class="plan-card"><div class="k">Entry — Indian</div><div class="v">${esc(p.entryIndian)}</div>${p.childFree?`<div class="sub">Children ${esc(p.childFree)} free</div>`:''}</div>` : '',
+    p.entryForeign? `<div class="plan-card"><div class="k">Entry — Foreign</div><div class="v">${esc(p.entryForeign)}</div>${p.entrySaarc?`<div class="sub">SAARC/BIMSTEC: ${esc(p.entrySaarc)}</div>`:''}</div>` : '',
+    (dest.city||dest.state) ? `<div class="plan-card"><div class="k">Location</div><div class="v" style="font-size:15px">${esc(dest.city)}</div><div class="sub">${esc(dest.state)}</div></div>` : ''
+  ].filter(Boolean).join('');
+
+  if(planCards){
+    const travelImg = MEDIA.pickSectionImage(media, usedImages);
+    sections.push(`
+      <section class="dest-section" id="sec-plan">
+        ${head('Plan Your Visit')}
+        ${travelImg ? `<div class="plan-media reveal">${mediaImg(travelImg, dest, {ratio:'21 / 9', index: media.gallery.indexOf(travelImg)})}</div>` : ''}
+        <div class="plan-grid reveal">${planCards}</div>
+        <div class="verify-note reveal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <span>${esc(p.note || 'Fees and hours change without notice.')} Last checked ${esc(window.LAST_VERIFIED)} — confirm before you travel.</span>
+        </div>
+        ${planCta(p)}
+      </section>`);
+  }
+
+  /* --- Continue Exploring ------------------------------------------------ */
+  if(related.length){
+    sections.push(`
+      <section class="dest-section" id="sec-nearby">
+        ${head('Continue Exploring')}
+        <div class="nearby-grid">
+          <div class="nearby-list reveal">
+            ${related.map(r=>`<div class="nearby-item" data-id="${esc(r.dest.id)}" role="button" tabindex="0">
+              <div class="thumb">${mediaThumb(r.dest)}</div>
+              <div class="meta"><h4>${esc(r.dest.name)}</h4><div class="dist">${esc(r.reason)} · ${esc(r.dest.city)}</div></div>
+            </div>`).join('')}
+          </div>
+          <div class="mini-map reveal">${buildMiniMap(dest)}</div>
+        </div>
+      </section>`);
+  }
+
+  const heroImgSrc = media.hero ? media.hero.src : null;
 
   el.destPage.innerHTML = `
+    <div data-site-id="${esc(dest.id)}">
     <button class="dest-close" id="dest-close-btn" aria-label="Close destination guide">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
-    <button class="view-toggle-btn" id="art-mode-toggle" title="Toggle Photo / Line Art Etching">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-      <span id="art-mode-label">Switch to Line Art</span>
-    </button>
 
     <header class="dest-hero">
-      <div class="art">${artFor(dest, '')}</div>
+      <div class="art">${heroImgSrc
+        ? `<div class="photo-art-wrap"><img src="${esc(heroImgSrc)}" class="photo-img" alt="${esc(media.hero.alt)}" fetchpriority="high" onerror="window.__antaraImgFallback&&window.__antaraImgFallback(this)"></div>`
+        : mediaPlaceholder(dest)}</div>
       <div class="dest-hero-scrim"></div>
       <div class="dest-hero-content">
-        <div class="eyebrow reveal is-in">${dest.category.join(' · ')}${dest.unesco&&dest.unesco.status?` · UNESCO ${dest.unesco.year}`:''}</div>
-        <h1>${dest.name}</h1>
-        <div class="loc-line">${dest.city}<span class="sep">·</span>${dest.state}<span class="sep">·</span>${dest.country}</div>
-        <button class="fav-toggle ${fav?'is-fav':''}" id="hero-fav">
-          <svg viewBox="0 0 24 24" fill="${fav?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-9.5-8.5C.5 8 2.5 4.5 6.2 4.5c2 0 3.4 1 5.8 3.5 2.4-2.5 3.8-3.5 5.8-3.5 3.7 0 5.7 3.5 3.7 8C19 16.65 12 21 12 21z"/></svg>
-          ${fav?'Saved':'Save to Journey'}
-        </button>
+        <div class="eyebrow reveal is-in">${esc((dest.category||[]).join(' · '))}${hasUnesco?` · UNESCO ${esc(dest.unesco.year)}`:''}</div>
+        <h1>${esc(dest.name)}</h1>
+        <div class="loc-line">${esc(dest.city)}<span class="sep">·</span>${esc(dest.state)}<span class="sep">·</span>${esc(dest.country)}</div>
+        <div class="hero-actions">
+          <button class="fav-toggle ${fav?'is-fav':''}" id="hero-fav">
+            <svg viewBox="0 0 24 24" fill="${fav?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-9.5-8.5C.5 8 2.5 4.5 6.2 4.5c2 0 3.4 1 5.8 3.5 2.4-2.5 3.8-3.5 5.8-3.5 3.7 0 5.7 3.5 3.7 8C19 16.65 12 21 12 21z"/></svg>
+            ${fav?'Saved':'Save to Journey'}
+          </button>
+          ${planCards ? `<button class="hero-plan-btn" id="hero-plan">Plan Your Visit
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>` : ''}
+        </div>
       </div>
       <div class="scroll-cue">Scroll to explore <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
     </header>
 
     <div class="dest-body">
-      <section class="dest-section" id="sec-overview">
-        <div class="section-head"><span class="section-num">01</span><h2>Overview</h2></div>
-        <div class="overview-grid">
-          <p class="reveal">${dest.overview}</p>
-          <div class="fact-list reveal">
-            ${factRow('City', dest.city)}
-            ${factRow('State', dest.state)}
-            ${factRow('Heritage status', dest.unesco&&dest.unesco.status ? `UNESCO · ${dest.unesco.year}` : 'Not UNESCO-listed')}
-            ${factRow('Category', dest.category.join(', '))}
-          </div>
-        </div>
-      </section>
-
-      <section class="dest-section" id="sec-why">
-        <div class="section-head"><span class="section-num">02</span><h2>Why Visit</h2></div>
-        <div class="reason-grid">
-          ${dest.whyVisit.map((r,i)=>`<div class="reason reveal"><span class="n">0${i+1}</span><h3>${r.title}</h3><p>${r.text}</p></div>`).join('')}
-        </div>
-      </section>
-
-      <section class="dest-section" id="sec-history">
-        <div class="section-head"><span class="section-num">03</span><h2>History</h2></div>
-        <p class="section-lede reveal">Documented dates from Archaeological Survey of India and UNESCO records — traditions and legends are marked separately from verified history.</p>
-        <div class="timeline" id="timeline">
-          ${dest.history.map(h=>`<div class="t-item reveal"><div class="yr">${h.year}</div><p>${h.text}</p>${h.legend?'<span class="legend-tag">Tradition, not verified history</span>':''}</div>`).join('')}
-        </div>
-      </section>
-
-      <section class="dest-section" id="sec-explore">
-        <div class="section-head"><span class="section-num">04</span><h2>Explore</h2></div>
-        <div class="explore-grid">
-          ${dest.explore.map(x=>`<div class="explore-card reveal"><div class="art">${x.image ? `<div class="photo-art-wrap"><img src="${x.image}" class="photo-img" alt="${x.name}" loading="lazy"></div>` : artSVG(dest.motif, dest.accent, '')}</div><h3>${x.name}</h3><p>${x.text}</p><div class="notice">${x.notice}</div></div>`).join('')}
-        </div>
-      </section>
-
-      <section class="dest-section" id="sec-miss">
-        <div class="section-head"><span class="section-num">05</span><h2>Don't Miss</h2></div>
-        <div class="miss-list">
-          ${dest.dontMiss.map((m,i)=>`<div class="miss-item reveal"><span class="n">0${i+1}</span><div class="art">${m.image ? `<div class="photo-art-wrap"><img src="${m.image}" class="photo-img" alt="${m.title}" loading="lazy"></div>` : artSVG(dest.motif, dest.accent,'')}</div><div><h3>${m.title}</h3><p>${m.text}</p></div></div>`).join('')}
-        </div>
-      </section>
-
-      <section class="dest-section" id="sec-closer">
-        <div class="section-head"><span class="section-num">06</span><h2>Look Closer</h2></div>
-        <p class="section-lede reveal">${dest.lookCloser.intro}</p>
-        <div class="closer-wrap reveal">
-          <div class="art">${dest.lookCloser.image ? `<div class="photo-art-wrap"><img src="${dest.lookCloser.image}" class="photo-img" alt="${dest.name}"></div>` : artSVG(dest.motif, dest.accent, dest.name)}</div>
-          ${dest.lookCloser.hotspots.map((h,i)=>`<button class="hotspot" data-i="${i}" style="left:${h.x}%;top:${h.y}%" aria-label="${h.title}"></button>`).join('')}
-          ${dest.lookCloser.hotspots.map((h,i)=>`<div class="hotspot-card" data-i="${i}" style="left:${Math.min(h.x+4,68)}%;top:${Math.max(h.y-6,4)}%"><div class="k">${h.title}</div><p>${h.text}</p></div>`).join('')}
-        </div>
-      </section>
-
-      <section class="dest-section" id="sec-best">
-        <div class="section-head"><span class="section-num">07</span><h2>Best Experience</h2></div>
-        <div class="route-wrap">
-          <div class="route-steps reveal">
-            ${dest.bestExperience.route.map(s=>`<div class="route-step"><b>${s.title}</b><span>${s.note}</span></div>`).join('')}
-          </div>
-          <div class="exp-tips reveal">
-            ${dest.bestExperience.tips.map(t=>`<div class="exp-tip"><div class="k">${t.k}</div><p>${t.text}</p></div>`).join('')}
-          </div>
-        </div>
-      </section>
-
-      <section class="dest-section" id="sec-plan">
-        <div class="section-head"><span class="section-num">08</span><h2>Plan Your Visit</h2></div>
-        <div class="plan-grid reveal">
-          <div class="plan-card"><div class="k">Opening hours</div><div class="v">${dest.plan.hours}</div><div class="sub">${dest.plan.closedDay||''}</div></div>
-          <div class="plan-card"><div class="k">Best time</div><div class="v">${dest.plan.bestTime}</div></div>
-          <div class="plan-card"><div class="k">Time needed</div><div class="v">${dest.plan.duration}</div></div>
-          <div class="plan-card"><div class="k">Entry — Indian</div><div class="v">${dest.plan.entryIndian}</div>${dest.plan.childFree?`<div class="sub">Children ${dest.plan.childFree} free</div>`:''}</div>
-          <div class="plan-card"><div class="k">Entry — Foreign</div><div class="v">${dest.plan.entryForeign}</div>${dest.plan.entrySaarc?`<div class="sub">SAARC/BIMSTEC: ${dest.plan.entrySaarc}</div>`:''}</div>
-          <div class="plan-card"><div class="k">Location</div><div class="v" style="font-size:15px">${dest.city}</div><div class="sub">${dest.state}</div></div>
-        </div>
-        <div class="verify-note reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-          <span>${dest.plan.note || 'Fees and hours change without notice.'} Last checked ${window.LAST_VERIFIED} — confirm on the <a href="${dest.plan.bookingUrl}" target="_blank" rel="noopener">official booking portal</a> before you travel.</span>
-        </div>
-      </section>
-
-      <section class="dest-section" id="sec-nearby">
-        <div class="section-head"><span class="section-num">09</span><h2>Nearby</h2></div>
-        <div class="nearby-grid">
-          <div class="nearby-list reveal">
-            ${nearby.length ? nearby.map(n=>`<div class="nearby-item" data-id="${n.id}"><div class="thumb">${artSVG(n.motif,n.accent,'')}</div><div class="meta"><h4>${n.name}</h4><div class="dist">${n.city}, ${n.state}</div></div></div>`).join('') : `<div style="padding:20px;color:var(--ink-45);font-size:13px;">More ${dest.state} destinations are on their way.</div>`}
-          </div>
-          <div class="mini-map reveal">${buildMiniMap(dest)}</div>
-        </div>
-      </section>
-
+      ${sections.join('')}
       <div class="dest-cta reveal">
         <h2 class="display-m">Where to next?</h2>
-        <button class="btn-primary" id="explore-more-btn">Back to ${dest.state} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="btn-primary" id="explore-more-btn">Back to ${esc(dest.state)} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        ${stateSlugOf(dest) ? `<a class="dest-cta-link" href="visual-india.html#/state/${esc(stateSlugOf(dest))}">Explore more from ${esc(dest.state)}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>` : ''}
       </div>
-      <div class="dest-foot">Sources: ${(dest.sources||[]).map(s=>`<a href="${s.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">${s.label}</a>`).join(' · ')}<br>Content last verified ${window.LAST_VERIFIED}.</div>
+      <div class="dest-foot">${(dest.sources||[]).length ? `Sources: ${(dest.sources||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:2px;">${esc(s.label)}</a>`).join(' · ')}<br>` : ''}Content last verified ${esc(window.LAST_VERIFIED)}.</div>
+    </div>
     </div>
   `;
 
   document.getElementById('dest-close-btn').addEventListener('click', () => closeDestination());
-  const toggleBtn = document.getElementById('art-mode-toggle');
-  if(toggleBtn){
-    let showingEtching = false;
-    toggleBtn.addEventListener('click', () => {
-      showingEtching = !showingEtching;
-      const heroArt = el.destPage.querySelector('.dest-hero .art');
-      if(heroArt){
-        heroArt.innerHTML = showingEtching ? artSVG(dest.motif, dest.accent, dest.name) : photoOrArt(dest, '');
-        document.getElementById('art-mode-label').textContent = showingEtching ? 'Show Real Photo' : 'Switch to Line Art';
-      }
+
+  const planBtn = document.getElementById('hero-plan');
+  if(planBtn){
+    planBtn.addEventListener('click', () => {
+      const sec = document.getElementById('sec-plan');
+      if(sec) sec.scrollIntoView({behavior: REDUCED_MOTION ? 'auto' : 'smooth', block:'start'});
     });
   }
+
   document.getElementById('hero-fav').addEventListener('click', (e) => {
     const nowFav = toggleFav(dest.id);
     e.currentTarget.classList.toggle('is-fav', nowFav);
     e.currentTarget.innerHTML = `<svg viewBox="0 0 24 24" fill="${nowFav?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-9.5-8.5C.5 8 2.5 4.5 6.2 4.5c2 0 3.4 1 5.8 3.5 2.4-2.5 3.8-3.5 5.8-3.5 3.7 0 5.7 3.5 3.7 8C19 16.65 12 21 12 21z"/></svg>${nowFav?'Saved':'Save to Journey'}`;
     toast(nowFav ? `Added ${dest.name} to My Journey` : `Removed ${dest.name} from My Journey`);
   });
+
   document.getElementById('explore-more-btn').addEventListener('click', () => closeDestination());
+
   el.destPage.querySelectorAll('.nearby-item').forEach(it => {
-    it.addEventListener('click', () => openDestination(it.dataset.id));
+    const go = () => openDestination(it.dataset.id);
+    it.addEventListener('click', go);
+    it.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
   });
+
   el.destPage.querySelectorAll('.hotspot').forEach(h => {
     h.addEventListener('click', () => {
       const i = h.dataset.i;
@@ -781,6 +857,19 @@ function renderDestination(dest){
       el.destPage.querySelectorAll('.hotspot-card').forEach(x=>x.classList.remove('is-open'));
       if(!wasOpen){ h.classList.add('is-open'); el.destPage.querySelector(`.hotspot-card[data-i="${i}"]`).classList.add('is-open'); }
     });
+  });
+
+  /* Any image carrying a gallery index opens the lightbox. */
+  el.destPage.querySelectorAll('[data-gallery-index]').forEach(frame => {
+    const idx = parseInt(frame.dataset.galleryIndex, 10);
+    if(isNaN(idx) || idx < 0) return;
+    frame.classList.add('is-zoomable');
+    frame.setAttribute('role','button');
+    frame.setAttribute('tabindex','0');
+    frame.setAttribute('aria-label','View larger image');
+    const open = () => openLightbox(media, idx, dest);
+    frame.addEventListener('click', open);
+    frame.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
   });
 
   const revealEls = el.destPage.querySelectorAll('.reveal');
@@ -799,15 +888,45 @@ function renderDestination(dest){
   }
 }
 
+/* ---------------------------------------------------------------------- */
+/* LIGHTBOX                                                               */
+/*                                                                        */
+/* Deliberately small: no library. Arrow keys and Escape work, focus       */
+/* returns to the thumbnail that opened it, and neighbouring frames are    */
+/* preloaded so stepping does not flash.                                   */
+/* ---------------------------------------------------------------------- */
+/* The viewer itself lives in lightbox.js so the heritage-site pages and the
+   Visual India galleries share one implementation. */
+const LIGHTBOX = window.AntaraLightbox;
+
+function openLightbox(media, index, dest){
+  LIGHTBOX.open(media.gallery, index, MEDIA.altFor(dest));
+}
+
+/* The site guide covers the map completely. While it is open the map beneath
+   it is inert: it stays in the DOM but is removed from the accessibility tree
+   and the tab order, so a screen reader does not meet two page headings at
+   once and Tab cannot wander onto markers hidden behind the overlay. */
+function setMapInert(inert){
+  ['nav', 'stage', 'filter-bar', 'bottom-sheet', 'drawer', 'search-overlay'].forEach(id => {
+    const node = document.getElementById(id);
+    if(!node) return;
+    if(inert){ node.setAttribute('aria-hidden', 'true'); node.setAttribute('inert', ''); }
+    else { node.removeAttribute('aria-hidden'); node.removeAttribute('inert'); }
+  });
+}
+
 function openDestination(id, opts){
   opts = opts || {};
   const dest = byId.get(id); if(!dest) return;
+  LIGHTBOX.close();
   renderDestination(dest);
   AppState.destId = id;
   el.destPage.style.display = 'block';
   requestAnimationFrame(()=> el.destPage.classList.add('is-open'));
   el.destPage.scrollTop = 0;
   document.body.style.overflow = 'hidden';
+  setMapInert(true);
   if(!opts.silent) updateHash(dest.state, id);
 }
 function closeDestination(opts){
@@ -816,6 +935,7 @@ function closeDestination(opts){
   el.destPage.classList.remove('is-open');
   document.body.style.overflow = '';
   AppState.destId = null;
+  setMapInert(false);
   setTimeout(()=>{ if(!AppState.destId) el.destPage.style.display='none'; }, REDUCED_MOTION?10:640);
   if(!opts.silent) updateHash(AppState.state, null);
 }
@@ -839,14 +959,14 @@ function renderSearchResults(q){
   q = q.trim().toLowerCase();
   if(!q){ searchResults.innerHTML = `<div class="search-hint">Try "Taj Mahal", "Delhi", "forts", or "UNESCO"</div>`; return; }
   const results = DESTS.filter(d => {
-    const hay = [d.name, d.city, d.state, d.category.join(' '), d.unesco&&d.unesco.status?'unesco':''].join(' ').toLowerCase();
+    const hay = [d.name, d.city, d.state, d.category.join(' '), isUnesco(d)?'unesco':''].join(' ').toLowerCase();
     return hay.includes(q);
   }).slice(0,10);
   if(!results.length){ searchResults.innerHTML = `<div class="search-hint">No matches for "${q}" yet — more destinations are on their way.</div>`; return; }
   searchResults.innerHTML = results.map(d => `
     <div class="search-result" data-id="${d.id}">
-      <div class="thumb">${artSVG(d.motif,d.accent,'')}</div>
-      <div class="meta"><h4>${d.name}</h4><span>${d.city}, ${d.state}${d.unesco&&d.unesco.status?' · UNESCO':''}</span></div>
+      <div class="thumb">${mediaThumb(d)}</div>
+      <div class="meta"><h4>${d.name}</h4><span>${d.city}, ${d.state}${isUnesco(d)?' · UNESCO':''}</span></div>
     </div>`).join('');
   searchResults.querySelectorAll('.search-result').forEach(r => {
     r.addEventListener('click', () => {
@@ -895,7 +1015,7 @@ function renderDrawer(){
   if(!favs.length){ body.innerHTML = `<div class="drawer-empty">Tap the heart on any destination to start planning your India journey.</div>`; return; }
   body.innerHTML = favs.map(d => `
     <div class="fav-item">
-      <div class="thumb" data-id="${d.id}">${artSVG(d.motif,d.accent,'')}</div>
+      <div class="thumb" data-id="${d.id}">${mediaThumb(d)}</div>
       <div class="meta" data-id="${d.id}"><h4>${d.name}</h4><span>${d.city}, ${d.state}</span></div>
       <button class="remove" data-remove="${d.id}" aria-label="Remove"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>`).join('');
@@ -995,9 +1115,6 @@ document.getElementById('nav-states').addEventListener('click', () => {
   const chip = el.filterBar.querySelector('[data-cat="All"]');
   if(chip) chip.click();
   toast('Hover or tap any state to begin exploring');
-});
-document.getElementById('nav-about').addEventListener('click', () => {
-  toast('Antara — a cartographic guide to India\u2019s heritage, built for exploration.');
 });
 
 /* ---------------------------------------------------------------------- */

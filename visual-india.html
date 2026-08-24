@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Visual India — Antara</title>
+<meta name="description" content="Explore India's heritage, one state at a time — a visual guide to the monuments, temples and forts recorded in Antara, grouped by the state they stand in.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="antara-tokens.css?v=9">
+<link rel="stylesheet" href="app.css?v=9">
+<link rel="stylesheet" href="visual-india.css?v=9">
+<script>
+(function() {
+  var savedTheme = localStorage.getItem('antara_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+})();
+</script>
+</head>
+<body class="vi-page">
+
+<nav class="vi-top">
+  <a class="vi-brand" href="visual-india.html#/">Antara</a>
+  <span class="vi-top-spacer"></span>
+  <a class="vi-top-link" href="map.html">Explore the Map</a>
+  <a class="vi-top-link is-current" href="visual-india.html#/" aria-current="page">Visual India</a>
+  <a class="vi-top-link" href="library.html">Archive</a>
+  <a class="vi-top-link" href="index.html">Festivals</a>
+</nav>
+
+<main id="vi-root"></main>
+
+<script src="data.js?v=9"></script>
+<!-- Media resolver and shared image viewer, both before the page controller -->
+<script src="site-media.js?v=9"></script>
+<script src="lightbox.js?v=9"></script>
+<script src="visual-india.js?v=9"></script>
+<script src="visual-india-page.js?v=9"></script>
+</body>
+</html>

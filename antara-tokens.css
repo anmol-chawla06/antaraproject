@@ -1,0 +1,129 @@
+/* ----------------------------------------------------------------------
+   ANTARA — SHARED DESIGN TOKENS
+
+   One palette and one type system for the whole product.
+
+   Antara grew as four independent front ends, and each had invented its own
+   identity: four different dark grounds (#0A0A0A, #111111, #070509 and a
+   violet-black), four different golds (#C9A86A, #C49F74, #d4af37, #dfb743)
+   and eight typefaces between them. Moving between the landing page, the map
+   and the library felt like moving between three products.
+
+   This file is the single source of truth. Each page's own stylesheet keeps
+   its own variable names and all of its layout rules — it simply points those
+   names here, so nothing is rewritten and everything agrees.
+
+   Load this BEFORE the page stylesheet that consumes it.
+   ---------------------------------------------------------------------- */
+
+:root {
+  /* --- ground and surfaces (dark is the default) --------------------- */
+  --antara-bg:              #0A0A0A;
+  --antara-bg-warm:         #0F0E0C;
+  --antara-surface:         #161614;
+  --antara-surface-raised:  #1C1B18;
+  --antara-surface-hover:   #232220;
+  --antara-glass:           rgba(22, 22, 20, 0.85);
+
+  /* --- ink ----------------------------------------------------------- */
+  --antara-ink:             #F7F3EC;
+  --antara-ink-90:          rgba(247, 243, 236, 0.90);
+  --antara-ink-70:          rgba(247, 243, 236, 0.70);
+  /* 0.45 measured 4.18:1 on the page ground — just under AA for body sizes.
+     Raised until small muted text clears 4.5:1 for real. */
+  --antara-ink-45:          rgba(247, 243, 236, 0.56);
+  --antara-ink-25:          rgba(247, 243, 236, 0.25);
+  --antara-ink-10:          rgba(247, 243, 236, 0.10);
+  --antara-ink-05:          rgba(247, 243, 236, 0.05);
+  --antara-ink-inverse:     #0A0A0A;
+
+  /* --- accents -------------------------------------------------------
+     Gold is the product's one accent. Terracotta and crimson are reserved
+     for heritage content and never used as a second UI accent. */
+  --antara-gold:            #C9A86A;
+  --antara-gold-bright:     #E4CE9B;
+  --antara-gold-dim:        #8B7545;
+  --antara-gold-glow:       rgba(201, 168, 106, 0.22);
+  --antara-terracotta:      #C86B3C;
+  --antara-crimson:         #8D3028;
+
+  /* --- semantic ------------------------------------------------------ */
+  --antara-danger:          #C4553F;
+  --antara-success:         #6E8C5A;
+
+  /* --- borders ------------------------------------------------------- */
+  --antara-border-subtle:   rgba(247, 243, 236, 0.10);
+  --antara-border-medium:   rgba(247, 243, 236, 0.20);
+  --antara-border-accent:   rgba(201, 168, 106, 0.42);
+
+  /* --- typography ----------------------------------------------------
+     Display carries the editorial voice; sans carries the interface.
+     The library keeps Crimson Pro for scripture and Cinzel for manuscript
+     titles — an archive legitimately reads differently from a UI — and
+     Devanagari always uses a face that renders it properly. */
+  --antara-font-display:    'Playfair Display', Georgia, 'Times New Roman', serif;
+  --antara-font-sans:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --antara-font-reading:    'Crimson Pro', 'EB Garamond', Georgia, serif;
+  --antara-font-archive:    'Cinzel', 'Marcellus', Georgia, serif;
+  --antara-font-devanagari: 'Noto Serif Devanagari', 'Tiro Devanagari Sanskrit', serif;
+
+  /* --- type scale ---------------------------------------------------- */
+  --antara-text-xs:         11px;
+  --antara-text-sm:         12.5px;
+  --antara-text-base:       15px;
+  --antara-text-md:         17px;
+  --antara-text-lg:         21px;
+  --antara-text-xl:         26px;
+
+  /* --- shape ---------------------------------------------------------
+     Three radii, deliberately few. Pills are for pills (chips, toggles),
+     not for every button on the page. */
+  --antara-radius-sm:       3px;
+  --antara-radius-md:       6px;
+  --antara-radius-lg:       12px;
+  --antara-radius-pill:     999px;
+
+  /* --- motion -------------------------------------------------------- */
+  --antara-ease:            cubic-bezier(0.4, 0, 0.2, 1);
+  --antara-fast:            0.18s var(--antara-ease);
+  --antara-smooth:          0.32s var(--antara-ease);
+}
+
+/* --- light: warm archival paper, not clinical white ------------------- */
+:root[data-theme="light"] {
+  --antara-bg:              #FDFBF7;
+  --antara-bg-warm:         #F5F0E6;
+  --antara-surface:         #FFFFFF;
+  --antara-surface-raised:  #F5F0E6;
+  --antara-surface-hover:   #EDE6DA;
+  --antara-glass:           rgba(253, 251, 247, 0.86);
+
+  --antara-ink:             #1C1921;
+  --antara-ink-90:          rgba(28, 25, 33, 0.90);
+  --antara-ink-70:          rgba(28, 25, 33, 0.72);
+  /* Muted ink needs more weight on paper than on black: 0.48 measured 3.12:1. */
+  --antara-ink-45:          rgba(28, 25, 33, 0.66);
+  --antara-ink-25:          rgba(28, 25, 33, 0.34);
+  --antara-ink-10:          rgba(28, 25, 33, 0.12);
+  --antara-ink-05:          rgba(28, 25, 33, 0.06);
+  --antara-ink-inverse:     #FDFBF7;
+
+  /* Darkened so gold text clears 4.5:1 on paper — #8A6A22 measured 4.44. */
+  --antara-gold:            #7C5C18;
+  --antara-gold-bright:     #A98430;
+  --antara-gold-dim:        #6E541A;
+  --antara-gold-glow:       rgba(138, 106, 34, 0.16);
+  --antara-terracotta:      #A9542B;
+  --antara-crimson:         #7A2820;
+
+  --antara-danger:          #9B3F2C;
+  --antara-success:         #4E6A3C;
+
+  --antara-border-subtle:   rgba(28, 25, 33, 0.12);
+  --antara-border-medium:   rgba(28, 25, 33, 0.22);
+  --antara-border-accent:   rgba(138, 106, 34, 0.40);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --antara-fast: 0.01ms; --antara-smooth: 0.01ms; }
+}

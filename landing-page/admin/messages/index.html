@@ -103,35 +103,78 @@
         let currentMessages = [];
         let activeMessageId = null;
 
+        function showListNotice(text, isError) {
+            const list = document.getElementById('messageList');
+            list.textContent = '';
+            const box = document.createElement('div');
+            box.style.padding = '1.5rem';
+            box.style.textAlign = 'center';
+            box.style.color = isError ? 'var(--clr-error, #c0392b)' : 'var(--clr-text-secondary)';
+            box.textContent = text;
+            list.appendChild(box);
+        }
+
         async function fetchMessages() {
             try {
                 const res = await fetch('/api/contact/messages');
-                const data = await res.json();
-                currentMessages = data.messages || [];
+                if (res.status === 401) {
+                    window.location.href = '/admin-login.html';
+                    return;
+                }
+                const payload = await res.json();
+                if (!res.ok || !payload.success) {
+                    showListNotice((payload.error && payload.error.message) || 'Failed to load messages.', true);
+                    return;
+                }
+                currentMessages = payload.data.messages || [];
                 renderList();
             } catch (err) {
-                document.getElementById('messageList').innerHTML = '<div style="padding: 1.5rem; color: red;">Failed to load.</div>';
+                showListNotice('Failed to load messages.', true);
             }
         }
 
+        // Message fields come from a public form, so every value is built as a
+        // text node. Interpolating them into innerHTML would be stored XSS.
         function renderList() {
             const list = document.getElementById('messageList');
+            list.textContent = '';
+
             if (currentMessages.length === 0) {
-                list.innerHTML = '<div style="padding: 1.5rem; text-align: center; color: var(--clr-text-secondary);">No messages.</div>';
+                showListNotice('No messages.', false);
                 return;
             }
 
-            list.innerHTML = currentMessages.map(msg => `
-                <div class="message-item ${msg.id === activeMessageId ? 'active' : ''}" onclick="selectMessage('${msg.id}')">
-                    <div class="msg-meta">
-                        <span><span class="status-dot status-${msg.status}"></span>${msg.status.toUpperCase()}</span>
-                        <span>${new Date(msg.created_at).toLocaleDateString()}</span>
-                    </div>
-                    <div class="msg-name">${msg.name}</div>
-                    <div class="msg-subject">${msg.subject}</div>
-                    <div class="msg-preview">${msg.message}</div>
-                </div>
-            `).join('');
+            currentMessages.forEach(msg => {
+                const item = document.createElement('div');
+                item.className = 'message-item' + (msg.id === activeMessageId ? ' active' : '');
+                item.addEventListener('click', () => selectMessage(msg.id));
+
+                const meta = document.createElement('div');
+                meta.className = 'msg-meta';
+
+                const statusSpan = document.createElement('span');
+                const dot = document.createElement('span');
+                dot.className = 'status-dot status-' + msg.status;
+                statusSpan.appendChild(dot);
+                statusSpan.appendChild(document.createTextNode(String(msg.status).toUpperCase()));
+
+                const dateSpan = document.createElement('span');
+                dateSpan.textContent = new Date(msg.created_at).toLocaleDateString();
+
+                meta.appendChild(statusSpan);
+                meta.appendChild(dateSpan);
+                item.appendChild(meta);
+
+                [['msg-name', msg.name], ['msg-subject', msg.subject], ['msg-preview', msg.message]]
+                    .forEach(([cls, value]) => {
+                        const el = document.createElement('div');
+                        el.className = cls;
+                        el.textContent = value || '';
+                        item.appendChild(el);
+                    });
+
+                list.appendChild(item);
+            });
         }
 
         function selectMessage(id) {
@@ -167,6 +210,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status })
                 });
+                if (res.status === 401) {
+                    window.location.href = '/admin-login.html';
+                    return;
+                }
                 if (res.ok) {
                     const idx = currentMessages.findIndex(m => m.id === activeMessageId);
                     if (idx > -1) {

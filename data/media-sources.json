@@ -1,0 +1,1638 @@
+{
+  "note": "Provenance for every externally sourced heritage image. Generated during the media pass; keep it in step with images/sites/.",
+  "generatedAt": "2026-08-23T09:34:22.870Z",
+  "sourceRepository": "Wikimedia Commons",
+  "policy": "Only public-domain or permissively licensed CC files are used. Files whose licence, restrictions or subject could not be established were rejected.",
+  "totalImages": 137,
+  "sites": [
+    {
+      "siteId": "qutub-minar",
+      "siteName": "Qutub Minar",
+      "commonsCategory": "Category:Qutb Minar",
+      "images": [
+        {
+          "file": "images/sites/qutub-minar/architecture-1.webp",
+          "caption": "Gate of Qutub Minar",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Gate_of_Qutub_Minar.jpg",
+          "creator": "Aks clicks",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Aks clicks, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/qutub-minar/culture-2.webp",
+          "caption": "QutubMinar Complex",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:QutubMinar_Complex.jpg",
+          "creator": "Sachindra26",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Sachindra26, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/qutub-minar/travel-3.webp",
+          "caption": "Qutb minar view from Qawat ul islam mosque",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Qutb_minar_view_from_Qawat_ul_islam_mosque.jpg",
+          "creator": "Mahi zahidi",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Mahi zahidi, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/qutub-minar/gallery-4.webp",
+          "caption": "Qtub minar potrait",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Qtub_minar_potrait.jpg",
+          "creator": "Manojkumarjp",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Manojkumarjp, CC0"
+        }
+      ]
+    },
+    {
+      "siteId": "humayuns-tomb",
+      "siteName": "Humayun's Tomb",
+      "commonsCategory": "Category:Humayun's Tomb, Delhi",
+      "images": [
+        {
+          "file": "images/sites/humayuns-tomb/architecture-1.webp",
+          "caption": "Ceiling Dome Inside Humayun’s Tomb",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Ceiling_Dome_Inside_Humayun%E2%80%99s_Tomb.jpg",
+          "creator": "Mbigul",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Mbigul, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/humayuns-tomb/travel-2.webp",
+          "caption": "Beautiful sunset at Humayun Tomb",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Beautiful_sunset_at_Humayun_Tomb.jpg",
+          "creator": "Theyesyed",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Theyesyed, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/humayuns-tomb/gallery-3.webp",
+          "caption": "Asia. India, Palace at Delhi LCCN2016820976",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Asia._India,_Palace_at_Delhi_LCCN2016820976.jpg",
+          "creator": "National Photo Company Collection",
+          "license": "Public domain",
+          "licenseUrl": null,
+          "attribution": "National Photo Company Collection, Public domain"
+        },
+        {
+          "file": "images/sites/humayuns-tomb/gallery-4.webp",
+          "caption": "Delhi, January 2012 (15621869835)",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Delhi,_January_2012_(15621869835).jpg",
+          "creator": "Leon Yaakov from Tel Aviv, ISRAEL",
+          "license": "CC BY 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+          "attribution": "Leon Yaakov from Tel Aviv, ISRAEL, CC BY 2.0"
+        }
+      ]
+    },
+    {
+      "siteId": "red-fort",
+      "siteName": "Red Fort",
+      "commonsCategory": "Category:Red Fort",
+      "images": [
+        {
+          "file": "images/sites/red-fort/architecture-1.webp",
+          "caption": "Historical trial in red fort",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Historical_trial_in_red_fort.jpg",
+          "creator": "Periogaurav",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Periogaurav, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/red-fort/culture-2.webp",
+          "caption": "Chatta Chowk or Bazaar-i-Musaqqaf",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:Chatta_Chowk_or_Bazaar-i-Musaqqaf.jpg",
+          "creator": "Legion65",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Legion65, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/red-fort/gallery-3.webp",
+          "caption": "Demolished buildings of Delhi fort",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Demolished_buildings_of_Delhi_fort.jpg",
+          "creator": "Gordon Sanderson",
+          "license": "Public domain",
+          "licenseUrl": null,
+          "attribution": "Gordon Sanderson, Public domain"
+        },
+        {
+          "file": "images/sites/red-fort/gallery-4.webp",
+          "caption": "History of the Red Fort",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:History_of_the_Red_Fort.jpg",
+          "creator": "Arush goutam",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Arush goutam, CC0"
+        }
+      ]
+    },
+    {
+      "siteId": "india-gate",
+      "siteName": "India Gate",
+      "commonsCategory": "Category:India Gate",
+      "images": [
+        {
+          "file": "images/sites/india-gate/architecture-1.webp",
+          "caption": "INDIA GATE DELHI",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:INDIA_GATE_DELHI.jpg",
+          "creator": "Baap8969",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Baap8969, CC0"
+        },
+        {
+          "file": "images/sites/india-gate/gallery-2.webp",
+          "caption": "India 35637",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:India_35637.jpg",
+          "creator": "Gautamdk1997",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Gautamdk1997, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/india-gate/architecture-3.webp",
+          "caption": "India Gate (Kargil War)",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:India_Gate_(Kargil_War).jpg",
+          "creator": "Abhiwiki jaiswal",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Abhiwiki jaiswal, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/india-gate/architecture-4.webp",
+          "caption": "India Gate (157857267)",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:India_Gate_(157857267).jpg",
+          "creator": "Chaitanya Bhagwat",
+          "license": "CC BY 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+          "attribution": "Chaitanya Bhagwat, CC BY 3.0"
+        }
+      ]
+    },
+    {
+      "siteId": "hawa-mahal",
+      "siteName": "Hawa Mahal",
+      "commonsCategory": "Category:Hawa Mahal",
+      "images": [
+        {
+          "file": "images/sites/hawa-mahal/architecture-1.webp",
+          "caption": "Hawa Mahal - Dome behind the main building",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Hawa_Mahal_-_Dome_behind_the_main_building.jpg",
+          "creator": "Vssun",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Vssun, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/hawa-mahal/gallery-2.webp",
+          "caption": "Courtyards of Hawa Mahal",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Courtyards_of_Hawa_Mahal.jpg",
+          "creator": "Vssun",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Vssun, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/hawa-mahal/gallery-3.webp",
+          "caption": "Fountain In courtyard of Hawa Mahal",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Fountain_In_courtyard_of_Hawa_Mahal.jpg",
+          "creator": "Vabinik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Vabinik, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/hawa-mahal/gallery-4.webp",
+          "caption": "Backlit",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Backlit.jpg",
+          "creator": "Purnim",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Purnim, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "meenakshi-temple",
+      "siteName": "Meenakshi Temple",
+      "commonsCategory": "Category:Madurai Meenakshi temple elephant",
+      "images": [
+        {
+          "file": "images/sites/meenakshi-temple/architecture-1.webp",
+          "caption": "Temple elephant and Madurai Meenakshi temple",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Temple_elephant_and_Madurai_Meenakshi_temple.jpg",
+          "creator": "Appaiah",
+          "license": "CC BY-SA 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+          "attribution": "Appaiah, CC BY-SA 2.0"
+        },
+        {
+          "file": "images/sites/meenakshi-temple/culture-2.webp",
+          "caption": "The Reverse Blessing",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:The_Reverse_Blessing.jpg",
+          "creator": "Vinoth Chandar",
+          "license": "CC BY 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+          "attribution": "Vinoth Chandar, CC BY 2.0"
+        },
+        {
+          "file": "images/sites/meenakshi-temple/gallery-3.webp",
+          "caption": "Elephant at Madurai Meenakshi temple",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Elephant_at_Madurai_Meenakshi_temple.jpg",
+          "creator": "Appaiah",
+          "license": "CC BY-SA 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+          "attribution": "Appaiah, CC BY-SA 2.0"
+        },
+        {
+          "file": "images/sites/meenakshi-temple/gallery-4.webp",
+          "caption": "Temple elephant, Menakshi Temple, Madurai (2) (36817502204)",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Temple_elephant,_Menakshi_Temple,_Madurai_(2)_(36817502204).jpg",
+          "creator": "Richard Mortel from Riyadh, Saudi Arabia",
+          "license": "CC BY 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+          "attribution": "Richard Mortel from Riyadh, Saudi Arabia, CC BY 2.0"
+        }
+      ]
+    },
+    {
+      "siteId": "mysore-palace",
+      "siteName": "Mysore Palace",
+      "commonsCategory": "Category:Mysore Palace",
+      "images": [
+        {
+          "file": "images/sites/mysore-palace/architecture-1.webp",
+          "caption": "Mysore Palace Pillar Interior",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Mysore_Palace_Pillar_Interior.jpg",
+          "creator": "Ar2439",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Ar2439, CC0"
+        },
+        {
+          "file": "images/sites/mysore-palace/travel-2.webp",
+          "caption": "Mysore Palace 3784",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Mysore_Palace_3784.jpg",
+          "creator": "Basavaraj M",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Basavaraj M, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mysore-palace/gallery-3.webp",
+          "caption": "A Courtyard of Amba Vilas Palace (Mysuru Palace), during day",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:A_Courtyard_of_Amba_Vilas_Palace_(Mysuru_Palace),_during_day.jpg",
+          "creator": "Shashank Mehendale",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Shashank Mehendale, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mysore-palace/gallery-4.webp",
+          "caption": "Amazing Amba Vilas Palace",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Amazing_Amba_Vilas_Palace.jpg",
+          "creator": "Shailee Mehendale",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Shailee Mehendale, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "gateway-of-india",
+      "siteName": "Gateway of India",
+      "commonsCategory": "Category:Gateway of India",
+      "images": [
+        {
+          "file": "images/sites/gateway-of-india/architecture-1.webp",
+          "caption": "Gateway of India (45082)",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Gateway_of_India_(45082).jpg",
+          "creator": "Suraj Digrase",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Suraj Digrase, CC0"
+        },
+        {
+          "file": "images/sites/gateway-of-india/gallery-2.webp",
+          "caption": "26-11 Mumbai attacks",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:26-11_Mumbai_attacks.jpg",
+          "creator": "Suraj Digrase",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Suraj Digrase, CC0"
+        },
+        {
+          "file": "images/sites/gateway-of-india/architecture-3.webp",
+          "caption": "Gateway of Hindustan",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Gateway_of_Hindustan.jpg",
+          "creator": "Dakshbakshi98",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Dakshbakshi98, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/gateway-of-india/architecture-4.webp",
+          "caption": "Gateway Of India 1111",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Gateway_Of_India_1111.jpg",
+          "creator": "Saif1512",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Saif1512, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "konark-sun-temple",
+      "siteName": "Konark Sun Temple",
+      "commonsCategory": "Category:Konark Sun Temple",
+      "images": [
+        {
+          "file": "images/sites/konark-sun-temple/architecture-1.webp",
+          "caption": "Carved walls on carved Souls",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Carved_walls_on_carved_Souls.jpg",
+          "creator": "$ayantan mitra",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "$ayantan mitra, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/konark-sun-temple/culture-2.webp",
+          "caption": "13th Century stone curvings at Konark Sun Temple Puri district, Odisha, India",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:13th_Century_stone_curvings_at_Konark_Sun_Temple_Puri_district,_Odisha,_India.jpg",
+          "creator": "Joydeep",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Joydeep, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/konark-sun-temple/gallery-3.webp",
+          "caption": "13th Century Elephant sculpture at Konark Sun Temple Puri district, Odisha, India",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:13th_Century_Elephant_sculpture_at_Konark_Sun_Temple_Puri_district,_Odisha,_India.jpg",
+          "creator": "Joydeep",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Joydeep, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/konark-sun-temple/gallery-4.webp",
+          "caption": "Chhayadevi Temple inside Sun Temple, Konark",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Chhayadevi_Temple_inside_Sun_Temple,_Konark.jpg",
+          "creator": "Purab1991",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Purab1991, CC BY-SA 3.0"
+        }
+      ]
+    },
+    {
+      "siteId": "fatehpur-sikri",
+      "siteName": "Fatehpur Sikri",
+      "commonsCategory": "Category:Fatehpur Sikri",
+      "images": [
+        {
+          "file": "images/sites/fatehpur-sikri/travel-1.webp",
+          "caption": "Bull in Fatehpur Sikri, India - 2025 - (ILCE-7CM2 DSCHW1869 DxO)",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Bull_in_Fatehpur_Sikri,_India_-_2025_-_(ILCE-7CM2_DSCHW1869_DxO).jpg",
+          "creator": "Miguel Discart &amp; Kiri Karma",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Miguel Discart &amp; Kiri Karma, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/fatehpur-sikri/gallery-2.webp",
+          "caption": "CITY VIEW Fatehpur Sikri",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:CITY_VIEW_Fatehpur_Sikri.jpg",
+          "creator": "Beingsachinsir",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Beingsachinsir, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/fatehpur-sikri/gallery-3.webp",
+          "caption": "Fatehpur Sikri shorts",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Fatehpur_Sikri_shorts.jpg",
+          "creator": "Rishikesh jatav",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "attribution": "Rishikesh jatav, CC BY 4.0"
+        },
+        {
+          "file": "images/sites/fatehpur-sikri/travel-4.webp",
+          "caption": "Elephant rider in Fatehpur Sikri, India - 2025 - (ILCE-7CM2 DSCHW1846 DxO)",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Elephant_rider_in_Fatehpur_Sikri,_India_-_2025_-_(ILCE-7CM2_DSCHW1846_DxO).jpg",
+          "creator": "Miguel Discart &amp; Kiri Karma",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Miguel Discart &amp; Kiri Karma, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "brihadeeswara-temple",
+      "siteName": "Brihadeeswara Temple",
+      "commonsCategory": "Category:Brihadisvara Temple",
+      "images": [
+        {
+          "file": "images/sites/brihadeeswara-temple/architecture-1.webp",
+          "caption": "Brihadeeswara Temple Thanjavur",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Brihadeeswara_Temple_Thanjavur.png",
+          "creator": "University of Edinburgh",
+          "license": "CC BY 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+          "attribution": "University of Edinburgh, CC BY 3.0"
+        },
+        {
+          "file": "images/sites/brihadeeswara-temple/travel-2.webp",
+          "caption": "Beautiful view of the Brihadishvara Temple",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Beautiful_view_of_the_Brihadishvara_Temple.jpg",
+          "creator": "Shailee Mehendale",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Shailee Mehendale, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/brihadeeswara-temple/gallery-3.webp",
+          "caption": "Brihadeeswara Temple main shrine",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Brihadeeswara_Temple_main_shrine.jpg",
+          "creator": "Sajeev0101",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Sajeev0101, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/brihadeeswara-temple/gallery-4.webp",
+          "caption": "1-Brihadeeswara Temple- court -Thanjavur-Tamilnadu 08",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:1-Brihadeeswara_Temple-_court_-Thanjavur-Tamilnadu_08.jpg",
+          "creator": "Nicholas.iyadurai",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Nicholas.iyadurai, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "agra-fort",
+      "siteName": "Agra Fort",
+      "commonsCategory": "Category:Agra Fort",
+      "images": [
+        {
+          "file": "images/sites/agra-fort/architecture-1.webp",
+          "caption": "AGRA FORT DOME",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:AGRA_FORT_DOME.jpg",
+          "creator": "Akaushal.iitk",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Akaushal.iitk, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/agra-fort/travel-2.webp",
+          "caption": "Agra 29 - view from the Red Fort (42306567241)",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Agra_29_-_view_from_the_Red_Fort_(42306567241).jpg",
+          "creator": "juggadery",
+          "license": "CC BY-SA 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+          "attribution": "juggadery, CC BY-SA 2.0"
+        },
+        {
+          "file": "images/sites/agra-fort/gallery-3.webp",
+          "caption": "AGRA KI FAMOUS JAMA MASJID",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:AGRA_KI_FAMOUS_JAMA_MASJID.jpg",
+          "creator": "Mizan khan576",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Mizan khan576, CC0"
+        },
+        {
+          "file": "images/sites/agra-fort/gallery-4.webp",
+          "caption": "Agra Fort-Agra-Uttar Pradesh",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Agra_Fort-Agra-Uttar_Pradesh.jpg",
+          "creator": "Soumya Shekhar",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Soumya Shekhar, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "rani-ki-vav",
+      "siteName": "Rani ki Vav",
+      "commonsCategory": "Category:Rani ki vav",
+      "images": [
+        {
+          "file": "images/sites/rani-ki-vav/architecture-1.webp",
+          "caption": "One of Pillar of Stepwell",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:One_of_Pillar_of_Stepwell.JPG",
+          "creator": "Harsh Patel",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Harsh Patel, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/rani-ki-vav/travel-2.webp",
+          "caption": "\"000 Inside Rani Ki Vav, Patan, Gujarat\"",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:%22000_Inside_Rani_Ki_Vav,_Patan,_Gujarat%22.jpg",
+          "creator": "Bibhas87",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Bibhas87, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/rani-ki-vav/gallery-3.webp",
+          "caption": "Kalpa rani ki vav",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Kalpa_rani_ki_vav.jpg",
+          "creator": "Kalpa21",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Kalpa21, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/rani-ki-vav/gallery-4.webp",
+          "caption": "Hepi photography 2",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Hepi_photography_2.jpg",
+          "creator": "Bhatiya hk",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Bhatiya hk, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "modhera-sun-temple",
+      "siteName": "Modhera Sun Temple",
+      "commonsCategory": "Category:Sun Temple, Modhera",
+      "images": [
+        {
+          "file": "images/sites/modhera-sun-temple/culture-1.webp",
+          "caption": "Magnificent Surya Mandir",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:Magnificent_Surya_Mandir.jpg",
+          "creator": "Sharvarism",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Sharvarism, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/modhera-sun-temple/gallery-2.webp",
+          "caption": "Lonely Pillors Modhera",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Lonely_Pillors_Modhera.JPG",
+          "creator": "Uday Parmar / Parmar uday at en.wikipedia",
+          "license": "CC BY 2.5",
+          "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
+          "attribution": "Uday Parmar / Parmar uday at en.wikipedia, CC BY 2.5"
+        },
+        {
+          "file": "images/sites/modhera-sun-temple/gallery-3.webp",
+          "caption": "Magnificent Sabha mandap",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Magnificent_Sabha_mandap.jpg",
+          "creator": "Prakashbarot3",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Prakashbarot3, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/modhera-sun-temple/gallery-4.webp",
+          "caption": "An Imposing View of a chapter in history",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:An_Imposing_View_of_a_chapter_in_history.jpg",
+          "creator": "Nandicmb",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Nandicmb, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "khajuraho-monuments",
+      "siteName": "Khajuraho Group of Monuments",
+      "commonsCategory": "Category:Khajuraho",
+      "images": [
+        {
+          "file": "images/sites/khajuraho-monuments/architecture-1.webp",
+          "caption": "Metal sculptures at Khajuraho",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Metal_sculptures_at_Khajuraho.jpg",
+          "creator": "BSSKrishnaS",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "BSSKrishnaS, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/khajuraho-monuments/culture-2.webp",
+          "caption": "BHARATANATYAM COSTUME 01",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:BHARATANATYAM_COSTUME_01.jpg",
+          "creator": "The open draft",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "The open draft, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/khajuraho-monuments/gallery-3.webp",
+          "caption": "Limgatomde Balli (Kannada- ಲಿಮ್ಗತೊಮ್ಡೆ ಬಳ್ಳಿ) (9859694885)",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Limgatomde_Balli_(Kannada-_%E0%B2%B2%E0%B2%BF%E0%B2%AE%E0%B3%8D%E0%B2%97%E0%B2%A4%E0%B3%8A%E0%B2%AE%E0%B3%8D%E0%B2%A1%E0%B3%86_%E0%B2%AC%E0%B2%B3%E0%B3%8D%E0%B2%B3%E0%B2%BF)_(9859694885).jpg",
+          "creator": "Dinesh Valke from Thane, India",
+          "license": "CC BY-SA 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+          "attribution": "Dinesh Valke from Thane, India, CC BY-SA 2.0"
+        },
+        {
+          "file": "images/sites/khajuraho-monuments/gallery-4.webp",
+          "caption": "Khajuraho - old tree",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Khajuraho_-_old_tree.jpg",
+          "creator": "Radosław Botev",
+          "license": "CC BY 3.0 pl",
+          "licenseUrl": "https://creativecommons.org/licenses/by/3.0/pl/deed.en",
+          "attribution": "Radosław Botev, CC BY 3.0 pl"
+        }
+      ]
+    },
+    {
+      "siteId": "sanchi-stupa",
+      "siteName": "Great Stupa at Sanchi",
+      "commonsCategory": "Category:Sanchi",
+      "images": [
+        {
+          "file": "images/sites/sanchi-stupa/architecture-1.webp",
+          "caption": "Aniconism of Buddha on Sanchi Stupa-1 gate 2",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Aniconism_of_Buddha_on_Sanchi_Stupa-1_gate_2.jpg",
+          "creator": "Vivek B Govindaraju",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Vivek B Govindaraju, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/sanchi-stupa/culture-2.webp",
+          "caption": "Elephant procession to Sanchi Tope in Sanchi, Madhya Pradesh",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:Elephant_procession_to_Sanchi_Tope_in_Sanchi,_Madhya_Pradesh.jpg",
+          "creator": "Lala Deen Dayal",
+          "license": "Public domain",
+          "licenseUrl": null,
+          "attribution": "Lala Deen Dayal, Public domain"
+        },
+        {
+          "file": "images/sites/sanchi-stupa/gallery-3.webp",
+          "caption": "Buddha meditating at Sanchi",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Buddha_meditating_at_Sanchi.jpg",
+          "creator": "Yashpilani",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Yashpilani, CC0"
+        },
+        {
+          "file": "images/sites/sanchi-stupa/gallery-4.webp",
+          "caption": "Bougainvillea, Sanchi, MP, India",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Bougainvillea,_Sanchi,_MP,_India.jpg",
+          "creator": "Yann (talk)",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Yann (talk), CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "gwalior-fort",
+      "siteName": "Gwalior Fort",
+      "commonsCategory": "Category:Gwalior Fort",
+      "images": [
+        {
+          "file": "images/sites/gwalior-fort/travel-1.webp",
+          "caption": "A View of the South Side of the Fort of Gwalior",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:A_View_of_the_South_Side_of_the_Fort_of_Gwalior.jpg",
+          "creator": "William Hodges",
+          "license": "Public domain",
+          "licenseUrl": null,
+          "attribution": "William Hodges, Public domain"
+        },
+        {
+          "file": "images/sites/gwalior-fort/gallery-2.webp",
+          "caption": "Chane jor garam at Gwalior Fort",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Chane_jor_garam_at_Gwalior_Fort.jpg",
+          "creator": "Bhawishya Mishra",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Bhawishya Mishra, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/gwalior-fort/gallery-3.webp",
+          "caption": "Beauty in black!",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Beauty_in_black!.jpg",
+          "creator": "Shiralitiwari!",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Shiralitiwari!, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/gwalior-fort/gallery-4.webp",
+          "caption": "Church on Gwalior Fort",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Church_on_Gwalior_Fort.jpg",
+          "creator": "Shirazibustan",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Shirazibustan, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "padmanabhaswamy-temple",
+      "siteName": "Sree Padmanabhaswamy Temple",
+      "commonsCategory": "Category:Padmanabhaswamy Temple",
+      "images": [
+        {
+          "file": "images/sites/padmanabhaswamy-temple/gallery-1.webp",
+          "caption": "Yali pillars at entrance to Padmanabhaswamy temple at Thiruvanthapuram",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Yali_pillars_at_entrance_to_Padmanabhaswamy_temple_at_Thiruvanthapuram.jpg",
+          "creator": "P.K.Niyogi",
+          "license": "Public domain",
+          "licenseUrl": null,
+          "attribution": "P.K.Niyogi, Public domain"
+        }
+      ]
+    },
+    {
+      "siteId": "mattancherry-palace",
+      "siteName": "Mattancherry Palace (Dutch Palace)",
+      "commonsCategory": "Category:Mattancherry Palace",
+      "images": [
+        {
+          "file": "images/sites/mattancherry-palace/architecture-1.webp",
+          "caption": "Mattancherry Palace-16-17th Century mural paintings-Scenes from the Ramayana-WUS09240",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Mattancherry_Palace-16-17th_Century_mural_paintings-Scenes_from_the_Ramayana-WUS09240.jpg",
+          "creator": "Rainer Halama",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rainer Halama, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mattancherry-palace/gallery-2.webp",
+          "caption": "Dutch Palace front entry",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Dutch_Palace_front_entry.jpg",
+          "creator": "KannanVM",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "KannanVM, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mattancherry-palace/gallery-3.webp",
+          "caption": "Kochi - Dutch Palace 2018-04-02b",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Kochi_-_Dutch_Palace_2018-04-02b.jpg",
+          "creator": "Rabe!",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rabe!, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mattancherry-palace/gallery-4.webp",
+          "caption": "Mattancherry Palace - Throne Room",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Mattancherry_Palace_-_Throne_Room.jpg",
+          "creator": "Ingo Mehling",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Ingo Mehling, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "victoria-memorial",
+      "siteName": "Victoria Memorial Hall",
+      "commonsCategory": "Category:Victoria Memorial, Kolkata",
+      "images": [
+        {
+          "file": "images/sites/victoria-memorial/architecture-1.webp",
+          "caption": "Victoria Memorial Hall Gate",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Victoria_Memorial_Hall_Gate.jpg",
+          "creator": "CoolWanderer05",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "CoolWanderer05, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/victoria-memorial/gallery-2.webp",
+          "caption": "Victoria Memorial Hall from AJC Bose Road Flyover",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Victoria_Memorial_Hall_from_AJC_Bose_Road_Flyover.jpg",
+          "creator": "Kingshuk Mondal",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "attribution": "Kingshuk Mondal, CC BY 4.0"
+        },
+        {
+          "file": "images/sites/victoria-memorial/gallery-3.webp",
+          "caption": "Victoria Memorial @kolkata",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Victoria_Memorial_@kolkata.jpg",
+          "creator": "Sivakeshreddy",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Sivakeshreddy, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/victoria-memorial/gallery-4.webp",
+          "caption": "Nostalgia of kolkata",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Nostalgia_of_kolkata.jpg",
+          "creator": "Sourav Mondal",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Sourav Mondal, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "darjeeling-railway",
+      "siteName": "Darjeeling Himalayan Railway",
+      "commonsCategory": "Category:Darjeeling Himalayan Railway",
+      "images": [
+        {
+          "file": "images/sites/darjeeling-railway/travel-1.webp",
+          "caption": "Darjeeling (Baedeker, 1914)",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Darjeeling_(Baedeker,_1914).jpg",
+          "creator": "Cartographers (Heinrich) Wagner &amp; (Ernest) Debes, Leipzig.",
+          "license": "Public domain",
+          "licenseUrl": null,
+          "attribution": "Cartographers (Heinrich) Wagner &amp; (Ernest) Debes, Leipzig., Public domain"
+        },
+        {
+          "file": "images/sites/darjeeling-railway/gallery-2.webp",
+          "caption": "Darjeeling Railway Z Reverse",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Darjeeling_Railway_Z_Reverse.JPG",
+          "creator": "Julian Nyča",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Julian Nyča, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/darjeeling-railway/gallery-3.webp",
+          "caption": "DHR Route Map",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:DHR_Route_Map.jpg",
+          "creator": "Chirag85",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Chirag85, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/darjeeling-railway/gallery-4.webp",
+          "caption": "Darjeeling train track",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Darjeeling_train_track.jpg",
+          "creator": "Gauri Tomer",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Gauri Tomer, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "charminar",
+      "siteName": "Charminar",
+      "commonsCategory": "Category:Charminar",
+      "images": [
+        {
+          "file": "images/sites/charminar/culture-1.webp",
+          "caption": "Charmiar Hyderabad full view image",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:Charmiar_Hyderabad_full_view_image.jpg",
+          "creator": "Rashid Jorvee",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rashid Jorvee, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/charminar/travel-2.webp",
+          "caption": "A Landscape shot of the Charminar",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:A_Landscape_shot_of_the_Charminar.jpg",
+          "creator": "IcyB201299",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "IcyB201299, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/charminar/gallery-3.webp",
+          "caption": "Char Minar 1",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Char_Minar_1.jpg",
+          "creator": "Rangan Datta Wiki",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rangan Datta Wiki, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/charminar/gallery-4.webp",
+          "caption": "Char Minar 2",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Char_Minar_2.jpg",
+          "creator": "Rangan Datta Wiki",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rangan Datta Wiki, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "golconda-fort",
+      "siteName": "Golconda Fort",
+      "commonsCategory": "Category:Golconda Fort",
+      "images": [
+        {
+          "file": "images/sites/golconda-fort/gallery-1.webp",
+          "caption": "00-Golconda-Fort-Hyderabad 01",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:00-Golconda-Fort-Hyderabad_01.jpg",
+          "creator": "Rajeshodayanchal",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rajeshodayanchal, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "golden-temple",
+      "siteName": "Sri Harmandir Sahib (Golden Temple)",
+      "commonsCategory": "Category:Golden Temple (Harmandir Sahib)",
+      "images": [
+        {
+          "file": "images/sites/golden-temple/architecture-1.webp",
+          "caption": "A final look at main shrine now before we depart (27161013349)",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:A_final_look_at_main_shrine_now_before_we_depart_(27161013349).jpg",
+          "creator": "shankar s. from Dubai, united arab emirates",
+          "license": "CC BY 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+          "attribution": "shankar s. from Dubai, united arab emirates, CC BY 2.0"
+        },
+        {
+          "file": "images/sites/golden-temple/travel-2.webp",
+          "caption": "Aerial view of both the Golden Temple and Baba Atal Rai Gurdwara visible behind",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Aerial_view_of_both_the_Golden_Temple_and_Baba_Atal_Rai_Gurdwara_visible_behind.jpg",
+          "creator": "shyam mishra",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "shyam mishra, CC0"
+        },
+        {
+          "file": "images/sites/golden-temple/gallery-3.webp",
+          "caption": "Amritsar Golden Temple 1",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Amritsar_Golden_Temple_1.JPG",
+          "creator": "Julian Nyča",
+          "license": "CC BY 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+          "attribution": "Julian Nyča, CC BY 3.0"
+        },
+        {
+          "file": "images/sites/golden-temple/gallery-4.webp",
+          "caption": "Amritsar Golden Temple 3",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Amritsar_Golden_Temple_3.JPG",
+          "creator": "Julian Nyča",
+          "license": "CC BY 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+          "attribution": "Julian Nyča, CC BY 3.0"
+        }
+      ]
+    },
+    {
+      "siteId": "jallianwala-bagh",
+      "siteName": "Jallianwala Bagh National Memorial",
+      "commonsCategory": "Category:Jallianwala Bagh",
+      "images": [
+        {
+          "file": "images/sites/jallianwala-bagh/travel-1.webp",
+          "caption": "Jalianwala Bagh Panorama",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Jalianwala_Bagh_Panorama.jpg",
+          "creator": "Ssriram mt",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Ssriram mt, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/jallianwala-bagh/gallery-2.webp",
+          "caption": "The old buildings have been left in their original condition (24071639177)",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:The_old_buildings_have_been_left_in_their_original_condition_(24071639177).jpg",
+          "creator": "shankar s. from Dubai, united arab emirates",
+          "license": "CC BY 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+          "attribution": "shankar s. from Dubai, united arab emirates, CC BY 2.0"
+        },
+        {
+          "file": "images/sites/jallianwala-bagh/gallery-3.webp",
+          "caption": "Jaliyanwala bagh",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Jaliyanwala_bagh.jpg",
+          "creator": "Rashcam",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rashcam, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/jallianwala-bagh/gallery-4.webp",
+          "caption": "Sikh Security Guard - Jallianwala Bagh - Amritsar - Punjab - India (12675219875)",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Sikh_Security_Guard_-_Jallianwala_Bagh_-_Amritsar_-_Punjab_-_India_(12675219875).jpg",
+          "creator": "Adam Jones from Kelowna, BC, Canada",
+          "license": "CC BY-SA 2.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+          "attribution": "Adam Jones from Kelowna, BC, Canada, CC BY-SA 2.0"
+        }
+      ]
+    },
+    {
+      "siteId": "kamakhya-temple",
+      "siteName": "Kamakhya Temple",
+      "commonsCategory": "Category:Kamakhya Temple",
+      "images": [
+        {
+          "file": "images/sites/kamakhya-temple/architecture-1.webp",
+          "caption": "Kamakhya Devi temple main gate",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Kamakhya_Devi_temple_main_gate.jpg",
+          "creator": "Summit Kumar Shaurya",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Summit Kumar Shaurya, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/kamakhya-temple/culture-2.webp",
+          "caption": "Ambubachi Mela at Kamakhya Temple by Vikramjit Kakati",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:Ambubachi_Mela_at_Kamakhya_Temple_by_Vikramjit_Kakati.jpg",
+          "creator": "Vikramjit Kakati",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Vikramjit Kakati, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/kamakhya-temple/travel-3.webp",
+          "caption": "Ambubachi Mela by Vikramjit Kakati",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Ambubachi_Mela_by_Vikramjit_Kakati.jpg",
+          "creator": "Vikramjit Kakati",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Vikramjit Kakati, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/kamakhya-temple/gallery-4.webp",
+          "caption": "Animals for sacrifice at Kamakhya temple, Guwahati, Assam",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Animals_for_sacrifice_at_Kamakhya_temple,_Guwahati,_Assam.jpg",
+          "creator": "Subhashish Panigrahi",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Subhashish Panigrahi, CC BY-SA 3.0"
+        }
+      ]
+    },
+    {
+      "siteId": "rang-ghar",
+      "siteName": "Rang Ghar",
+      "commonsCategory": "Category:Rang Ghar",
+      "images": [
+        {
+          "file": "images/sites/rang-ghar/architecture-1.webp",
+          "caption": "Gateway of Rang ghar",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Gateway_of_Rang_ghar.JPG",
+          "creator": "Aniruddha Buragohain",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Aniruddha Buragohain, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/rang-ghar/culture-2.webp",
+          "caption": "Rang Ghar, Sivsagar, Assam",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:Rang_Ghar,_Sivsagar,_Assam.jpg",
+          "creator": "Anurag2174",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Anurag2174, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/rang-ghar/travel-3.webp",
+          "caption": "Architecture - A view from Rang-Ghar",
+          "role": "travel",
+          "source": "https://commons.wikimedia.org/wiki/File:Architecture_-_A_view_from_Rang-Ghar.jpg",
+          "creator": "Gitika Gayan",
+          "license": "CC BY 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+          "attribution": "Gitika Gayan, CC BY 3.0"
+        },
+        {
+          "file": "images/sites/rang-ghar/gallery-4.webp",
+          "caption": "Rang Ghar, Sivsagar District, Assam",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Rang_Ghar,_Sivsagar_District,_Assam.jpg",
+          "creator": "Kanad Sanyal",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Kanad Sanyal, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "kedarnath-temple",
+      "siteName": "Kedarnath Temple",
+      "commonsCategory": "Category:Kedarnath Temple",
+      "images": [
+        {
+          "file": "images/sites/kedarnath-temple/culture-1.webp",
+          "caption": "Devotee at Kedarnath Temple (India)",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:Devotee_at_Kedarnath_Temple_(India).jpg",
+          "creator": "Abhishek.katariya1804",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Abhishek.katariya1804, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/kedarnath-temple/gallery-2.webp",
+          "caption": "Kedarnath Temple in 2014",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Kedarnath_Temple_in_2014.jpg",
+          "creator": "Kiranmadhu.e",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Kiranmadhu.e, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/kedarnath-temple/gallery-3.webp",
+          "caption": "A Very Good Photo of Kedarnaath Bhairon Baba",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:A_Very_Good_Photo_of_Kedarnaath_Bhairon_Baba.jpg",
+          "creator": "Ayushalora",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Ayushalora, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/kedarnath-temple/gallery-4.webp",
+          "caption": "Kedarnath Temple in Uttarakhand, India, by Yogabrata Chakraborty",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Kedarnath_Temple_in_Uttarakhand,_India,_by_Yogabrata_Chakraborty.jpg",
+          "creator": "Billjones94",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Billjones94, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "hadimba-temple",
+      "siteName": "Hadimba Devi Temple",
+      "commonsCategory": "Category:Hidimba Devi Temple",
+      "images": [
+        {
+          "file": "images/sites/hadimba-temple/architecture-1.webp",
+          "caption": "Eastern Window - Hidimba Devi Temple - Manali 2014-05-11 2651",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Eastern_Window_-_Hidimba_Devi_Temple_-_Manali_2014-05-11_2651.JPG",
+          "creator": "Biswarup Ganguly",
+          "license": "CC BY 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+          "attribution": "Biswarup Ganguly, CC BY 3.0"
+        },
+        {
+          "file": "images/sites/hadimba-temple/gallery-2.webp",
+          "caption": "Famous Devi Hidimba Temple",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Famous_Devi_Hidimba_Temple.jpg",
+          "creator": "Saanchiv",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "attribution": "Saanchiv, CC BY-SA 3.0"
+        },
+        {
+          "file": "images/sites/hadimba-temple/gallery-3.webp",
+          "caption": "Forest around Hidimba temple",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Forest_around_Hidimba_temple.jpg",
+          "creator": "Akanksha Arora",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Akanksha Arora, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/hadimba-temple/gallery-4.webp",
+          "caption": "Devi Hidimba Temple Manali",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Devi_Hidimba_Temple_Manali.jpg",
+          "creator": "Hippiefromhills",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Hippiefromhills, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "basilica-of-bom-jesus",
+      "siteName": "Basilica of Bom Jesus",
+      "commonsCategory": "Category:Basilica of Bom Jesus (Goa)",
+      "images": [
+        {
+          "file": "images/sites/basilica-of-bom-jesus/gallery-1.webp",
+          "caption": "On one rainy day!",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:On_one_rainy_day!.jpg",
+          "creator": "Mousumi 0694",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Mousumi 0694, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/basilica-of-bom-jesus/gallery-2.webp",
+          "caption": "Basilica of Bom Jesus vrvbgoa2k24 (1)",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Basilica_of_Bom_Jesus_vrvbgoa2k24_(1).jpg",
+          "creator": "Vinayaraj",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Vinayaraj, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/basilica-of-bom-jesus/gallery-3.webp",
+          "caption": "Basilica of Bom Jesus, Goa 2",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Basilica_of_Bom_Jesus,_Goa_2.jpg",
+          "creator": "Slyronit",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Slyronit, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "mahabodhi-temple",
+      "siteName": "Mahabodhi Temple Complex",
+      "commonsCategory": "Category:Mahabodhi Temple",
+      "images": [
+        {
+          "file": "images/sites/mahabodhi-temple/architecture-1.webp",
+          "caption": "Ashokan pillar inside Mahabodhi temple complex",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Ashokan_pillar_inside_Mahabodhi_temple_complex.jpg",
+          "creator": "Rohit Sharma",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rohit Sharma, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mahabodhi-temple/gallery-2.webp",
+          "caption": "Big cooking bowl inside Mahabodhi temple",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Big_cooking_bowl_inside_Mahabodhi_temple.jpg",
+          "creator": "Rohit Sharma",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rohit Sharma, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mahabodhi-temple/gallery-3.webp",
+          "caption": "Buddha shrine inside Mahabodhi temple complex",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Buddha_shrine_inside_Mahabodhi_temple_complex.jpg",
+          "creator": "Rohit Sharma",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rohit Sharma, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mahabodhi-temple/gallery-4.webp",
+          "caption": "Lord Buddha footprint, Mahabodhi temple",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Lord_Buddha_footprint,_Mahabodhi_temple.jpg",
+          "creator": "Rohit Sharma",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rohit Sharma, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "nalanda-ruins",
+      "siteName": "Nalanda Mahavihara Ruins",
+      "commonsCategory": "Category:Nalanda",
+      "images": [
+        {
+          "file": "images/sites/nalanda-ruins/architecture-1.webp",
+          "caption": "Plaque - Stupas and Inscription - Terracotta - Gupta Period Circa 5th-6th Century AD - Nalanda - Archaeological Museum - Nalanda - Bihar - Indian Buddhist Art - Exhibition - Indian Museum - Kolkata 2012-12-21 2312",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Plaque_-_Stupas_and_Inscription_-_Terracotta_-_Gupta_Period_Circa_5th-6th_Century_AD_-_Nalanda_-_Archaeological_Museum_-_Nalanda_-_Bihar_-_Indian_Buddhist_Art_-_Exhibition_-_Indian_Museum_-_Kolkata_2012-12-21_2312.JPG",
+          "creator": "Biswarup Ganguly",
+          "license": "CC BY 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+          "attribution": "Biswarup Ganguly, CC BY 3.0"
+        },
+        {
+          "file": "images/sites/nalanda-ruins/gallery-2.webp",
+          "caption": "Constitution Page105 Rammanohar",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Constitution_Page105_Rammanohar.jpg",
+          "creator": "Abrsinha",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Abrsinha, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/nalanda-ruins/gallery-3.webp",
+          "caption": "EMB - Buddha Acht Wunder",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:EMB_-_Buddha_Acht_Wunder.jpg",
+          "creator": "Wolfgang Sauber",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Wolfgang Sauber, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/nalanda-ruins/gallery-4.webp",
+          "caption": "Votive Stupas Near Temple No. 12 At Nalanda",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Votive_Stupas_Near_Temple_No._12_At_Nalanda.jpg",
+          "creator": "Indianvagabond",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Indianvagabond, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "shalimar-bagh",
+      "siteName": "Shalimar Bagh Mughal Garden",
+      "commonsCategory": "Category:Shalimar Bagh (Srinagar)",
+      "images": [
+        {
+          "file": "images/sites/shalimar-bagh/architecture-1.webp",
+          "caption": "Ceiling flower painting inside marble pavilion of Shalimar Bagh, Srinagar",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Ceiling_flower_painting_inside_marble_pavilion_of_Shalimar_Bagh,_Srinagar.jpg",
+          "creator": "Rohit14400",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Rohit14400, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/shalimar-bagh/gallery-2.webp",
+          "caption": "Lake side view of shalimar bagh",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Lake_side_view_of_shalimar_bagh.jpg",
+          "creator": "Sanjeevs789",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Sanjeevs789, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/shalimar-bagh/gallery-3.webp",
+          "caption": "Shalimar Bagh of Srinagar",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Shalimar_Bagh_of_Srinagar.jpg",
+          "creator": "KaranKapoor1314",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "KaranKapoor1314, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/shalimar-bagh/gallery-4.webp",
+          "caption": "Shalimar Top view",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Shalimar_Top_view.jpg",
+          "creator": "Sachin Tomar",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Sachin Tomar, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "mahant-ghasidas-memorial-museum",
+      "siteName": "Mahant Ghasidas Memorial Museum",
+      "commonsCategory": "Category:Mahant Ghasidas Museum Raipur",
+      "images": [
+        {
+          "file": "images/sites/mahant-ghasidas-memorial-museum/gallery-1.webp",
+          "caption": "Suyash Dwivedi addressing at National Science Conference Raipur",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Suyash_Dwivedi_addressing_at_National_Science_Conference_Raipur.jpg",
+          "creator": "Suyash Dwivedi",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Suyash Dwivedi, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mahant-ghasidas-memorial-museum/gallery-2.webp",
+          "caption": "Mahant Ghasidas Sangrahalaya Raipur (1)",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Mahant_Ghasidas_Sangrahalaya_Raipur_(1).jpg",
+          "creator": "Suyash Dwivedi",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Suyash Dwivedi, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/mahant-ghasidas-memorial-museum/gallery-3.webp",
+          "caption": "মহন্ত ঘাসিদাস স্মৃতি যাদুঘরের কারুকার্য",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:%E0%A6%AE%E0%A6%B9%E0%A6%A8%E0%A7%8D%E0%A6%A4_%E0%A6%98%E0%A6%BE%E0%A6%B8%E0%A6%BF%E0%A6%A6%E0%A6%BE%E0%A6%B8_%E0%A6%B8%E0%A7%8D%E0%A6%AE%E0%A7%83%E0%A6%A4%E0%A6%BF_%E0%A6%AF%E0%A6%BE%E0%A6%A6%E0%A7%81%E0%A6%98%E0%A6%B0%E0%A7%87%E0%A6%B0_%E0%A6%95%E0%A6%BE%E0%A6%B0%E0%A7%81%E0%A6%95%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%AF.jpg",
+          "creator": "শরদিন্দু ভট্টাচার্য্য",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "শরদিন্দু ভট্টাচার্য্য, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "danteshwari-temple",
+      "siteName": "Danteshwari Temple",
+      "commonsCategory": "Category:Danteshwari Temple, Dantewada",
+      "images": [
+        {
+          "file": "images/sites/danteshwari-temple/culture-1.webp",
+          "caption": "0011122 Dantewada Danteswari Mata Mandir Chattisgarh 010",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:0011122_Dantewada_Danteswari_Mata_Mandir_Chattisgarh_010.jpg",
+          "creator": "Ms Sarah Welch",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Ms Sarah Welch, CC0"
+        },
+        {
+          "file": "images/sites/danteshwari-temple/gallery-2.webp",
+          "caption": "Danteswari Temple 0016",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Danteswari_Temple_0016.jpg",
+          "creator": "Ratnesh1948",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Ratnesh1948, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/danteshwari-temple/gallery-3.webp",
+          "caption": "Danteswari Temple 0017",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Danteswari_Temple_0017.jpg",
+          "creator": "Ratnesh1948",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Ratnesh1948, CC BY-SA 4.0"
+        },
+        {
+          "file": "images/sites/danteshwari-temple/gallery-4.webp",
+          "caption": "Danteswari Temple 0018",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Danteswari_Temple_0018.jpg",
+          "creator": "Ratnesh1948",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Ratnesh1948, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "bhoramdeo-temple",
+      "siteName": "Bhoramdeo Temple",
+      "commonsCategory": "Category:Bhoramdeo Temple",
+      "images": [
+        {
+          "file": "images/sites/bhoramdeo-temple/culture-1.webp",
+          "caption": "11th century Bhoramdeo temple Kawardha, Chhattisgarh - 170",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:11th_century_Bhoramdeo_temple_Kawardha,_Chhattisgarh_-_170.jpg",
+          "creator": "Ms Sarah Welch",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Ms Sarah Welch, CC BY-SA 4.0"
+        }
+      ]
+    },
+    {
+      "siteId": "sirpur-heritage-site",
+      "siteName": "Sirpur Heritage Site",
+      "commonsCategory": "Category:Group of monuments at Sirpur",
+      "images": [
+        {
+          "file": "images/sites/sirpur-heritage-site/architecture-1.webp",
+          "caption": "Teevaradeva site, Sirpur Chhattisgarh",
+          "role": "architecture",
+          "source": "https://commons.wikimedia.org/wiki/File:Teevaradeva_site,_Sirpur_Chhattisgarh.jpg",
+          "creator": "Ms Sarah Welch",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Ms Sarah Welch, CC0"
+        },
+        {
+          "file": "images/sites/sirpur-heritage-site/culture-2.webp",
+          "caption": "6th century Anandaprabha Vihara Buddhist site, Sirpur Chhattisgarh",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:6th_century_Anandaprabha_Vihara_Buddhist_site,_Sirpur_Chhattisgarh.jpg",
+          "creator": "Ms Sarah Welch",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Ms Sarah Welch, CC0"
+        },
+        {
+          "file": "images/sites/sirpur-heritage-site/gallery-3.webp",
+          "caption": "Rama temple, Sirpur Chhattisgarh",
+          "role": "gallery",
+          "source": "https://commons.wikimedia.org/wiki/File:Rama_temple,_Sirpur_Chhattisgarh.jpg",
+          "creator": "Ms Sarah Welch",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "attribution": "Ms Sarah Welch, CC0"
+        },
+        {
+          "file": "images/sites/sirpur-heritage-site/culture-4.webp",
+          "caption": "Temple ruins affiliation unknown, Sirpur monuments Chhattisgarh",
+          "role": "culture",
+          "source": "https://commons.wikimedia.org/wiki/File:Temple_ruins_affiliation_unknown,_Sirpur_monuments_Chhattisgarh.jpg",
+          "creator": "Ms Sarah Welch",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "attribution": "Ms Sarah Welch, CC BY-SA 4.0"
+        }
+      ]
+    }
+  ]
+}

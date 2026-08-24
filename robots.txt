@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin-login.html
+Disallow: /api/
+
+# Add a Sitemap: line here once Antara has a production domain.

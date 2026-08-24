@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Antara Narration Self-Test</title>
+<style>
+  :root {
+    --bg: #070509;
+    --panel: rgba(255,255,255,0.04);
+    --line: rgba(255,255,255,0.12);
+    --ink: #ece7f2;
+    --muted: #9a93a6;
+    --gold: #bf953f;
+    --pass: #4ec9a0;
+    --fail: #e5686f;
+    --warn: #d8b45a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2.5rem 1.5rem; background: var(--bg); color: var(--ink);
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px; line-height: 1.6;
+  }
+  .wrap { max-width: 62rem; margin: 0 auto; }
+  h1 {
+    font-family: "Cinzel", Georgia, serif; font-weight: 600; font-size: 1.6rem;
+    margin: 0 0 .35rem; letter-spacing: .04em;
+    background: linear-gradient(135deg, #fcf6ba, #bf953f);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  p.sub { margin: 0 0 1.75rem; color: var(--muted); font-size: .9rem; }
+  button {
+    font: inherit; font-weight: 600; letter-spacing: .03em; cursor: pointer;
+    background: linear-gradient(135deg, #fcf6ba, #bf953f); color: #1a1206;
+    border: 0; border-radius: 3px; padding: .7rem 1.6rem;
+  }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .note {
+    border: 1px solid var(--line); border-left: 2px solid var(--gold);
+    background: var(--panel); padding: .85rem 1.1rem; margin: 0 0 1.5rem;
+    font-size: .85rem; color: var(--muted);
+  }
+  #summary { margin: 1.75rem 0 1rem; font-weight: 600; font-size: 1.05rem; }
+  table { width: 100%; border-collapse: collapse; margin-top: .5rem; }
+  th, td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; font-weight: 600; }
+  td.status { width: 5.5rem; font-weight: 700; font-size: .8rem; letter-spacing: .06em; }
+  .pass { color: var(--pass); } .fail { color: var(--fail); } .warn { color: var(--warn); }
+  td.detail { color: var(--muted); font-size: .84rem; font-variant-numeric: tabular-nums; }
+  code { font-family: "SFMono-Regular", Consolas, monospace; font-size: .85em; color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>◈ Antara Narration Self-Test</h1>
+  <p class="sub">Exercises a real <code>HTMLAudioElement</code> against the generated narration manifest.</p>
+
+  <div class="note">
+    Browsers block audio until the page is interacted with, so the run needs a click.
+    Keep the volume audible — one check plays the track out loud.
+  </div>
+
+  <button id="run">Run tests</button>
+
+  <div id="summary"></div>
+  <table id="results" hidden>
+    <thead><tr><th>Status</th><th>Check</th><th>Observed</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script src="audio/narration_manifest.js"></script>
+<script src="narration.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const tbody = document.querySelector('#results tbody');
+  const summaryEl = document.getElementById('summary');
+  const runBtn = document.getElementById('run');
+
+  let pass = 0, fail = 0;
+
+  function row(status, label, detail) {
+    const tr = document.createElement('tr');
+    const s = document.createElement('td');
+    s.className = 'status ' + status.toLowerCase();
+    s.textContent = status;
+    const l = document.createElement('td');
+    l.textContent = label;
+    const d = document.createElement('td');
+    d.className = 'detail';
+    d.textContent = detail == null ? '' : String(detail);
+    tr.append(s, l, d);
+    tbody.appendChild(tr);
+  }
+  function check(label, cond, detail) {
+    if (cond) { pass++; row('PASS', label, detail); }
+    else { fail++; row('FAIL', label, detail); }
+    return cond;
+  }
+  function info(label, detail) { row('NOTE', label, detail); }
+
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  function once(el, ev, timeout) {
+    return new Promise((resolve, reject) => {
+      const t = setTimeout(() => { el.removeEventListener(ev, h); reject(new Error(ev + ' timed out')); }, timeout || 8000);
+      function h(e) { clearTimeout(t); el.removeEventListener(ev, h); resolve(e); }
+      el.addEventListener(ev, h);
+    });
+  }
+
+  // Capture anything the page logs as an error, so "no console errors" is
+  // observed rather than assumed.
+  const consoleErrors = [];
+  const originalError = console.error;
+  console.error = function () {
+    consoleErrors.push(Array.from(arguments).join(' '));
+    originalError.apply(console, arguments);
+  };
+  window.addEventListener('error', e => consoleErrors.push(e.message));
+  window.addEventListener('unhandledrejection', e => consoleErrors.push('unhandled rejection: ' + e.reason));
+
+  async function run() {
+    runBtn.disabled = true;
+    tbody.textContent = '';
+    document.getElementById('results').hidden = false;
+    pass = 0; fail = 0; consoleErrors.length = 0;
+
+    const manifest = window.ANTARA_NARRATION_MANIFEST;
+    const N = window.AntaraNarration;
+
+    if (!check('narration manifest loaded', !!manifest, manifest ? 'version ' + manifest.version : 'missing')) return finish();
+    if (!check('narration.js loaded', !!N)) return finish();
+
+    const index = N.createIndex(manifest);
+    check('language catalogue present', index.languages.length > 0,
+      index.languages.map(l => l.code).join(', '));
+
+    // --- Find a real track ---------------------------------------------------
+    let scope = null, lang = null, track = null;
+    for (const key of Object.keys(manifest.tracks)) {
+      const at = key.indexOf(':');
+      const kind = key.slice(0, at), id = key.slice(at + 1);
+      const s = kind === 'book' ? { bookId: id } : kind === 'chapter' ? { chapterId: id } : { verseId: id };
+      for (const code of Object.keys(manifest.tracks[key])) {
+        const t = N.resolveTrack(index, s, code);
+        if (t) { scope = s; lang = code; track = t; break; }
+      }
+      if (track) break;
+    }
+
+    if (!check('a real recording exists to test', !!track,
+        track ? track.audioUrl : 'no available tracks in manifest')) return finish();
+
+    info('track under test', track.audioUrl + '  [' + lang + ', ' + track.scope + ' scope]');
+
+    // --- Availability semantics ---------------------------------------------
+    const absent = index.languages.map(l => l.code).find(c => !N.hasTrack(index, scope, c));
+    if (absent) {
+      check('a language with no recording resolves to no track (it falls back to a voice)',
+        N.resolveTrack(index, scope, absent) === null, 'tested "' + absent + '"');
+    } else {
+      info('every catalogued language has audio', 'skipped missing-language check');
+    }
+
+    // narration.js stays pure: it is handed the voice list and never reaches
+    // for speechSynthesis itself. That is what keeps it testable in Node.
+    check('narration.js does not touch speechSynthesis directly',
+      !/speechSynthesis/.test(N.createIndex.toString() + N.resolveTrack.toString() + N.resolveVoice.toString()));
+
+    const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    info('browser voices detected', voices.length + ' — ' +
+      ([...new Set(voices.map(v => v.lang))].sort().join(', ') || 'none'));
+    const sa = index.languages.find(l => l.code === 'sa');
+    if (sa) {
+      check('Sanskrit is not satisfied by a non-Sanskrit voice',
+        N.resolveVoice(sa, voices) === null || /^sa(-|_|$)/i.test(N.resolveVoice(sa, voices).lang),
+        N.resolveVoice(sa, voices) ? N.resolveVoice(sa, voices).lang : 'no Sanskrit voice (expected)');
+    }
+
+    // --- Network -------------------------------------------------------------
+    let head;
+    try {
+      head = await fetch(track.audioUrl, { method: 'GET', headers: { Range: 'bytes=0-1023' } });
+      check('audio file is reachable', head.ok || head.status === 206,
+        'HTTP ' + head.status + '  ' + (head.headers.get('content-type') || ''));
+      check('server supports byte ranges (needed to seek)',
+        head.status === 206 || head.headers.get('accept-ranges') === 'bytes',
+        head.status === 206 ? 'HTTP 206 Partial Content' : (head.headers.get('accept-ranges') || 'no Accept-Ranges'));
+    } catch (e) {
+      check('audio file is reachable', false, e.message);
+    }
+
+    // --- Real playback -------------------------------------------------------
+    const audio = new Audio();
+    audio.preload = 'metadata';
+    audio.src = track.audioUrl;
+
+    try {
+      await once(audio, 'loadedmetadata', 10000);
+      const d = audio.duration;
+      check('duration is decoded from the file', Number.isFinite(d) && d > 0, d.toFixed(3) + 's');
+      if (track.durationSeconds != null) {
+        const drift = Math.abs(d - track.durationSeconds);
+        check('decoded duration matches the manifest (±0.5s)', drift < 0.5,
+          'manifest ' + track.durationSeconds + 's vs decoded ' + d.toFixed(3) + 's  (Δ ' + drift.toFixed(3) + 's)');
+      }
+    } catch (e) {
+      check('metadata loads', false, e.message);
+      return finish();
+    }
+
+    audio.volume = 1;
+    try {
+      await audio.play();
+      check('play() starts playback', !audio.paused, 'paused=' + audio.paused);
+    } catch (e) {
+      check('play() starts playback', false, e.name + ': ' + e.message);
+      return finish();
+    }
+
+    await wait(1400);
+    const advanced = audio.currentTime;
+    check('playback position actually advances', advanced > 0.3, 'currentTime = ' + advanced.toFixed(3) + 's');
+
+    audio.pause();
+    await wait(400);
+    const held = audio.currentTime;
+    check('pause() stops playback', audio.paused, 'paused=' + audio.paused);
+    check('position holds while paused', Math.abs(audio.currentTime - held) < 0.05,
+      held.toFixed(3) + 's held');
+
+    // Seek
+    const target = Math.min(audio.duration * 0.75, audio.duration - 0.4);
+    audio.currentTime = target;
+    try { await once(audio, 'seeked', 6000); } catch (e) { /* some engines seek synchronously */ }
+    check('seek moves to the requested position', Math.abs(audio.currentTime - target) < 0.35,
+      'requested ' + target.toFixed(3) + 's, landed ' + audio.currentTime.toFixed(3) + 's');
+
+    // Progress fraction must be derived from real values
+    const ratio = audio.currentTime / audio.duration;
+    check('progress fraction is real and in range', ratio > 0.5 && ratio <= 1,
+      (ratio * 100).toFixed(1) + '% of the file');
+
+    // Volume
+    audio.volume = 0.25;
+    check('volume is settable', Math.abs(audio.volume - 0.25) < 0.001, 'volume = ' + audio.volume);
+    audio.volume = 0;
+    check('volume can mute', audio.volume === 0, 'volume = 0');
+    audio.volume = 1;
+
+    // Play through to the end to confirm 'ended' fires
+    audio.currentTime = Math.max(0, audio.duration - 0.8);
+    try {
+      await audio.play();
+      await once(audio, 'ended', 6000);
+      check('ended fires at the end of the track', true, 'reached ' + audio.duration.toFixed(3) + 's');
+    } catch (e) {
+      check('ended fires at the end of the track', false, e.message);
+    }
+
+    // --- Missing file must fail loudly, not silently -------------------------
+    const ghost = new Audio();
+    ghost.src = 'audio/manuscripts/__does_not_exist__/xx.mp3';
+    try {
+      await once(ghost, 'error', 6000);
+      check('a missing file raises an error event (never silent success)', true,
+        'error event received');
+    } catch (e) {
+      check('a missing file raises an error event (never silent success)', false, e.message);
+    }
+
+    finish();
+  }
+
+  function finish() {
+    // The deliberate 404 above is an expected network error, not a page fault.
+    const real = consoleErrors.filter(m => !/__does_not_exist__/.test(m));
+    check('no unexpected console or runtime errors', real.length === 0,
+      real.length ? real.join(' | ') : 'clean');
+
+    summaryEl.className = fail === 0 ? 'pass' : 'fail';
+    summaryEl.textContent = fail === 0
+      ? '✓ All ' + pass + ' checks passed.'
+      : '✕ ' + fail + ' failed, ' + pass + ' passed.';
+    runBtn.disabled = false;
+    runBtn.textContent = 'Run again';
+  }
+
+  runBtn.addEventListener('click', () => { run().catch(e => { check('test run completed', false, e.message); finish(); }); });
+})();
+</script>
+</body>
+</html>

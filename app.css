@@ -1,44 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 
+/* Local names, product-wide values. See antara-tokens.css — it must load
+   first. Both themes come from there, so the map, the landing page and the
+   library can no longer drift apart. */
 :root {
-  --bg: #0A0A0A;
-  --bg-warm: #0F0E0C;
-  --surface: #161614;
-  --surface-raised: #1C1B18;
-  --surface-glass: rgba(22, 22, 20, 0.85);
-  --cream: #F7F3EC;
-  --gold: #C9A86A;
-  --gold-dim: #8B7545;
-  --terracotta: #C86B3C;
-  --crimson: #8D3028;
-  --ink-90: rgba(247, 243, 236, 0.90);
-  --ink-70: rgba(247, 243, 236, 0.70);
-  --ink-45: rgba(247, 243, 236, 0.45);
-  --ink-25: rgba(247, 243, 236, 0.25);
-  --ink-10: rgba(247, 243, 236, 0.10);
-  --ink-05: rgba(247, 243, 236, 0.05);
+  --bg: var(--antara-bg);
+  --bg-warm: var(--antara-bg-warm);
+  --surface: var(--antara-surface);
+  --surface-raised: var(--antara-surface-raised);
+  --surface-glass: var(--antara-glass);
+  --cream: var(--antara-ink);
+  --gold: var(--antara-gold);
+  --gold-dim: var(--antara-gold-dim);
+  --terracotta: var(--antara-terracotta);
+  --crimson: var(--antara-crimson);
+  --ink-90: var(--antara-ink-90);
+  --ink-70: var(--antara-ink-70);
+  --ink-45: var(--antara-ink-45);
+  --ink-25: var(--antara-ink-25);
+  --ink-10: var(--antara-ink-10);
+  --ink-05: var(--antara-ink-05);
 
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Playfair Display', serif;
-}
-
-[data-theme="light"] {
-  --bg: #FDFBF7;
-  --bg-warm: #F5F0E6;
-  --surface: #FFFFFF;
-  --surface-raised: #F5F0E6;
-  --surface-glass: rgba(255, 255, 255, 0.85);
-  --cream: #1C1921;
-  --gold: #9B7829;
-  --gold-dim: #7A5C1B;
-  --terracotta: #B4552C;
-  --crimson: #7A2820;
-  --ink-90: rgba(28, 25, 33, 0.90);
-  --ink-70: rgba(28, 25, 33, 0.70);
-  --ink-45: rgba(28, 25, 33, 0.45);
-  --ink-25: rgba(28, 25, 33, 0.25);
-  --ink-10: rgba(28, 25, 33, 0.10);
-  --ink-05: rgba(28, 25, 33, 0.05);
+  --font-sans: var(--antara-font-sans);
+  --font-serif: var(--antara-font-display);
 }
 
 html {
@@ -50,6 +34,17 @@ html {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Inline icons are authored with a 24x24 viewBox and no intrinsic size, so in
+   a flex or grid parent they stretch to fill it — which is how a 24px warning
+   glyph ended up drawn 700px wide across every site page. Give every icon a
+   default size; components that want another size override it by class. The
+   map's own geometry uses different viewBoxes and is untouched. */
+svg[viewBox="0 0 24 24"] {
+  width: 18px;
+  height: 18px;
+  flex: none;
 }
 
 html, body {
@@ -159,19 +154,23 @@ button {
   cursor: pointer;
 }
 
+/* The product's one primary action. Same shape, fill and rhythm on the landing
+   page, the map, Visual India and the archive. */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
+  gap: 8px;
+  padding: 12px 22px;
   background: var(--gold);
-  color: var(--bg);
+  color: var(--antara-ink-inverse);
+  font-family: var(--font-sans);
   font-weight: 500;
-  border-radius: 30px;
+  border-radius: var(--antara-radius-md);
   transition: transform 0.2s, background 0.2s;
 }
 .btn-primary:hover {
-  background: var(--cream);
+  background: var(--antara-gold-bright);
   transform: translateY(-2px);
 }
 
@@ -1103,31 +1102,6 @@ button {
   width: 100%;
   height: 100%;
 }
-.view-toggle-btn {
-  position: absolute;
-  top: 32px;
-  right: 92px;
-  height: 48px;
-  padding: 0 20px;
-  border-radius: 24px;
-  background: rgba(10, 10, 10, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 10;
-  color: var(--cream);
-  border: 1px solid var(--ink-10);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.view-toggle-btn:hover {
-  background: var(--surface);
-  border-color: var(--gold);
-}
 .dest-hero-scrim {
   position: absolute;
   inset: 0;
@@ -1675,9 +1649,26 @@ button {
   padding: 40px 20px;
   text-align: center;
   font-size: 12px;
-  color: var(--ink-25);
+  /* Was --ink-25, a border tint used as text: 2.0:1. Provenance and the
+     verification date are exactly the text a reader must be able to read. */
+  color: var(--ink-45);
   border-top: 1px solid var(--ink-05);
 }
+
+/* Hands off to that state's Visual India gallery. */
+.dest-cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ink-70);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink-25);
+  padding-bottom: 3px;
+}
+.dest-cta-link:hover { color: var(--gold); border-bottom-color: var(--gold); }
+.dest-cta-link svg { width: 14px; height: 14px; }
 
 /* Toast */
 #toast {
@@ -1712,3 +1703,359 @@ button {
     scroll-behavior: auto !important;
   }
 }
+
+/* ====================================================================== */
+/* HERITAGE SITE MEDIA                                                    */
+/*                                                                        */
+/* Every photograph on a site page reserves its aspect ratio before it     */
+/* loads, so nothing reflows, and degrades to the site's own line-art      */
+/* motif rather than an empty box. Tokens are the existing Antara set.     */
+/* ====================================================================== */
+
+.media-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.media-frame {
+  position: relative;
+  aspect-ratio: var(--media-ratio, 4 / 3);
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--surface-raised);
+  border: 1px solid var(--ink-10);
+}
+.media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  opacity: 1;
+  transition: opacity .45s ease, transform .6s cubic-bezier(.2,.7,.3,1);
+}
+/* Loading state: a quiet shimmer in the surface colour, never a spinner. */
+.media-frame.is-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg,
+    transparent 20%,
+    var(--ink-05) 50%,
+    transparent 80%);
+  background-size: 220% 100%;
+  animation: media-shimmer 1.4s linear infinite;
+}
+.media-frame.is-loading img { opacity: 0; }
+@keyframes media-shimmer {
+  from { background-position: 180% 0; }
+  to   { background-position: -80% 0; }
+}
+.media-figure figcaption {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--ink-45);
+  line-height: 1.5;
+}
+
+/* Zoomable frames read as interactive. */
+.media-frame.is-zoomable { cursor: zoom-in; }
+.media-frame.is-zoomable:hover img { transform: scale(1.04); }
+.media-frame.is-zoomable:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* The intentional fallback — the site's motif plus an honest line. */
+.media-placeholder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 20px 16px 38px;
+  text-align: center;
+  background:
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--placeholder-tint, #C9A86A) 11%, var(--surface-raised)),
+      var(--surface-raised) 62%);
+}
+.media-placeholder-name {
+  font-family: var(--font-serif);
+  font-size: clamp(15px, 2.2vw, 22px);
+  line-height: 1.25;
+  color: var(--ink-70);
+  max-width: 22ch;
+  text-wrap: balance;
+}
+.media-placeholder-note {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  right: 12px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+
+/* Editorial split: prose beside a tall supporting image. */
+.split-media {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+.split-media.reverse { grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr); }
+.split-media.no-media { grid-template-columns: minmax(0, 1fr); }
+.split-media-img { position: sticky; top: 96px; }
+
+/* Gallery strip. */
+.gallery-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 18px;
+}
+.plan-media { margin-bottom: 26px; }
+.miss-media { min-width: 0; }
+
+/* Plan Your Visit call to action. */
+.plan-cta {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.plan-cta .btn-primary { text-decoration: none; }
+.plan-cta-note {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  color: var(--ink-45);
+  max-width: 34ch;
+  line-height: 1.5;
+}
+.btn-booking { display: inline-flex; align-items: center; gap: 8px; }
+.btn-booking svg { width: 16px; height: 16px; }
+
+/* Shown in place of the booking button when no official portal exists. */
+.plan-info {
+  margin-top: 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent, var(--ink-45));
+  border-radius: 4px;
+  background: var(--paper-2, transparent);
+}
+.plan-info-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-70);
+  margin-bottom: 9px;
+}
+.plan-info-head svg { width: 15px; height: 15px; flex: none; }
+.plan-info-text {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ink-70);
+  margin: 0;
+  max-width: 62ch;
+}
+.plan-info-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 2px;
+}
+.plan-info-link:hover { border-bottom-color: currentColor; }
+.plan-info-link svg { width: 14px; height: 14px; flex: none; }
+
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.hero-plan-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--ink-25);
+  background: transparent;
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  cursor: pointer;
+  transition: border-color .25s ease, background .25s ease;
+}
+.hero-plan-btn:hover { border-color: var(--gold); background: var(--ink-05); }
+.hero-plan-btn svg { width: 15px; height: 15px; }
+
+/* List thumbnails: real photography where it exists. */
+.search-result .thumb,
+.fav-item .thumb,
+.nearby-item .thumb {
+  overflow: hidden;
+  position: relative;
+}
+.thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.thumb-failed { background: var(--surface-raised); }
+/* Stands in for a missing thumbnail so list rows keep their rhythm. */
+.thumb-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--ink-45);
+  background: color-mix(in srgb, var(--placeholder-tint, #C9A86A) 14%, var(--surface-raised));
+}
+
+/* ---------------------------------------------------------------------- */
+/* LIGHTBOX                                                               */
+/* ---------------------------------------------------------------------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  background: rgba(8, 8, 8, .93);
+  backdrop-filter: blur(8px);
+}
+.lightbox.is-open { display: flex; }
+.lb-figure {
+  margin: 0;
+  max-width: min(1180px, 88vw);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+.lb-figure img {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: 6px;
+  background: var(--surface);
+}
+.lb-figure figcaption {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  color: rgba(247, 243, 236, .72);
+  text-align: center;
+  max-width: 62ch;
+}
+.lb-close, .lb-nav {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(247, 243, 236, .2);
+  background: rgba(20, 20, 20, .6);
+  color: #F7F3EC;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease;
+}
+.lb-close:hover, .lb-nav:hover { border-color: var(--gold); background: rgba(40, 36, 28, .75); }
+.lb-close:focus-visible, .lb-nav:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.lb-close svg, .lb-nav svg { width: 20px; height: 20px; }
+.lb-close { position: absolute; top: 24px; right: 24px; }
+.lb-count {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  color: rgba(247, 243, 236, .5);
+}
+
+/* ---------------------------------------------------------------------- */
+/* RESPONSIVE                                                             */
+/* ---------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .split-media,
+  .split-media.reverse { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  /* On one column the image leads, so the reader sees the place first. */
+  .split-media.reverse .split-media-img { order: -1; }
+  .split-media-img { position: static; }
+  .gallery-strip { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+}
+
+@media (max-width: 620px) {
+  .lightbox { padding: 12px; gap: 4px; }
+  .lb-close { top: 12px; right: 12px; width: 40px; height: 40px; }
+  .lb-nav { width: 38px; height: 38px; }
+  .lb-figure img { max-height: 68vh; }
+  .plan-cta { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .plan-cta-note { max-width: none; }
+  .plan-cta .btn-primary { width: 100%; justify-content: center; }
+  .plan-info { padding: 16px; }
+  .plan-info-text { max-width: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-frame.is-loading::after { animation: none; }
+  .media-frame img,
+  .media-frame.is-zoomable:hover img { transition: none; transform: none; }
+}
+
+/* Attribution for externally licensed photography. CC BY / BY-SA require the
+   creator and licence to be visible wherever the image is used. */
+.media-credit {
+  display: block;
+  margin-top: 3px;
+  font-size: 10.5px;
+  letter-spacing: .03em;
+  color: var(--ink-25);
+}
+.media-credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.media-credit a:hover { color: var(--gold); }
+.lb-figure .media-credit { margin-top: 6px; font-size: 11px; color: rgba(247,243,236,.45); }
+
+/* Where an Explore or Don't Miss entry has no photograph of its own, the card
+   is text-only rather than a placeholder box — the Gallery section carries the
+   site's imagery, so an empty frame would promise something twice. */
+.explore-card.is-textonly {
+  border-left: 2px solid var(--ink-10);
+  padding-left: 18px;
+}
+.miss-item:not(:has(.miss-media)) { grid-template-columns: auto 1fr; }

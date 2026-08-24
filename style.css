@@ -7,11 +7,13 @@
    THEME VARIABLES & DESIGN TOKENS
    -------------------------------------------------------------------------- */
 :root {
-  /* Fonts */
-  --font-serif-title: 'Cinzel', 'Marcellus', Georgia, serif;
-  --font-sanskrit: 'Noto Serif Devanagari', 'Tiro Devanagari Sanskrit', serif;
-  --font-body: 'Crimson Pro', 'EB Garamond', Georgia, serif;
-  --font-ui: 'Marcellus', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Fonts. The archive keeps its reading faces; only the interface face joins
+     the rest of the product, so controls here match controls everywhere else.
+     Marcellus was a fourth UI typeface used on this page alone. */
+  --font-serif-title: var(--antara-font-archive);
+  --font-sanskrit: var(--antara-font-devanagari);
+  --font-body: var(--antara-font-reading);
+  --font-ui: var(--antara-font-sans);
 
   /* Baseline Transitions & Radii */
   --transition-fast: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
@@ -32,34 +34,38 @@
    DEEP MIDNIGHT THEME (Default)
    Charcoal obsidian (#070509) + Metallic Gold (#D4AF37)
    -------------------------------------------------------------------------- */
+/* The archive keeps its own reading typography — Cinzel for manuscript titles,
+   Crimson Pro for scripture, Noto Serif Devanagari for Sanskrit — but takes its
+   colour from the product. It used to sit on a violet-black ground (#070509)
+   with a brass gold (#d4af37) that matched nothing else in Antara. */
 [data-theme="dark"] {
-  --bg-primary: #070509;
-  --bg-secondary: #0e0b14;
-  --bg-surface: #15111e;
-  --bg-surface-elevated: #1d182a;
-  --bg-surface-hover: #262036;
-  --bg-glass: rgba(14, 11, 20, 0.78);
-  --bg-glass-card: rgba(21, 17, 30, 0.72);
-  --border-subtle: rgba(212, 175, 55, 0.12);
-  --border-medium: rgba(212, 175, 55, 0.28);
-  --border-highlight: rgba(212, 175, 55, 0.55);
+  --bg-primary: var(--antara-bg);
+  --bg-secondary: var(--antara-bg-warm);
+  --bg-surface: var(--antara-surface);
+  --bg-surface-elevated: var(--antara-surface-raised);
+  --bg-surface-hover: var(--antara-surface-hover);
+  --bg-glass: var(--antara-glass);
+  --bg-glass-card: rgba(28, 27, 24, 0.72);
+  --border-subtle: var(--antara-border-subtle);
+  --border-medium: var(--antara-border-medium);
+  --border-highlight: var(--antara-border-accent);
 
-  --text-primary: #f5f0e6;
-  --text-secondary: #c9c0b2;
-  --text-muted: #8e8477;
-  --text-inverse: #070509;
+  --text-primary: var(--antara-ink);
+  --text-secondary: var(--antara-ink-70);
+  --text-muted: var(--antara-ink-45);
+  --text-inverse: var(--antara-ink-inverse);
 
-  --accent-gold: #d4af37;
-  --accent-gold-bright: #f3e5ab;
-  --accent-gold-dark: #997d26;
-  --accent-gold-glow: rgba(212, 175, 55, 0.25);
-  --accent-crimson: #9e2a2b;
-  --accent-saffron: #cf6f26;
+  --accent-gold: var(--antara-gold);
+  --accent-gold-bright: var(--antara-gold-bright);
+  --accent-gold-dark: var(--antara-gold-dim);
+  --accent-gold-glow: var(--antara-gold-glow);
+  --accent-crimson: var(--antara-crimson);
+  --accent-saffron: var(--antara-terracotta);
 
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --shloka-glow: 0 0 20px rgba(212, 175, 55, 0.15);
-  --scrollbar-thumb: #2c2538;
+  --shloka-glow: 0 0 20px var(--antara-gold-glow);
+  --scrollbar-thumb: #2b2a26;
 }
 
 /* --------------------------------------------------------------------------
@@ -67,28 +73,28 @@
    Heritage Cream (#FDFBF7) + Antique Gold (#B8860B) + Deep Sepia
    -------------------------------------------------------------------------- */
 [data-theme="light"] {
-  --bg-primary: #fdfbf7;
-  --bg-secondary: #f6f1e8;
-  --bg-surface: #ede6dc;
-  --bg-surface-elevated: #ffffff;
-  --bg-surface-hover: #e5ddcf;
-  --bg-glass: rgba(253, 251, 247, 0.85);
+  --bg-primary: var(--antara-bg);
+  --bg-secondary: var(--antara-bg-warm);
+  --bg-surface: var(--antara-surface-raised);
+  --bg-surface-elevated: var(--antara-surface);
+  --bg-surface-hover: var(--antara-surface-hover);
+  --bg-glass: var(--antara-glass);
   --bg-glass-card: rgba(255, 255, 255, 0.88);
-  --border-subtle: rgba(184, 134, 11, 0.16);
-  --border-medium: rgba(184, 134, 11, 0.32);
-  --border-highlight: rgba(184, 134, 11, 0.65);
+  --border-subtle: var(--antara-border-subtle);
+  --border-medium: var(--antara-border-medium);
+  --border-highlight: var(--antara-border-accent);
 
-  --text-primary: #1e1914;
-  --text-secondary: #4a4035;
-  --text-muted: #7d7265;
-  --text-inverse: #ffffff;
+  --text-primary: var(--antara-ink);
+  --text-secondary: var(--antara-ink-70);
+  --text-muted: var(--antara-ink-45);
+  --text-inverse: var(--antara-ink-inverse);
 
-  --accent-gold: #b8860b;
-  --accent-gold-bright: #d4af37;
-  --accent-gold-dark: #7a5806;
-  --accent-gold-glow: rgba(184, 134, 11, 0.2);
-  --accent-crimson: #851e1f;
-  --accent-saffron: #b85d19;
+  --accent-gold: var(--antara-gold);
+  --accent-gold-bright: var(--antara-gold-bright);
+  --accent-gold-dark: var(--antara-gold-dim);
+  --accent-gold-glow: var(--antara-gold-glow);
+  --accent-crimson: var(--antara-crimson);
+  --accent-saffron: var(--antara-terracotta);
 
   --card-shadow: 0 6px 24px rgba(60, 45, 20, 0.08);
   --glass-shadow: 0 8px 30px rgba(70, 50, 25, 0.06);
@@ -1431,6 +1437,30 @@ button, input, select, textarea {
   text-overflow: ellipsis;
 }
 
+.audio-status-note {
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-status-note[hidden] {
+  display: none;
+}
+
+.audio-status-note.is-unavailable {
+  color: #d98a7a;
+}
+
+.audio-status-note.is-recorded,
+.audio-status-note.is-synth {
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
 /* Center Audio Controls */
 .audio-controls-center {
   flex: 1;
@@ -1554,6 +1584,33 @@ button, input, select, textarea {
 }
 .progress-bar-container:hover .progress-scrubber-handle {
   transform: translateY(-50%) scale(1);
+}
+
+/* Browser speech reports no duration, so the track shows an honest "speaking"
+   state instead of a progress bar timed against a guess. Where the engine does
+   report word boundaries, .progress-bar-fill still advances on real position. */
+.progress-bar-container.is-speaking {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--accent-gold) 45%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  animation: narration-speaking 1.6s linear infinite;
+}
+
+@keyframes narration-speaking {
+  from { background-position: -40% 0; }
+  to   { background-position: 140% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar-container.is-speaking {
+    animation: none;
+    background-position: 50% 0;
+  }
 }
 
 /* Right Audio Settings */
@@ -2222,3 +2279,19 @@ button, input, select, textarea {
   transform: scale(1.3);
 }
 
+
+/* ==========================================================================
+   REDUCED MOTION
+   Respect the visitor's system setting: keep state changes instant rather
+   than animated. Opacity is left alone so nothing disappears.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

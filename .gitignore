@@ -3,4 +3,11 @@ node_modules/
 *.log
 .gemini/
 .git/
+# Secrets. Ignore every .env variant, but keep the committed templates.
 .env
+.env.*
+!.env.example
+
+# Contact submissions are real personal data (names, email addresses) and must
+# never enter the repository. server.js recreates this file on first run.
+landing-page/data/contact_messages.json

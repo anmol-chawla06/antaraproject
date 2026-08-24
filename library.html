@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Antara Heritage Library | अन्तरा ग्रन्थागार — Classical Sanskrit & Vedic Texts</title>
   <meta name="description" content="A scholarly digital library for classical Indian heritage texts including the Bhagavad Gita, Rigveda Samhita, and Principal Upanishads with interlinear translations, audio recitation, and Vedic Tanpura drone.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   
   <!-- Classical Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Serif+Devanagari:wght@400;600;700&family=Marcellus&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="antara-tokens.css?v=9">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <div class="app-root">
@@ -170,7 +172,7 @@
               </div>
               <div class="dhyana-volume-slider-box">
                 <span class="slider-icon">☵</span>
-                <input type="range" class="dhyana-volume-slider" id="sliderVolTanpura" min="0" max="1" step="0.05" value="0.7">
+                <input type="range" class="dhyana-volume-slider" id="sliderVolTanpura" aria-label="Vedic Tanpura volume" min="0" max="1" step="0.05" value="0.7">
               </div>
             </div>
 
@@ -186,7 +188,7 @@
               </div>
               <div class="dhyana-volume-slider-box">
                 <span class="slider-icon">☵</span>
-                <input type="range" class="dhyana-volume-slider" id="sliderVolOm" min="0" max="1" step="0.05" value="0.6">
+                <input type="range" class="dhyana-volume-slider" id="sliderVolOm" aria-label="Cosmic OM volume" min="0" max="1" step="0.05" value="0.6">
               </div>
             </div>
 
@@ -202,7 +204,7 @@
               </div>
               <div class="dhyana-volume-slider-box">
                 <span class="slider-icon">☵</span>
-                <input type="range" class="dhyana-volume-slider" id="sliderVolBells" min="0" max="1" step="0.05" value="0.5">
+                <input type="range" class="dhyana-volume-slider" id="sliderVolBells" aria-label="Temple Bells volume" min="0" max="1" step="0.05" value="0.5">
               </div>
             </div>
 
@@ -218,7 +220,7 @@
               </div>
               <div class="dhyana-volume-slider-box">
                 <span class="slider-icon">☵</span>
-                <input type="range" class="dhyana-volume-slider" id="sliderVolFlute" min="0" max="1" step="0.05" value="0.5">
+                <input type="range" class="dhyana-volume-slider" id="sliderVolFlute" aria-label="River Flute volume" min="0" max="1" step="0.05" value="0.5">
               </div>
             </div>
 
@@ -234,7 +236,7 @@
               </div>
               <div class="dhyana-volume-slider-box">
                 <span class="slider-icon">☵</span>
-                <input type="range" class="dhyana-volume-slider" id="sliderVolBowls" min="0" max="1" step="0.05" value="0.5">
+                <input type="range" class="dhyana-volume-slider" id="sliderVolBowls" aria-label="Singing Bowls volume" min="0" max="1" step="0.05" value="0.5">
               </div>
             </div>
 
@@ -250,7 +252,7 @@
               </div>
               <div class="dhyana-volume-slider-box">
                 <span class="slider-icon">☵</span>
-                <input type="range" class="dhyana-volume-slider" id="sliderVolRain" min="0" max="1" step="0.05" value="0.5">
+                <input type="range" class="dhyana-volume-slider" id="sliderVolRain" aria-label="Monsoon Rain volume" min="0" max="1" step="0.05" value="0.5">
               </div>
             </div>
 
@@ -266,7 +268,7 @@
               </div>
               <div class="dhyana-volume-slider-box">
                 <span class="slider-icon">☵</span>
-                <input type="range" class="dhyana-volume-slider" id="sliderVolJapa" min="0" max="1" step="0.05" value="0.5">
+                <input type="range" class="dhyana-volume-slider" id="sliderVolJapa" aria-label="Subtle Japa Hum volume" min="0" max="1" step="0.05" value="0.5">
               </div>
             </div>
 
@@ -282,7 +284,7 @@
               </div>
               <div class="dhyana-volume-slider-box">
                 <span class="slider-icon">☵</span>
-                <input type="range" class="dhyana-volume-slider" id="sliderVolRaga" min="0" max="1" step="0.05" value="0.5">
+                <input type="range" class="dhyana-volume-slider" id="sliderVolRaga" aria-label="Morning Raga Flute volume" min="0" max="1" step="0.05" value="0.5">
               </div>
             </div>
 
@@ -298,7 +300,7 @@
               </div>
               <div class="dhyana-volume-slider-box">
                 <span class="slider-icon">☵</span>
-                <input type="range" class="dhyana-volume-slider" id="sliderVolNight" min="0" max="1" step="0.05" value="0.5">
+                <input type="range" class="dhyana-volume-slider" id="sliderVolNight" aria-label="Ashram Night volume" min="0" max="1" step="0.05" value="0.5">
               </div>
             </div>
 
@@ -428,6 +430,7 @@
           <div class="audio-text-info">
             <div class="audio-verse-citation" id="audioCitation">Bhagavad Gita 2.47</div>
             <div class="audio-verse-snippet" id="audioSnippet">कर्मण्येवाधिकारस्ते मा फलेषु कदाचन...</div>
+            <div class="audio-status-note" id="audioStatusNote" role="status" aria-live="polite" hidden></div>
           </div>
         </div>
 
@@ -475,13 +478,11 @@
         <!-- Right Sound Settings & Voice Selection -->
         <div class="audio-settings-right">
           <!-- Voice selector for Speech Synthesis / Recitation -->
+          <!-- Populated at runtime from the narration manifest: only languages
+               with a real recording for the current manuscript are selectable. -->
           <div class="voice-selector-box">
-            <span class="voice-glyph" title="Voice Language">◎</span>
-            <select class="voice-select" id="voiceSelect" aria-label="Select Voice Engine">
-              <option value="sa_hi">Sanskrit / Hindi Reciter</option>
-              <option value="en">English Translation Voice</option>
-              <option value="auto">Auto (Text Language)</option>
-            </select>
+            <span class="voice-glyph" title="Narration Language">◎</span>
+            <select class="voice-select" id="voiceSelect" aria-label="Select narration language"></select>
           </div>
 
           <!-- Volume Slider -->
@@ -598,6 +599,11 @@
 
   <!-- Embedded Data Layer (Bypasses file:// CORS) -->
   <script src="texts_data.js"></script>
+  <!-- Narration audio manifest: which recordings exist, per manuscript and
+       language. Generated by build_narration_manifest.js - do not hand-edit. -->
+  <script src="audio/narration_manifest.js"></script>
+  <!-- Narration track resolution (must load before library.js) -->
+  <script src="narration.js"></script>
   <!-- App Engine Logic -->
   <script src="library.js"></script>
 </body>
