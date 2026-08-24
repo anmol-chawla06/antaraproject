@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-23T15:49:43.593Z",
+  "generatedAt": "2026-08-24T09:51:08.484Z",
   "generatedBy": "build_narration_manifest.js",
   "note": "Generated file - do not hand-edit. Add audio under audio/manuscripts/ and re-run npm run build:narration.",
   "languages": [
@@ -9,13 +9,7 @@
       "label": "Sanskrit",
       "nativeLabel": "संस्कृतम्",
       "textField": "sanskrit",
-      "speech": {
-        "lang": "sa-IN",
-        "match": [
-          "sa-in",
-          "sa"
-        ]
-      }
+      "speech": null
     },
     {
       "code": "hi",
@@ -50,117 +44,63 @@
       "label": "Tamil",
       "nativeLabel": "தமிழ்",
       "textField": null,
-      "speech": {
-        "lang": "ta-IN",
-        "match": [
-          "ta-in",
-          "ta"
-        ]
-      }
+      "speech": null
     },
     {
       "code": "te",
       "label": "Telugu",
       "nativeLabel": "తెలుగు",
       "textField": null,
-      "speech": {
-        "lang": "te-IN",
-        "match": [
-          "te-in",
-          "te"
-        ]
-      }
+      "speech": null
     },
     {
       "code": "gu",
       "label": "Gujarati",
       "nativeLabel": "ગુજરાતી",
       "textField": null,
-      "speech": {
-        "lang": "gu-IN",
-        "match": [
-          "gu-in",
-          "gu"
-        ]
-      }
+      "speech": null
     },
     {
       "code": "mr",
       "label": "Marathi",
       "nativeLabel": "मराठी",
       "textField": null,
-      "speech": {
-        "lang": "mr-IN",
-        "match": [
-          "mr-in",
-          "mr"
-        ]
-      }
+      "speech": null
     },
     {
       "code": "bn",
       "label": "Bengali",
       "nativeLabel": "বাংলা",
       "textField": null,
-      "speech": {
-        "lang": "bn-IN",
-        "match": [
-          "bn-in",
-          "bn"
-        ]
-      }
+      "speech": null
     },
     {
       "code": "kn",
       "label": "Kannada",
       "nativeLabel": "ಕನ್ನಡ",
       "textField": null,
-      "speech": {
-        "lang": "kn-IN",
-        "match": [
-          "kn-in",
-          "kn"
-        ]
-      }
+      "speech": null
     },
     {
       "code": "ml",
       "label": "Malayalam",
       "nativeLabel": "മലയാളം",
       "textField": null,
-      "speech": {
-        "lang": "ml-IN",
-        "match": [
-          "ml-in",
-          "ml"
-        ]
-      }
+      "speech": null
     },
     {
       "code": "pa",
       "label": "Punjabi",
       "nativeLabel": "ਪੰਜਾਬੀ",
       "textField": null,
-      "speech": {
-        "lang": "pa-IN",
-        "match": [
-          "pa-in",
-          "pa"
-        ]
-      }
+      "speech": null
     },
     {
       "code": "or",
       "label": "Odia",
       "nativeLabel": "ଓଡ଼ିଆ",
       "textField": null,
-      "speech": {
-        "lang": "or-IN",
-        "match": [
-          "or-in",
-          "or"
-        ]
-      }
+      "speech": null
     }
   ],
   "resolutionOrder": [
@@ -168,30 +108,5 @@
     "chapter",
     "book"
   ],
-  "tracks": {
-    "book:bhagavad_gita": {
-      "en": {
-        "available": true,
-        "scope": "book",
-        "lang": "en",
-        "audioUrl": "audio/manuscripts/bhagavad-gita/en.wav",
-        "mimeType": "audio/wav",
-        "bytes": 761518,
-        "durationSeconds": 17.267,
-        "transcript": null
-      }
-    },
-    "verse:bg_2_47": {
-      "en": {
-        "available": true,
-        "scope": "verse",
-        "lang": "en",
-        "audioUrl": "audio/manuscripts/bhagavad-gita/verses/bg_2_47.en.wav",
-        "mimeType": "audio/wav",
-        "bytes": 957082,
-        "durationSeconds": 21.701,
-        "transcript": null
-      }
-    }
-  }
+  "tracks": {}
 }

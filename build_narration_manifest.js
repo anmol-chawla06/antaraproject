@@ -33,38 +33,37 @@ const DB_PATH = path.join(ROOT, 'texts_database.json');
 // can ship audio before it ships translations, and browser speech can only read
 // a language whose text actually exists.
 //
+// RELEASE RULE: browser speech is offered for ENGLISH and HINDI only.
+//
 // `speech` drives the Web Speech fallback used when no recorded file exists:
 // `lang` is the BCP-47 tag requested from the engine, `match` lists acceptable
 // voice-tag prefixes in priority order.
 //
-// Sanskrit deliberately matches ONLY genuine `sa` voices. A Hindi voice reading
-// Devanagari is not Sanskrit narration, and presenting it as such would be a
-// lie about provenance -- when no Sanskrit voice exists the player says so.
+// Every other language carries `speech: null`. That is not a cosmetic flag --
+// resolveVoice() never touches the voice list for them, so no detection is
+// attempted, no near-match can creep in, and the player states plainly that no
+// recording exists. In particular a Hindi voice reading Devanagari is NOT
+// Sanskrit narration, and presenting it as such would be a lie about
+// provenance.
+//
+// These languages stay in the catalogue so the picker can show them as
+// unavailable rather than pretending they were never planned. Give one a
+// `speech` block again only when a real voice AND a real transcript exist.
 const LANGUAGE_CATALOGUE = [
-  { code: 'sa', label: 'Sanskrit',  nativeLabel: 'संस्कृतम्',  textField: 'sanskrit',
-    speech: { lang: 'sa-IN', match: ['sa-in', 'sa'] } },
+  { code: 'sa', label: 'Sanskrit',  nativeLabel: 'संस्कृतम्',  textField: 'sanskrit', speech: null },
   { code: 'hi', label: 'Hindi',     nativeLabel: 'हिन्दी',     textField: 'hindi',
     speech: { lang: 'hi-IN', match: ['hi-in', 'hi'] } },
   { code: 'en', label: 'English',   nativeLabel: 'English',    textField: 'english',
     speech: { lang: 'en-IN', match: ['en-in', 'en-gb', 'en-us', 'en'] } },
-  { code: 'ta', label: 'Tamil',     nativeLabel: 'தமிழ்',      textField: null,
-    speech: { lang: 'ta-IN', match: ['ta-in', 'ta'] } },
-  { code: 'te', label: 'Telugu',    nativeLabel: 'తెలుగు',      textField: null,
-    speech: { lang: 'te-IN', match: ['te-in', 'te'] } },
-  { code: 'gu', label: 'Gujarati',  nativeLabel: 'ગુજરાતી',    textField: null,
-    speech: { lang: 'gu-IN', match: ['gu-in', 'gu'] } },
-  { code: 'mr', label: 'Marathi',   nativeLabel: 'मराठी',      textField: null,
-    speech: { lang: 'mr-IN', match: ['mr-in', 'mr'] } },
-  { code: 'bn', label: 'Bengali',   nativeLabel: 'বাংলা',      textField: null,
-    speech: { lang: 'bn-IN', match: ['bn-in', 'bn'] } },
-  { code: 'kn', label: 'Kannada',   nativeLabel: 'ಕನ್ನಡ',      textField: null,
-    speech: { lang: 'kn-IN', match: ['kn-in', 'kn'] } },
-  { code: 'ml', label: 'Malayalam', nativeLabel: 'മലയാളം',     textField: null,
-    speech: { lang: 'ml-IN', match: ['ml-in', 'ml'] } },
-  { code: 'pa', label: 'Punjabi',   nativeLabel: 'ਪੰਜਾਬੀ',      textField: null,
-    speech: { lang: 'pa-IN', match: ['pa-in', 'pa'] } },
-  { code: 'or', label: 'Odia',      nativeLabel: 'ଓଡ଼ିଆ',       textField: null,
-    speech: { lang: 'or-IN', match: ['or-in', 'or'] } }
+  { code: 'ta', label: 'Tamil',     nativeLabel: 'தமிழ்',      textField: null, speech: null },
+  { code: 'te', label: 'Telugu',    nativeLabel: 'తెలుగు',      textField: null, speech: null },
+  { code: 'gu', label: 'Gujarati',  nativeLabel: 'ગુજરાતી',    textField: null, speech: null },
+  { code: 'mr', label: 'Marathi',   nativeLabel: 'मराठी',      textField: null, speech: null },
+  { code: 'bn', label: 'Bengali',   nativeLabel: 'বাংলা',      textField: null, speech: null },
+  { code: 'kn', label: 'Kannada',   nativeLabel: 'ಕನ್ನಡ',      textField: null, speech: null },
+  { code: 'ml', label: 'Malayalam', nativeLabel: 'മലയാളം',     textField: null, speech: null },
+  { code: 'pa', label: 'Punjabi',   nativeLabel: 'ਪੰਜਾਬੀ',      textField: null, speech: null },
+  { code: 'or', label: 'Odia',      nativeLabel: 'ଓଡ଼ିଆ',       textField: null, speech: null }
 ];
 
 const MIME_BY_EXT = {

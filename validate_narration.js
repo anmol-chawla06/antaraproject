@@ -255,6 +255,64 @@ ok('hi-IN is preferred over a bare hi voice',
     { lang: 'hi-IN', name: 'Google Hindi', localService: false }
   ]).lang === 'hi-IN');
 
+/* RELEASE RULE: browser speech is offered for ENGLISH and HINDI only. Every
+   other catalogued language must carry `speech: null` so no voice detection is
+   attempted at all and the player states that no recording exists. */
+const shippedCat = require('./audio/manifest.json');
+const TTS_LANGUAGES = ['en', 'hi'];
+
+ok('exactly English and Hindi are configured for browser speech',
+  shippedCat.languages.filter(l => l.speech).map(l => l.code).sort().join(',') === 'en,hi',
+  shippedCat.languages.filter(l => l.speech).map(l => l.code).join(','));
+
+shippedCat.languages.filter(l => !TTS_LANGUAGES.includes(l.code)).forEach(l => {
+  ok(l.code + ' has no speech configuration at all', l.speech === null || l.speech === undefined,
+    JSON.stringify(l.speech));
+  /* With speech:null the resolver never inspects the voice list, so even a
+     browser that ships that language's voice cannot be routed to it. */
+  const voices = [{ lang: l.code + '-IN', name: 'Hypothetical ' + l.code, localService: true },
+                  { lang: 'hi-IN', name: 'Google Hindi', localService: false },
+                  { lang: 'en-US', name: 'Microsoft David', localService: true }];
+  ok(l.code + ' resolves no voice even when one exists', N.resolveVoice(l, voices) === null);
+  ok(l.code + ' reports no-speech-config rather than a voice failure',
+    N.speechAvailability(l, { english: 'x', hindi: 'y', sanskrit: 'z' }, voices).reason === 'no-speech-config');
+});
+
+/* The two supported languages must read their OWN transcript. */
+{
+  const verse = { sanskrit: 'संस्कृत पाठ', english: 'English transcript here', hindi: 'हिन्दी प्रतिलेख यहाँ' };
+  const voices = [{ lang: 'en-US', name: 'Microsoft David', localService: true },
+                  { lang: 'hi-IN', name: 'Google Hindi', localService: false }];
+  const idxNow = N.createIndex(shippedCat);
+  const scope = { bookId: 'bhagavad_gita', chapterId: 'bg_ch_02', verseId: 'bg_2_47' };
+
+  const enPlan = N.planNarration(idxNow, scope, 'en', verse, voices);
+  ok('English plans speech', enPlan.mode === 'speech', enPlan.mode + ' ' + (enPlan.reason || ''));
+  ok('English speaks the ENGLISH field', enPlan.text === verse.english, enPlan.text);
+  ok('English uses an English voice', /^en/i.test(enPlan.voice.lang));
+
+  const hiPlan = N.planNarration(idxNow, scope, 'hi', verse, voices);
+  ok('Hindi plans speech', hiPlan.mode === 'speech', hiPlan.mode + ' ' + (hiPlan.reason || ''));
+  ok('Hindi speaks the HINDI field, never the English one',
+    hiPlan.text === verse.hindi && hiPlan.text !== verse.english, hiPlan.text);
+  ok('Hindi uses a Hindi voice', /^hi/i.test(hiPlan.voice.lang), hiPlan.voice.lang);
+
+  const saPlan = N.planNarration(idxNow, scope, 'sa', verse, voices);
+  ok('Sanskrit is unavailable even though a Hindi voice exists', saPlan.mode === 'unavailable', saPlan.mode);
+  ok('Sanskrit never receives a voice', !saPlan.voice);
+
+  ok('only English and Hindi are offered as available',
+    N.availableLanguages(idxNow, scope, verse, voices).map(l => l.code).sort().join(',') === 'en,hi',
+    N.availableLanguages(idxNow, scope, verse, voices).map(l => l.code).join(','));
+}
+
+/* No production recording exists, so nothing may pre-empt browser speech. */
+ok('the shipped manifest carries no audio tracks',
+  Object.keys(shippedCat.tracks || {}).length === 0,
+  Object.keys(shippedCat.tracks || {}).join(', '));
+ok('no fixture audio remains on disk',
+  !fs.existsSync(path.join(__dirname, 'audio', 'manuscripts', 'bhagavad-gita', 'en.wav')));
+
 /* Every Indian language the brief names must be in the SHIPPED catalogue (not
    the fixture above), so a browser that ships one of these voices is actually
    offered it. */
@@ -264,19 +322,27 @@ const shippedLang = code => shipped.languages.find(l => l.code === code);
   ok('the shipped catalogue carries ' + code, !!shippedLang(code));
 });
 
-ok('Punjabi resolves a pa-IN voice when one exists',
-  N.resolveVoice(shippedLang('pa'), [V('pa-IN')]).lang === 'pa-IN');
-ok('Odia resolves an or-IN voice when one exists',
-  N.resolveVoice(shippedLang('or'), [V('or-IN')]).lang === 'or-IN');
-ok('Punjabi is not satisfied by a Hindi voice',
+/* Superseded by the English/Hindi-only release rule: Punjabi and Odia stay in
+   the catalogue so the picker can show them, but they carry no speech config,
+   so even a browser that ships pa-IN or or-IN is never routed to them. */
+ok('Punjabi does NOT resolve a voice, even when pa-IN exists',
+  N.resolveVoice(shippedLang('pa'), [V('pa-IN')]) === null);
+ok('Odia does NOT resolve a voice, even when or-IN exists',
+  N.resolveVoice(shippedLang('or'), [V('or-IN')]) === null);
+ok('Punjabi is not satisfied by a Hindi voice either',
   N.resolveVoice(shippedLang('pa'), [V('hi-IN')]) === null);
 
 /* A language with a voice but no transcript must stay unavailable rather than
-   read English text and call it Tamil. */
+   read English text and call it Tamil. Under the English/Hindi-only rule Tamil
+   is refused one step earlier still -- it has no speech configuration at all,
+   so the voice list is never even consulted. */
 ok('a voice without matching text does not make a language available',
   N.speechAvailability(shippedLang('ta'), { english: 'text', sanskrit: 's' }, [V('ta-IN')]).ok === false);
-ok('and the reason given is the missing text',
-  N.speechAvailability(shippedLang('ta'), { english: 'text', sanskrit: 's' }, [V('ta-IN')]).reason === 'no-text');
+ok('and the reason is no-speech-config, refused before any voice lookup',
+  N.speechAvailability(shippedLang('ta'), { english: 'text', sanskrit: 's' }, [V('ta-IN')]).reason === 'no-speech-config');
+/* The no-text guard itself still works, proven on a language that HAS a config. */
+ok('a configured language with no transcript reports no-text',
+  N.speechAvailability(shippedLang('hi'), { english: 'text', sanskrit: 's' }, [V('hi-IN')]).reason === 'no-text');
 
 // The rule that keeps narration honest about provenance.
 ok('Sanskrit is NOT satisfied by a Hindi voice',
@@ -441,7 +507,12 @@ if (!fs.existsSync(manifestPath)) {
   console.log('         ' + totalVerses + ' verses; manuscripts with narration: ' +
     (covered.join(', ') || '(none)'));
 
-  ok('at least one real recording is present for end-to-end testing', declared.length > 0);
+  /* RELEASE RULE: there are no production recordings, and the placeholder Gita
+     fixtures were removed so they cannot pre-empt browser speech. English and
+     Hindi are spoken by the browser; everything else says so plainly. */
+  ok('no recordings are declared, so nothing pre-empts browser speech', declared.length === 0,
+    declared.join(', '));
+  ok('no language claims recorded audio', langsWithAudio.length === 0, langsWithAudio.join(', '));
 }
 
 // --- Deterministic asset paths ----------------------------------------------

@@ -2,7 +2,7 @@
 
 > Living development tracker. Updated continuously as the project evolves.
 
-**Last audited:** 2026-08-24 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 275 assertions, exit 0
+**Last audited:** 2026-08-24 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 319 assertions, exit 0
 
 > **RELEASE CANDIDATE — QA PASSED 2026-08-24.** Verified from a fresh clone at `4ccb390`:
 > clean `npm install`, documented startup, 232 assertions, the complete 24-step user journey,
@@ -22,13 +22,13 @@ than assumed.
 | Core Application | ✅ COMPLETE | Four front ends + one Express backend, all serving 200, zero console/network errors |
 | Heritage Map | 🟡 IN PROGRESS | 40 destinations, search, filters, gallery + lightbox. **137 Commons images added — 37/40 sites now rich, 0 hero-only.** **Line-art removed globally; Visual India state galleries added.** Region filter and mobile tap targets still open |
 | Library | ✅ COMPLETE | 142 verses, 10 manuscripts, layered text, bookmarks, search |
-| Narration | 🟡 IN PROGRESS | Hybrid engine **re-verified in headed Chrome 151, 2026-08-23**: recorded audio first, Web Speech fallback second, honest unavailable third. English + Hindi speak; 10 catalogued languages correctly disabled for want of a voice. **No production recordings exist** — audible narration is browser TTS, which varies by machine |
+| Narration | 🟡 IN PROGRESS | **Release rule: English + Hindi browser TTS only**, verified with real clicks in Chromium 151. All other languages state *"Recording unavailable"*. No production recordings; fixture audio removed |
 | Festivals | ✅ COMPLETE | 14 festivals, all fields populated, calendar + detail + map deep-links |
 | Travel | 🟡 IN PROGRESS | Visitor info complete for all 40 sites. **Booking audited 2026-08-23: 24 verified official portals, 16 honest visitor-info states, 19 broken/wrong links removed.** External handoff only — no payment code |
 | Heritage AI | ✅ COMPLETE | Verified end-to-end against live OpenAI, rate limiting confirmed |
 | Contact | ✅ COMPLETE | Verified end-to-end. **Admin inbox access restored and a critical PII leak closed 2026-08-24 (section 8b).** Flat-file storage remains a production limitation |
 | Security | ✅ COMPLETE | Secrets and PII purged from history; all controls tested live |
-| Testing | 🟡 IN PROGRESS | **275 automated assertions**, now including 43 server-security assertions |
+| Testing | 🟡 IN PROGRESS | **319 automated assertions** (narration 155, media 42, visit 22, Visual India 57, server security 43) |
 | Product Polish | 🟡 IN PROGRESS | **UI refinement pass 2026-08-23: one palette and one type system across all 5 pages; WCAG AA met on every page in both themes; 0 overflow at 4 widths.** Mobile tap targets still open |
 
 ---
@@ -422,28 +422,67 @@ Manuscript → Language → recorded audio → HTML5 <audio>
 - [x] **Sanskrit matches only genuine `sa` voices.** A Hindi voice reading Devanagari is not
       Sanskrit narration. The prefix matcher guards the hyphen so `sa` cannot match `sat`
 
-### Per-language status
+### Per-language status — RELEASE RULE (2026-08-24)
 
-Re-verified end-to-end in **headed Chrome 151 on Windows 11, 2026-08-23**, with
-`speechSynthesis.speak/cancel/pause/resume` instrumented to prove what was actually spoken.
-That browser exposes **22 voices across 14 language prefixes**; only two are usable here.
+**Narration:**
+- ✅ **English browser TTS**
+- ✅ **Hindi browser TTS**
+- ⚪ **Other languages: recording unavailable**
+- ⚪ **Production recordings: future enhancement**
+- ⚪ **Sanskrit: unavailable without a suitable browser voice or recording**
 
-| Language | Status | Evidence on the test browser |
+Audibility of English and Hindi in Chromium was **confirmed by the project owner
+on 2026-08-24**; the automated checks below evidence which voice and transcript
+reached the engine.
+
+Browser speech is offered for **English and Hindi only**. Every other catalogued
+language carries `speech: null`, so the voice list is never consulted for it, no
+near-match can creep in, and the picker states plainly that no recording exists.
+No language other than English and Hindi is claimed to work.
+
+| Language | Narration | Evidence on the test browser |
 |---|---|---|
-| English | 🟡 TTS WORKING | **Recording wins where one exists** — Bhagavad Gita plays `en.wav` with 0 TTS calls. Elsewhere (e.g. Rigveda) it **speaks** via `Microsoft David` (en-US, **local**). Only 2 placeholder fixtures exist; no production recording |
-| Hindi | 🟡 TTS WORKING | **Speaks** via `Google हिन्दी` (hi-IN, **network**) — one utterance, `start` → `end`, no error when left uninterrupted. No recording |
-| Sanskrit | 🔴 BLOCKED | No Sanskrit voice in any mainstream browser. Offered but **disabled**: *"Sanskrit (संस्कृतम्) — no voice installed"*. Correctly refuses rather than borrowing Hindi |
-| Tamil, Telugu, Gujarati, Marathi, Bengali, Kannada, Malayalam | ⚪ NO VOICE | Catalogued and detected at runtime; **this browser ships none of them**, so each is shown disabled as *"no voice installed"*. No transcript exists either |
-| Punjabi, Odia | ⚪ NO VOICE | **Added to the catalogue 2026-08-23** — they were missing, so a browser shipping `pa-IN`/`or-IN` could never have been offered them |
+| English | ✅ **Browser TTS** | Real click on Play → `Microsoft David - English (United States)` `[en-US]`, **local**; utterance.lang `en-US`; the **English** transcript (160 chars, Latin script); `start` fired; status *"Speaking — English"* |
+| Hindi | ✅ **Browser TTS** | Real click on Play → `Google हिन्दी` `[hi-IN]`, network; utterance.lang `hi-IN`; the **Hindi** transcript (169 chars, Devanagari); `start` fired; status *"Speaking — हिन्दी"* |
+| Sanskrit, Tamil, Telugu, Gujarati, Marathi, Bengali, Kannada, Malayalam, Punjabi, Odia | ⚪ **Recording unavailable** | Disabled in the picker, labelled *"— Recording unavailable"*. Pressing play never calls `speak()` and never borrows another language's voice |
 
-**Nothing is hardcoded as available.** The catalogue lists 12 languages; availability is
-computed per language at runtime from `speechSynthesis.getVoices()`, refreshed on
-`voiceschanged`, and a language is offered only when **both** a matching voice and matching
-text exist. On this machine that yields exactly **English and Hindi** enabled, 10 disabled.
+**Voices actually present** (Chromium 151, Windows 11; safe metadata only):
+`Google हिन्दी` `[hi-IN]` localService=false · `Microsoft David/Mark/Zira`
+`[en-US]` localService=true · `Google US English` `[en-US]` · `Google UK English
+Female/Male` `[en-GB]`. **No `en-IN`.** No voice at all for sa, ta, te, bn, gu, mr,
+kn, ml, pa, or.
 
-**No production narration has been recorded for Antara.** What a reader hears today is a
-browser voice, so it is not identical across machines — that is the accepted trade for the
-current release.
+**Data rule enforced:** English speaks the manuscript's `english` field, Hindi speaks
+its `hindi` field. All 142 verses carry both. No runtime translation, no invented text,
+and the two languages were verified to speak **different** transcripts.
+
+**Fixture audio removed.** The two placeholder Gita WAVs (`en.wav`,
+`bg_2_47.en.wav`, 1.7 MB) were deleted so no test file can pre-empt browser
+speech. The manifest now declares **0 tracks**. If a genuine production recording
+is added later it takes priority automatically — the resolver is unchanged.
+
+### Bug found and fixed during this work — stale speech state
+
+`speechSynthesis` is a browser-wide singleton whose queue **outlives the page**. An
+utterance left speaking or paused by a previous visit was still there on load, so
+pressing play resumed *that* stale utterance — the previous passage, possibly in the
+previous language — instead of speaking the current selection. The player now cancels
+the engine once at start-up, so every session begins from silence.
+
+### Manual verification in Chromium — 35/35
+
+Every Play press was a **real `Input.dispatchMouseEvent`** (`isTrusted === true`) on a
+foregrounded window, which is what Chrome's user-activation gate actually requires; a
+synthetic `.click()` alone is refused as `not-allowed`. Each language was tested from a
+freshly loaded, idle page so the click under test genuinely started the speech.
+
+Sequence: selector contents → English speaks → pause → Hindi speaks → pause →
+English again → switch language mid-narration (cancels, then speaks the new language,
+never two utterances at once) → Sanskrit and Tamil both refuse. **0 console errors.**
+
+*Audibility is evidenced by `speak()` being called once with the correct voice and
+transcript, the utterance firing `start`, and the engine reporting `speaking` — the
+output was not literally listened to.*
 
 ### Voice-selection fix — 2026-08-23
 
@@ -920,7 +959,7 @@ mount. Only `index.html`, `css/`, `js/` and `assets/` pass; everything else is 4
 
 ## 11. Testing
 
-**Latest verified run: 2026-08-24 — `npm test` → 275 assertions, 0 failures, exit 0.**
+**Latest verified run: 2026-08-24 — `npm test` → 319 assertions, 0 failures, exit 0.**
 
 ### Completed
 - [x] `validate_db.js` — every one of 142 verses has all required multi-language fields; sample
@@ -954,7 +993,7 @@ mount. Only `index.html`, `css/`, `js/` and `assets/` pass; everything else is 4
       (state → Explore Site → site page → Explore more from → state → Explore on Map →
       focused map). Lightbox open/←→/Escape at each width. **0 console errors, 0 exceptions,
       0 HTTP 4xx, 0 failed images**
-- [x] `validate_narration.js` — **111 assertions**: scope resolution, voice resolution and
+- [x] `validate_narration.js` — **155 assertions**: scope resolution, voice resolution and
       ranking, Sanskrit strictness, text selection, the audio/speech/refusal plan, language
       availability, duration handling, manifest integrity, deterministic asset paths, the
       production-asset lifecycle, and that Web Speech is actually wired into the shipped player
@@ -1321,7 +1360,7 @@ variable is required.**
 - [x] **No secrets in repository** — pattern scan clean; token purged from history and revoked
 - [x] **No PII in repository** — `contact_messages.json` untracked and purged from history
 - [x] **Security audit complete** — every control exercised against the running server
-- [x] **Tests passing** — 275 assertions, exit 0, 2026-08-24
+- [x] **Tests passing** — 319 assertions, exit 0, 2026-08-24
 - [x] **Map works** — verified serving, routing, and data integrity
 - [x] **Library works** — 142/142 verses complete, page loads and executes cleanly
 - [x] **Festivals work** — 14/14 populated, all deep-links resolve

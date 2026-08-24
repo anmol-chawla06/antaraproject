@@ -2056,24 +2056,28 @@
   }
 
   // Turn a stable reason code into wording a reader can act on.
+  /* Browser speech is offered for English and Hindi only in this release, so
+     every other language resolves to the same honest state. The reason codes
+     still distinguish the causes for anyone reading the plan, but the visitor
+     is told one plain thing: there is no recording. */
   function narrationUnavailableMessage(lang, reason) {
     const label = narrationLabel(lang);
     switch (reason) {
-      case 'no-voice-for-language':
-        return lang === 'sa'
-          ? 'No recording exists yet, and this browser has no Sanskrit voice — ' +
-            'browser speech cannot read Sanskrit, and a Hindi voice would not be Sanskrit narration.'
-          : label + ' narration requires a ' + label + ' voice installed in this browser.';
-      case 'no-voices':
-        return 'This browser reports no speech voices at all, and no ' + label + ' recording exists yet.';
-      case 'no-text':
-        return 'No ' + label + ' recording exists yet, and this passage has no ' + label + ' text to read aloud.';
       case 'no-speech-config':
-        return label + ' has no browser-speech configuration and no recording yet.';
+        return 'Recording unavailable — ' + label + ' narration has not been recorded yet. ' +
+               'English and Hindi are read by the browser’s own voice; other languages await a recording.';
+      case 'no-voice-for-language':
+        return 'Recording unavailable — no ' + label + ' recording exists yet, and this browser has no ' +
+               label + ' voice to read it.';
+      case 'no-voices':
+        return 'Recording unavailable — this browser reports no speech voices at all, and no ' +
+               label + ' recording exists yet.';
+      case 'no-text':
+        return 'Recording unavailable — this passage has no ' + label + ' text to read aloud.';
       case 'unknown-language':
-        return 'That narration language is not in the catalogue.';
+        return 'Recording unavailable — that narration language is not in the catalogue.';
       default:
-        return 'No ' + label + ' narration is available for this passage.';
+        return 'Recording unavailable — no ' + label + ' narration exists for this passage.';
     }
   }
 
@@ -2109,7 +2113,7 @@
     AppState.audio.currentTrack = null;
     updatePlayPauseButtonUI();
     setTransportZeroed();
-    setNarrationStatus('Narration unavailable — ' + narrationUnavailableMessage(lang, reason), 'unavailable');
+    setNarrationStatus(narrationUnavailableMessage(lang, reason), 'unavailable');
     showToast(narrationLabel(lang) + ' narration unavailable', '✕');
   }
 
@@ -2229,7 +2233,7 @@
       updatePlayPauseButtonUI();
       setSpeakingIndicator(true);
       setNarrationStatus(
-        'Speaking — ' + plan.langDef.label + ' browser voice (' + plan.voice.name + ')',
+        'Speaking — ' + (plan.langDef.nativeLabel || plan.langDef.label),
         'speaking'
       );
       highlightActiveVerseCard(verse.id);
@@ -2356,8 +2360,11 @@
       } else if (l.hasSpeech) {
         label += ' — browser voice';
       } else {
+        // Browser speech is offered for English and Hindi only this release.
+        // Everything else states the same plain thing rather than explaining
+        // a voice-detection result the visitor cannot act on.
         opt.disabled = true;
-        label += l.speechReason === 'no-text' ? ' — no text' : ' — no voice installed';
+        label += ' — Recording unavailable';
       }
       opt.textContent = label;
       DOM.voiceSelect.appendChild(opt);
@@ -2392,7 +2399,7 @@
 
     if (recorded.length === 0 && spoken.length === 0) {
       setNarrationStatus(
-        'Narration unavailable — no recordings exist for this manuscript and this browser has no suitable voice.',
+        'Recording unavailable — no recordings exist for this manuscript and this browser has no suitable voice.',
         'unavailable'
       );
       return;
@@ -2400,7 +2407,7 @@
 
     const parts = [];
     if (recorded.length) parts.push('recorded in ' + recorded.join(', '));
-    if (spoken.length) parts.push('browser voice for ' + spoken.join(', '));
+    if (spoken.length) parts.push('read by your browser in ' + spoken.join(' and '));
     setNarrationStatus('Narration available — ' + parts.join('; '), recorded.length ? 'recorded' : 'speaking');
   }
 
@@ -3162,7 +3169,7 @@
         updatePlayPauseButtonUI();
         setTransportZeroed();
         setNarrationStatus(
-          'Narration unavailable — ' + narrationUnavailableMessage(lang, plan.reason),
+          narrationUnavailableMessage(lang, plan.reason),
           'unavailable'
         );
         return;
@@ -3183,6 +3190,15 @@
         refreshNarrationAvailabilityNote();
       }
     });
+
+    /* speechSynthesis is a browser-wide singleton whose queue outlives the
+       page: an utterance left speaking or paused by a previous visit is still
+       there on load. Pressing play would then resume that stale utterance --
+       the previous passage, possibly in the previous language -- instead of
+       speaking the current selection. Start every session from silence. */
+    if (speechEngine) {
+      try { speechEngine.cancel(); } catch (err) { /* nothing to clear */ }
+    }
 
     // Chromium populates getVoices() asynchronously and can repopulate it
     // later, so re-offer languages whenever the voice list changes.
