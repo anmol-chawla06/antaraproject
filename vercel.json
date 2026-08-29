@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd landing-page && npm install",
+  "buildCommand": "echo \"no build step - the front ends are plain browser JS\"",
+  "outputDirectory": "vercel-static",
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30,
+      "includeFiles": "{landing-page/**,images/**,photos sites/**,audio/**,data/**,*.html,*.js,*.css,*.json,favicon.svg,robots.txt}"
+    }
+  },
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/index" }
+  ]
+}

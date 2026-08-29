@@ -101,6 +101,211 @@ Heritage AI and the contact form will not work in this mode — they need `serve
 
 ---
 
+## 4b. Deploying to Vercel
+
+### Dashboard settings
+
+| Setting | Value |
+| :--- | :--- |
+| **Root Directory** | **`.` (the repository root) — NOT `landing-page`** |
+| Framework Preset | **Other** |
+| Build Command | leave as configured in `vercel.json` (there is no build step) |
+| Install Command | `cd landing-page && npm install` (set in `vercel.json`) |
+| Output Directory | leave empty — `vercel.json` sets it to `vercel-static/`, see below |
+| Node.js version | 20.x or later |
+
+> **The root directory must be the repository root.** Only the landing page
+> lives in `landing-page/`. The map, Visual India, the Library, the festival
+> calendar and roughly **63 MB of images and audio sit at the repository root**
+> and are served by the same Express app. Setting the root directory to
+> `landing-page` would exclude all of them from the deployment and every page
+> except the landing page would return 404.
+
+### Environment variables
+
+Set these under **Project Settings → Environment Variables**. Only
+`OPENAI_API_KEY` and `OPENAI_MODEL` are needed for Heritage AI; the rest govern
+the admin area and contact behaviour. See `landing-page/.env.example`.
+
+| Variable | Required on Vercel? | Notes |
+| :--- | :--- | :--- |
+| `OPENAI_API_KEY` | For Heritage AI | Unset ⇒ `/api/chat` answers 503 and the rest of the site still works |
+| `OPENAI_MODEL` | No | Defaults to `gpt-4o` |
+| `ADMIN_PASSWORD` | For the admin inbox | Unset ⇒ the admin area is disabled entirely |
+| `ADMIN_SESSION_SECRET` | **Yes, if you use the admin area** | See the warning below |
+| `DATABASE_URL` | **Yes, for the contact form** | PostgreSQL connection string. Unset ⇒ the contact form declines every message. See below |
+| `CONTACT_EMAIL` | Recommended | Shown to visitors when a message cannot be stored |
+| `ALLOWED_ORIGINS` | No | Blank is correct for a single-domain deployment |
+| `PORT` | No | Vercel routes its own port; ignored there |
+
+> **`ADMIN_SESSION_SECRET` matters more on Vercel than locally.** Left blank,
+> the server generates a random secret per process. Serverless runs many
+> short-lived instances, so a session signed by one instance is rejected by the
+> next: sign-in appears to succeed and then immediately fails. Set a long random
+> value.
+
+### How it is wired
+
+`api/index.js` re-exports the same Express app that `npm run dev` runs, so there
+is one server definition and no duplicated routing. `vercel.json` sends **every**
+request to that function:
+
+```json
+"routes": [{ "src": "/(.*)", "dest": "/api/index" }]
+```
+
+That is deliberate. The `/data` and `/landing-page` guards, the admin session
+check and the static allow-list all live inside Express. If Vercel's CDN served
+files straight off the filesystem it would bypass every one of them and
+re-expose `landing-page/data/contact_messages.json`, `server.js` and the auth
+middleware — the exact leak that was closed earlier.
+
+#### Why the output directory is empty
+
+**Vercel checks the output directory for a matching static file *before* it
+evaluates `routes`, and serves any hit straight from the CDN.** The `routes`
+entry above cannot override that; `handle` and `override`, which once could, are
+both deprecated.
+
+That is not a theoretical concern — it broke the first deployment. With
+`outputDirectory` set to `"."` the repository root *was* the static output, and
+the root `index.html` is the **festival portal**. So `/` was answered from the
+CDN with the festival calendar and the request never reached Express, which
+would have served the landing page. Every guard above was bypassed for any path
+that happened to exist as a file.
+
+The fix is to publish an empty directory, `vercel-static/`:
+
+```json
+"outputDirectory": "vercel-static"
+```
+
+The filesystem check then always misses, routing falls through to the function,
+and Express — the only place that knows which application owns which URL —
+decides everything. **Do not put files in `vercel-static/`.** Anything there is
+served without passing through Express.
+
+**The trade-off:** every asset, images and audio included, is served through the
+function rather than straight from the CDN, so it is slower than a pure static
+deployment. If that matters later, the safe optimisation is to give genuinely
+public asset directories (`images/`, `photos sites/`, `audio/`) their own
+CDN-served routes and keep everything else on the function — but re-run
+`npm test` and verify each sensitive path still returns 404 afterwards.
+
+#### Which application answers which URL
+
+Two applications ship a file called `index.html`: the landing page in
+`landing-page/`, and the festival portal at the repository root. Which one
+answers a given URL is stated explicitly in `server.js` rather than left to
+whichever `express.static` mount happens to be registered first.
+
+| URL | Serves | File |
+| :--- | :--- | :--- |
+| `/` | **Antara landing page** | `landing-page/index.html` |
+| `/festivals.html` | Festival portal | `index.html` (repo root) |
+| `/index.html` | Festival portal | `index.html` (repo root) — kept so existing `../index.html` links and bookmarks keep working |
+| `/map.html` | Map | `map.html` |
+| `/visual-india.html` | Visual India | `visual-india.html` |
+| `/library.html` | Library | `library.html` |
+| `/admin-login.html` | Admin sign-in | `landing-page/admin-login.html` |
+| `/admin/*` | Admin inbox, behind a session | `landing-page/admin/**` |
+| `/api/*` | Express API | routes in `server.js` |
+
+Nothing was moved, renamed or duplicated to achieve this.
+
+### Contact storage: two backends, one interface
+
+**A serverless filesystem is read-only apart from `/tmp`, and `/tmp` is
+per-instance and evicted without warning.** A JSON file therefore cannot hold
+contact messages on Vercel, so there are two implementations behind one
+interface, chosen by whether a connection string is configured:
+
+| | Store | Where |
+| :--- | :--- | :--- |
+| **Local** (`npm run dev`) | JSON file | `landing-page/data/contact_messages.json` |
+| **Vercel** (`DATABASE_URL` set) | PostgreSQL | `contact_messages` table |
+
+Both expose the same four **async** methods — `isWritable()`, `list()`,
+`add(message)`, `setStatus(id, status)` — so the routes never branch on which
+one is in use. The selector is the presence of `DATABASE_URL` (or `POSTGRES_URL`,
+which Vercel's Postgres integrations inject), not `NODE_ENV`: pointing a local
+run at the real database is then just a matter of setting the variable.
+
+**Only contact messages live in the database.** Heritage data, manuscripts,
+festivals, map data and media stay as files in the repository — they are
+read-only content that ships with the deployment.
+
+```
+POST /api/contact  →  contactStore  →  postgresStore (Vercel)
+                                    →  file store    (local)
+```
+
+#### Setting it up
+
+Any PostgreSQL will do; the driver is plain `pg` and the SQL is standard, so
+Neon, Supabase, Railway or a self-hosted server all work. On Vercel the least
+friction is **Storage → Create Database → Neon**, which provisions Postgres and
+injects the connection variables into the project automatically. Otherwise paste
+a connection string into `DATABASE_URL` yourself.
+
+Nothing else is required: the table and its index are created on first use.
+
+```sql
+CREATE TABLE contact_messages (
+  id          TEXT PRIMARY KEY,
+  name        TEXT        NOT NULL,
+  email       TEXT        NOT NULL,
+  subject     TEXT        NOT NULL DEFAULT 'No Subject',
+  message     TEXT        NOT NULL,
+  status      TEXT        NOT NULL DEFAULT 'new'
+                          CHECK (status IN ('new','read','replied','archived')),
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+```
+
+#### If no database is configured
+
+The behaviour that was already there stays as the safety net: the file store
+probes for a writable location, finds none on a serverless host, and
+
+- `POST /api/contact` answers **503 `CONTACT_STORAGE_UNAVAILABLE`** and points
+  the visitor at `CONTACT_EMAIL`. A message is never accepted and then dropped.
+- The admin inbox reports `storage.writable: false`, so it is obvious why no new
+  messages arrive.
+- The rest of the site is unaffected.
+
+#### Serverless notes
+
+- Nothing connects, queries or creates a table at module load. Work done during
+  import happens before the function can serve anything, so a failure there
+  would take down every page rather than one form.
+- The pool is capped at one connection: a serverless instance serves one request
+  at a time, and a provider's connection limit is reached long before its query
+  limit.
+- Raw PostgreSQL errors are logged server-side and never returned to the
+  browser — they carry table, column and constraint names.
+- TLS certificates are verified. A managed database presents a normal publicly
+  trusted certificate, so a verification failure means something is genuinely
+  wrong.
+
+### Verify after deploying
+
+```bash
+# these must all return 404
+curl -I https://<your-domain>/landing-page/server.js
+curl -I https://<your-domain>/landing-page/middleware/adminAuth.js
+curl -I https://<your-domain>/landing-page/data/contact_messages.json
+
+# these must all return 200
+curl -I https://<your-domain>/
+curl -I https://<your-domain>/map.html
+curl -I https://<your-domain>/visual-india.html
+curl -I https://<your-domain>/library.html
+curl -I https://<your-domain>/index.html
+```
+
+---
+
 ## 5. Architecture
 
 ### Data-first, offline-capable
@@ -239,9 +444,11 @@ Page context (which section the reader is viewing) is sent as `{ type, id }` and
 
 ## 10. Contact system
 
-Submissions are validated server-side (name, email format, message, per-field length caps) and appended to `landing-page/data/contact_messages.json`.
+Submissions are validated server-side (name, email format, message, per-field length caps), then handed to `landing-page/services/contactStore.js`, which writes them to **`landing-page/data/contact_messages.json` locally** or to a **PostgreSQL `contact_messages` table when `DATABASE_URL` is set**. See [§4b](#contact-storage-two-backends-one-interface) for why, and for the schema.
 
-That file is **never** served over HTTP — a 404 handler for `/data` is registered ahead of the static middleware. Do not reorder those routes.
+Validation, field limits, statuses and the API contract are identical in both modes; only the storage differs. A message that cannot be stored is **declined with 503**, never accepted and dropped.
+
+The JSON file is **never** served over HTTP — a 404 handler for `/data` is registered ahead of the static middleware. Do not reorder those routes. The connection string is server-side only and appears in no client file; the startup log prints the database host, never the URL that carries the password.
 
 The inbox at `/admin/messages/` requires a signed session. Message fields are rendered as text nodes, never interpolated into HTML, because they are attacker-controlled.
 

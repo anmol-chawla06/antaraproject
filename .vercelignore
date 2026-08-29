@@ -1,0 +1,18 @@
+# Never upload local secrets or stored personal data.
+.env
+.env.*
+!.env.example
+landing-page/.env
+landing-page/.env.*
+!landing-page/.env.example
+landing-page/data/contact_messages.json
+
+# Development-only material: the Python pipeline, validators and scratch files
+# are not needed to serve the site.
+data_builders/
+*.py
+validate_*.js
+test_support/
+narration-selftest.html
+f.id
+.vscode/
