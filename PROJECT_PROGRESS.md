@@ -2,7 +2,7 @@
 
 > Living development tracker. Updated continuously as the project evolves.
 
-**Last audited:** 2026-08-24 · **Branch:** `fix/core-narration-stabilization` · **Tests:** 319 assertions, exit 0
+**Last audited:** 2026-08-29 · **Branch:** `chore/vercel-deployment-prep` · **Tests:** 470 assertions, exit 0
 
 > **RELEASE CANDIDATE — QA PASSED 2026-08-24.** Verified from a fresh clone at `4ccb390`:
 > clean `npm install`, documented startup, 232 assertions, the complete 24-step user journey,
@@ -26,9 +26,9 @@ than assumed.
 | Festivals | ✅ COMPLETE | 14 festivals, all fields populated, calendar + detail + map deep-links |
 | Travel | 🟡 IN PROGRESS | Visitor info complete for all 40 sites. **Booking audited 2026-08-23: 24 verified official portals, 16 honest visitor-info states, 19 broken/wrong links removed.** External handoff only — no payment code |
 | Heritage AI | ✅ COMPLETE | Verified end-to-end against live OpenAI, rate limiting confirmed |
-| Contact | ✅ COMPLETE | Verified end-to-end. **Admin inbox access restored and a critical PII leak closed 2026-08-24 (section 8b).** Flat-file storage remains a production limitation |
+| Contact | ✅ COMPLETE | Verified end-to-end. **Admin inbox access restored and a critical PII leak closed 2026-08-24 (section 8b).** **Persistent storage added 2026-08-24: JSON file locally, PostgreSQL on Vercel, one interface (section 8c)** |
 | Security | ✅ COMPLETE | Secrets and PII purged from history; all controls tested live |
-| Testing | 🟡 IN PROGRESS | **319 automated assertions** (narration 155, media 42, visit 22, Visual India 57, server security 43) |
+| Testing | 🟡 IN PROGRESS | **470 automated assertions** (narration 155, media 42, visit 22, Visual India 57, server + deployment 128, contact storage 66) |
 | Product Polish | 🟡 IN PROGRESS | **UI refinement pass 2026-08-23: one palette and one type system across all 5 pages; WCAG AA met on every page in both themes; 0 overflow at 4 widths.** Mobile tap targets still open |
 
 ---
@@ -869,14 +869,318 @@ mount. Only `index.html`, `css/`, `js/` and `assets/` pass; everything else is 4
   contents, the auth invariants, and that no credential reaches any client file.
 - QA probe message removed afterwards; **the 8 genuine messages are intact**.
 
-### In Progress
-- [ ] Production storage strategy — flat-file JSON with no locking. Concurrent writes can
-      interleave, and it does not survive an ephemeral filesystem. Acceptable for now, not for
-      production traffic.
-
 ### Not Started
 - [ ] Email notification on new submission
 - [ ] CAPTCHA or bot heuristics beyond IP rate limiting
+
+---
+
+## 8c. Persistent contact storage — 2026-08-24
+
+On `chore/vercel-deployment-prep`. **Not committed, not pushed, not deployed.**
+This clears the one release blocker left by §13c. Nothing outside contact
+storage was touched: UI, map, Visual India, library, narration, festivals, Plan
+Your Visit, Heritage AI and admin authentication are all unchanged.
+
+### The problem
+A serverless filesystem is read-only apart from `/tmp`, and `/tmp` is
+per-instance and evicted without warning. The JSON file store therefore could
+not keep a message on Vercel, and `POST /api/contact` answered
+503 `CONTACT_STORAGE_UNAVAILABLE` — honest, but a dead contact form.
+
+### The shape
+Two implementations behind one interface, selected by configuration:
+
+```
+POST /api/contact  →  contactStore  →  postgresStore   (DATABASE_URL set)
+                                    →  file store      (no DATABASE_URL)
+```
+
+| | Store | Where |
+|---|---|---|
+| **Local** (`npm run dev`) | JSON file | `landing-page/data/contact_messages.json` |
+| **Vercel** | PostgreSQL | `contact_messages` table |
+
+The selector is the **presence of a connection string**, not `NODE_ENV` or a
+Vercel-specific flag. That keeps it honest in both directions: a local run can
+be pointed at the real database by setting one variable, and a production
+deployment missing the variable does not silently fall through to a filesystem
+that cannot keep anything — it falls to the file store, which probes, finds no
+writable location, and declines the message.
+
+Both stores expose the same four methods, and **all four are now `async`**. A
+database cannot answer synchronously, and letting one store return values while
+the other returned promises would push the difference out into the routes, which
+is exactly what the interface exists to prevent. The three routes now `await`.
+
+**Scope held:** only contact messages moved. Heritage data, manuscripts,
+festivals, map data and media remain flat files in the repository — read-only
+content that ships with the deployment. Five assertions check that no table for
+any of them was introduced.
+
+### Provider
+Driver is plain **`pg`** (`landing-page/package.json`, +14 transitive packages)
+against standard SQL, so any PostgreSQL works — Neon, Supabase, Railway or
+self-hosted. **Neon** is the documented default: it is Vercel's marketplace
+Postgres, provisions from the dashboard, injects the connection variables
+itself, and its pooled endpoint handles serverless connection churn. No ORM: one
+table with seven columns does not justify a migration framework.
+
+The table and its index are created lazily on first use — never at module load.
+
+### Serverless-safety rules held
+- Nothing connects, queries or creates a table during import. **Verified:**
+  importing with `DATABASE_URL` set to an unreachable host completes in 322 ms
+  and exports a valid handler.
+- The driver itself is `require`d lazily, so a missing or broken `pg` degrades
+  to "storage unavailable" rather than felling every page.
+- Pool capped at **one** connection — a serverless instance serves one request
+  at a time, and a provider's connection limit binds long before its query limit.
+- A failed first connection is **not** memoised, so a brief outage does not mark
+  the store dead for the life of the instance.
+- `pool.on('error')` is registered; an unhandled `error` event on a dropped idle
+  client would otherwise kill the process.
+- One retry on transient connection codes (`ECONNRESET`, `57P01`, `08006`, …),
+  which a warm instance holding a stale socket will hit.
+
+### Security verification
+- [x] The connection string is server-side only; it appears in **no** client
+      file (asserted across all four)
+- [x] The startup log prints the **host only** — verified that
+      `postgres://someuser:sup3rsecret@db.invalid.test:5432/antara` logs as
+      `db.invalid.test:5432`
+- [x] Raw PostgreSQL errors are logged server-side and never returned; the
+      caller sees `STORAGE_ERROR`. Asserted that no response body carried table,
+      constraint or connection text
+- [x] Every value reaches SQL as a **bound parameter**; no string interpolation
+- [x] TLS required and certificates **verified** for any non-local host; no
+      `rejectUnauthorized: false` anywhere
+- [x] `status` constrained by a schema `CHECK`, not only by the route
+- [x] Admin authentication untouched — the inbox and status updates still refuse
+      an unauthenticated request 401, before and after the change
+- [x] No PII committed; the real store stays gitignored and untracked
+
+### Testing — `validate_contact.js`, 66 assertions
+A new **live HTTP** suite, not a shape check: it starts the real Express app and
+talks to it. Each phase runs in a **fresh child process**, standing in for a
+fresh serverless invocation, which is the only way to test the claim that
+actually matters — that a message outlives the process that received it.
+
+| Phase | Proves |
+|---|---|
+| Store selection | A connection string picks PostgreSQL; its absence picks the file store; TLS policy; no connection at construction |
+| Interface parity | Both stores expose the same four methods, all `AsyncFunction` |
+| A — production store | Submission accepted · admin retrieves it · every field intact · newest-first · status change · 400 on bad input · 401 unauthenticated · 404 unknown id · no DB text in any body |
+| B — **new process** | Both messages **survived the restart**, the status change survived, a further submission still works |
+| C — local JSON mode | Unchanged: accepts, lists, updates, writes to disk |
+| D — read-only filesystem | Still declines 503 rather than losing a message |
+
+By default the PostgreSQL phases run against `test_support/pg_stub.js`, which
+keeps rows in a **file** so a restart is meaningful, and enforces the primary key
+and the status `CHECK`. **Stated limitation:** the stub matches SQL by shape and
+does not parse it. Setting `TEST_DATABASE_URL` runs the identical assertions
+against a real database and cleans up its rows afterwards — that is what proves
+the SQL itself.
+
+### Local verification
+- `npm test` → **429 assertions, exit 0** (server 67 → 87, plus contact 66)
+- Live `npm run dev` run, **24/24**: startup announces the file store; `/`,
+  `/index.html`, `/map.html`, `/library.html`, `/visual-india.html` all 200;
+  8 sensitive paths still closed; submit → sign in → inbox → status change →
+  admin page → sign out → inbox closed again; Heritage AI unaffected
+- The **8 real messages in the local store are intact** — the live run backed
+  the file up and restored it, and its test entry is gone
+
+> One false alarm worth recording: the first live run reported the
+> `/landing-page/**` guards open and sign-in failing. The cause was a **port
+> collision** — an unrelated `server.js` from another project already held the
+> port, so the checks were hitting someone else's server. The run now allocates
+> a verified-free port and probes `/vercel.json` to confirm the server answering
+> is Antara's before asserting anything. The guards were never open.
+
+---
+
+## 8d. Production root served the wrong application — 2026-08-26
+
+On `chore/vercel-deployment-prep`. **Not committed, not pushed, not deployed.**
+The first Vercel deployment succeeded but `/` showed the **festival portal**
+instead of the Antara landing page.
+
+### Root cause
+**Vercel checks the output directory for a matching static file BEFORE it
+evaluates `routes`, and serves any hit straight from the CDN.** Vercel's own
+documentation deprecates `handle` and `override` — the two properties that could
+once change that — and a Vercel maintainer states it plainly: *"static files
+take precedence over rewrites."*
+
+`vercel.json` set `"outputDirectory": "."`, which made the **repository root**
+the static output. The root `index.html` is the festival portal. So:
+
+```
+GET /  ->  CDN finds ./index.html  ->  serves the FESTIVAL PORTAL
+           (routes never evaluated, Express never reached)
+```
+
+Locally the same request is correct, because there is no CDN: Express answers,
+and `express.static(__dirname)` resolves `/` to `landing-page/index.html`. That
+gap between local and production is the whole of the bug — verified by probing
+both, not inferred.
+
+**The same mechanism silently disabled the security architecture.** If the
+filesystem answers before Express for `/`, it answers before Express for
+everything, so `/landing-page/server.js`, `/landing-page/middleware/adminAuth.js`
+and the admin shell were reachable straight from the CDN, bypassing the
+`/data` and `/landing-page` guards. `.vercelignore` kept `.env*` and
+`contact_messages.json` out of the upload, so **no PII was exposed** — but the
+guards were not doing the work they were written to do.
+
+### Fix — three small changes, nothing moved or duplicated
+1. **`outputDirectory: "vercel-static"`**, a directory that is deliberately
+   empty. The filesystem check always misses, routing falls through to the
+   function, and Express decides everything. `vercel-static/.gitkeep` explains
+   why it must stay empty.
+2. **Explicit front-end routes in `server.js`**, so URL ownership is a stated
+   product decision rather than a side effect of `express.static` mount order:
+   `/` → landing page, `/festivals.html` → festival portal, `/index.html` →
+   festival portal (kept, because the landing page links to `../index.html`).
+3. **`includeFiles` gained `*.json`.** With the CDN no longer serving anything,
+   `festivals_database.json` and `texts_database.json` — fetched from the
+   repository root by the festival portal and the library — had to enter the
+   function bundle or both apps would have broken. They were previously answered
+   by the CDN, so this would have been the *next* production failure.
+
+Also added, since Express is now the only gatekeeper: `/node_modules`,
+`/package.json`, `/package-lock.json`, `/data_builders`, `/test_support` are
+404, and developer file types (`.md`, `.py`, `.sh`, `.bat`, `.yml`, `.ini`,
+`.log`) plus `validate_*.js` are blocked by extension rather than by name, so
+adding another document cannot quietly publish it.
+
+### Verification
+- `npm test` → **454 assertions, exit 0** (server 87 → 112)
+- **Exposure sweep, 50 paths:** 20 sensitive paths blocked (including
+  `/node_modules/express/package.json`, which *was* served before this pass),
+  30 required paths served
+- **Real Chrome, 7 pages** (`/`, `/festivals.html`, `/index.html`, `/map.html`,
+  `/library.html`, `/visual-india.html`, `/admin-login.html`):
+  **0 console errors, 0 exceptions, 0 failed requests, 0 HTTP 4xx**
+- Every internal link on the landing page resolves — 11 × 200, plus
+  `/admin/messages/` → 401 as designed
+- **Heritage AI live round trip: 200**, real OpenAI answer returned
+- Contact + admin flow **24/24**; the 8 genuine messages untouched
+- Narration, map, library, Visual India, festivals and the design tokens are
+  **byte-identical** — `git status` shows no diff against any of them
+
+> A note on method: the first exposure sweep reported `/vercel.json` and several
+> guards as open. That was a **port collision** with an unrelated `server.js`
+> from another project, not a real finding. Every probe now allocates a
+> verified-free port and confirms the responding server is Antara's before
+> asserting. The same false alarm had already appeared once in §8c — worth
+> remembering as a standing hazard on this machine.
+
+---
+
+## 8e. Production application entrypoint — 2026-08-29
+
+On `chore/vercel-deployment-prep`. **Not committed, not pushed, not deployed.**
+
+**Production root routing: ✅ the Antara landing page is served at `/`.**
+
+§8d fixed *which application answers `/`*. This pass fixed the other half of the
+same problem: the links. Antara is one website with one front door, and every
+module now addresses the others by **route**, never by source folder.
+
+### What was still wrong after §8d
+Every module's "back to Antara" control pointed at **`landing-page/index.html`**
+— a path into the repository layout rather than a URL of the product:
+
+| File | Was | Now |
+|---|---|---|
+| `index.html` (festival portal) | `landing-page/index.html` | `/` |
+| `map.html` | `landing-page/index.html` | `/` |
+| `library.html` | `landing-page/index.html` | `/` |
+| `visual-india.html` | *(no home control)* | wordmark → `/` |
+
+Three problems in one: it published which folder holds which application, it
+landed on the **second** copy of the landing page (the guard-adjacent
+`/landing-page/` prefix) instead of the canonical root, and it would break the
+moment the folder were renamed.
+
+The landing page's own calls to action climbed out with `../`, and two of them
+pointed at `../index.html` — the festival portal's *legacy* URL rather than its
+stated one:
+
+| Call to action | Was | Now |
+|---|---|---|
+| Explore the Map | `../map.html` | `/map.html` |
+| Visual India (×2) | `../visual-india.html#/` | `/visual-india.html#/` |
+| Explore the Archive | `../library.html` | `/library.html` |
+| Plan Your Visit | `../index.html` | `/festivals.html` |
+| Explore Festivals | `../index.html#festival-section` | `/festivals.html#festival-section` |
+
+`../` happened to resolve correctly — browsers clamp `..` at the origin root —
+so nothing was visibly broken. It was right by accident, and only at the two
+URLs the landing page is currently served from.
+
+### Production route map — all of these coexist
+
+| Route | Serves | Source |
+|---|---|---|
+| `/` | **Antara landing page** | `landing-page/index.html` |
+| `/festivals.html` | Festival portal | `index.html` (repo root) |
+| `/index.html` | Festival portal (legacy URL, kept) | `index.html` (repo root) |
+| `/map.html` | Heritage map, `#/india/<state>` preserved | `map.html` |
+| `/visual-india.html` | Visual India, `#/` preserved | `visual-india.html` |
+| `/library.html` | Heritage Library | `library.html` |
+| `/admin-login.html` | Admin sign-in | `landing-page/admin-login.html` |
+| `/admin/messages/` | Admin inbox — `requireAdmin`, 401 without a session | `landing-page/admin/` |
+| `/api/contact`, `/api/contact/messages`, `/api/chat`, `/api/admin/*` | Express API | `landing-page/server.js` |
+| `/landing-page/index.html` | The landing page, still intentionally reachable | — |
+
+Nothing redirects. `/map.html` and its siblings are opened directly and stay
+there; only `/` is the landing page.
+
+### What was NOT changed
+No file moved, was renamed, duplicated or deleted. No second landing page. The
+festival portal is intact and directly reachable at `/festivals.html`. No
+change to typography, colour, cards, images, narration, Heritage AI, map
+behaviour, festival content or booking logic — this was an entrypoint and
+navigation fix only. `landing-page/index.html` keeps `../antara-tokens.css`,
+which resolves to the same file from both of its URLs.
+
+### Verification — 70/70 entrypoint assertions, plus the suite
+- **`npm test` → 470 assertions, exit 0** (server + deployment 112 → 128)
+- Seven routes each return the **right application**, checked by `<title>`;
+  `/` explicitly asserted **not** to be the festival portal
+- **No page links into `/landing-page/`** — all six front ends
+- Every internal link on all five modules resolves — **31 links, none dead**
+- **Real Chrome click-through**, all four modules: landing → module → home →
+  landing, verified by title *and* `location.pathname` at each step
+- `/map.html#/india/karnataka` survives navigation; festival cards still
+  deep-link into the map's hash route
+- Landing page renders with **0 console errors and 0 failed requests at both**
+  `/` **and** `/landing-page/index.html`; 3 stylesheets resolve at each
+- **23 internal paths still 404** (`server.js`, `adminAuth.js`,
+  `contact_messages.json`, `.env`, `node_modules/`, `vercel.json`, the test
+  harness, the docs); `/admin/messages/` still 401
+- Contact and Heritage AI endpoints answer on their existing routes
+- `npm run dev` (`node server.js` in `landing-page/`) re-verified directly:
+  every route above correct, `/landing-page/server.js`, `/.env` and
+  `/node_modules/express/package.json` all 404
+
+> **The port hazard from §8d, now understood exactly.** A quick smoke test on a
+> fixed port reported `/festivals.html` → 404 and `/landing-page/server.js` →
+> 200 — i.e. as though none of this work applied. It was not real. A `server.js`
+> from a different project, **started six days earlier**, held `0.0.0.0:8123`
+> (IPv4). Node binds `::` by default, so the freshly started server took
+> `[::]:8123` (IPv6) and *both* bound successfully — no `EADDRINUSE`, a normal
+> start-up banner, and `curl 127.0.0.1` answered by the stale six-day-old
+> process. Re-run on a port proven free, with an identity probe before any
+> assertion, every route was correct. **Never assert against a fixed port on
+> this machine**: allocate a free one and confirm the responding server is this
+> build. This is the third time the same trap has cost time.
+
+Regression cover added to `validate_server.js`, so a future edit cannot quietly
+reintroduce a source-folder link or a dead call to action.
 
 ---
 
@@ -959,7 +1263,7 @@ mount. Only `index.html`, `css/`, `js/` and `assets/` pass; everything else is 4
 
 ## 11. Testing
 
-**Latest verified run: 2026-08-24 — `npm test` → 319 assertions, 0 failures, exit 0.**
+**Latest verified run: 2026-08-24 — `npm test` → 343 assertions, 0 failures, exit 0.**
 
 ### Completed
 - [x] `validate_db.js` — every one of 142 verses has all required multi-language fields; sample
@@ -1299,6 +1603,76 @@ variable is required.**
 
 ---
 
+## 13c. Vercel deployment preparation — 2026-08-24
+
+Prepared on `chore/vercel-deployment-prep`. **Not deployed.** No product
+behaviour, UI, narration, map, booking or Heritage AI logic was changed.
+
+### Backend compatibility — three real blockers found and fixed
+
+| Blocker | Why it would have broken Vercel | Fix |
+|---|---|---|
+| `app.listen()` ran unconditionally | Serverless imports the module and invokes an exported handler; `listen()` binds a port nothing routes to | `module.exports = app`; `listen()` only under `require.main === module`, so `npm run dev` is unchanged |
+| **`new OpenAI()` at module load** | The constructor **throws** without a key, so one unset variable crashed the whole function on import — the map, library and every page would 404, not just Heritage AI | Client built lazily on first use; `/api/chat` answers 503 `AI_UNCONFIGURED` |
+| **`mkdirSync`/`writeFileSync` at module load** | Throws `EROFS` on a read-only serverless filesystem, again killing the function on import | Storage moved behind `services/contactStore.js`, which **probes** for writability instead of assuming it |
+
+### Frontend compatibility
+- [x] All four front ends plus Visual India verified reachable: `/`, `/map.html`,
+      `/visual-india.html`, `/library.html`, `/index.html`, `/admin-login.html`
+- [x] Root-relative assets, `audio/manifest.json`, `antara-tokens.css`, `app.js`,
+      `data.js` all serve
+- [x] **Root Directory must be the repository root, not `landing-page/`** — the
+      map, Visual India, Library, festivals and ~63 MB of media live at the repo
+      root; a `landing-page` root would 404 everything but the landing page
+
+### Environment variables
+`landing-page/.env.example` rewritten to declare exactly the seven variables the
+code reads — `OPENAI_API_KEY`, `OPENAI_MODEL`, `ADMIN_PASSWORD`,
+`ADMIN_SESSION_SECRET`, `CONTACT_EMAIL`, `PORT`, `ALLOWED_ORIGINS`. No `GEMINI_*`
+or `TELEGRAM_*` (retired with the bot). Asserted by tests: every declared
+variable is read by the code, and no template value is real.
+
+`CONTACT_EMAIL` is now genuinely used — it is the address offered to a visitor
+when their message cannot be stored.
+
+**`ADMIN_SESSION_SECRET` becomes mandatory on Vercel.** Blank means a random
+per-process secret; across many short-lived serverless instances a session
+signed by one is rejected by the next, so sign-in appears to work and then fails.
+
+### Security verification
+- [x] Every request routed through Express (`routes: [{src:"/(.*)", dest:"/api/index"}]`)
+      so the CDN can never serve a file straight off the filesystem and bypass the
+      `/data`, `/landing-page` and admin guards
+- [x] 10 sensitive paths verified **404**, 9 public paths verified **200**
+- [x] New deployment internals (`/vercel.json`, `/api/index.js`, `/.vercelignore`)
+      also guarded — they were briefly served once added, and are now blocked
+- [x] `.vercelignore` keeps `.env*` and `contact_messages.json` out of the upload
+- [x] No secret in any client file; no PII tracked
+
+### Contact storage status — ⚠️ superseded by §8c
+At the end of this pass contact submissions could not persist on Vercel, and the
+form answered 503 rather than losing them. **That blocker was cleared the same
+day** by adding a PostgreSQL store — see §8c. The 503 path remains as the
+safety net for a deployment with no database configured.
+
+### Deployment blockers
+- ✅ ~~Contact form will not accept messages~~ — **resolved in §8c.**
+- 🟠 `vercel build` could not be run locally — it requires the owner's Vercel
+      login. Config validated structurally instead: JSON parses, the entrypoint
+      exports a valid Express handler, and it loads with **no environment set at
+      all** without throwing.
+- 🟠 Media is served through the function rather than the CDN. Correct and
+      secure, but slower than a static deployment; the optimisation path is
+      documented in the README.
+- 🟠 Rate limiting is in-memory, so on serverless it applies per instance and
+      is weaker than locally.
+
+### Local verification
+`npm test` → **343 assertions, exit 0** (server-security 43 → 67). `npm run dev`
+unchanged; admin/contact flow **33/33**; security paths all correct.
+
+---
+
 ## 14. Known Issues
 
 | Issue | Severity | Status | Notes |
@@ -1317,8 +1691,9 @@ variable is required.**
 | 53 tap targets under 24px on the map at 390px | Medium | 🔴 OPEN | Unchanged this pass: 53 on the map, 50 on a site page, 9 on the landing page. Functional but uncomfortable on touch |
 | No skip links | Medium | 🔴 OPEN | No page offers skip-to-content. Not addressed this pass |
 | Sparse `alt` text | Low | ✅ FIXED 2026-08-23 | The 14 festival carousel images had **no `alt` attribute at all**; they now carry real names and the ambient carousel is `aria-hidden`. 0 images product-wide lack `alt` |
-| Contact storage is an unlocked flat file | Medium | 🟡 OPEN | Concurrent writes can interleave; will not survive an ephemeral filesystem |
-| `landing-page` test script is a stub | Medium | 🔴 OPEN | `echo "No tests..." && exit 0` — backend has no automated coverage |
+| Contact storage is an unlocked flat file | Medium | ✅ FIXED 2026-08-24 | PostgreSQL store added for production (§8c). The flat file remains the **local** store only, where a single process makes interleaving a non-issue |
+| Contact form cannot accept messages on Vercel | **High** | ✅ FIXED 2026-08-24 | Was 503 `CONTACT_STORAGE_UNAVAILABLE`. Now persists to PostgreSQL when `DATABASE_URL` is set; the 503 remains the safety net when it is not (§8c) |
+| `landing-page` test script is a stub | Medium | 🟡 OPEN | `echo "No tests..." && exit 0`. The backend now has **66 live HTTP assertions** via root-level `validate_contact.js`, but the `landing-page` script itself is still a stub |
 | Heritage AI is stateless per request | Low | 🟡 OPEN | No multi-turn context; model cannot follow up on its own answer |
 | Narration fixtures are WAV, not MP3 | Low | 🟡 OPEN | 1.7 MB in-tree. No encoder on the dev machine; `mimeType` already data-driven |
 | Projection constants duplicated in three files | Low | 🟠 OPEN | `gen.py`, `map-data.js`, `app.js` agree today; nothing enforces it |
@@ -1332,6 +1707,10 @@ variable is required.**
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-08-29 | **Production application entrypoint finished (§8e).** Every module's "home" control pointed at the source folder `landing-page/index.html`; all four now point at `/`. The landing page's calls to action climbed out with `../` and sent Plan Your Visit / Festivals to the legacy `/index.html`; all six are now the documented routes. Verified by real-browser click-through, landing → module → home, for all four modules | ✅ Done |
+| 2026-08-26 | **Fixed the production root serving the wrong application.** Vercel's CDN answered `/` from the repo-root `index.html` (festivals) before `routes` ran, bypassing Express and every guard with it. Output directory is now an empty `vercel-static/`; `/` and `/festivals.html` are explicit Express routes; `*.json` added to the function bundle | ✅ Done |
+| 2026-08-24 | **Persistent contact storage.** PostgreSQL store behind the existing `contactStore` interface, selected by `DATABASE_URL`; JSON file kept for local development. Clears the last deployment blocker. `validate_contact.js` — 66 live HTTP assertions including survival across a process restart | ✅ Done |
+| 2026-08-24 | Vercel deployment preparation: exportable app, lazy OpenAI client, storage isolated behind a probing store, `vercel.json` / `api/index.js` / `.vercelignore`, `.env.example` rewritten | ✅ Done |
 | 2026-08-23 | Sourced **137 licensed images from Wikimedia Commons** across 37 sites — coverage inverted from 3 rich/37 hero-only to **37 rich/0 hero-only**. Provenance in `data/media-sources.json`, attribution rendered on page | ✅ Done |
 | 2026-08-23 | Heritage site media pass: `site-media.js` resolver, gallery + lightbox, lazy loading, honest placeholders, real thumbnails; fixed 8 `undefined` booking links and 24 empty Look Closer sections | ✅ Done |
 | 2026-08-23 | Audited image coverage across all 40 sites — 3 rich, 37 hero-only, 0 broken | 🟡 Content gap logged |
@@ -1360,12 +1739,13 @@ variable is required.**
 - [x] **No secrets in repository** — pattern scan clean; token purged from history and revoked
 - [x] **No PII in repository** — `contact_messages.json` untracked and purged from history
 - [x] **Security audit complete** — every control exercised against the running server
-- [x] **Tests passing** — 319 assertions, exit 0, 2026-08-24
+- [x] **Tests passing** — 470 assertions, exit 0, 2026-08-29
 - [x] **Map works** — verified serving, routing, and data integrity
 - [x] **Library works** — 142/142 verses complete, page loads and executes cleanly
 - [x] **Festivals work** — 14/14 populated, all deep-links resolve
 - [x] **Heritage AI works end-to-end** — real OpenAI round-trip with context and rate limiting
-- [x] **Contact works** — submission, storage, validation and rate limiting all verified
+- [x] **Contact works** — submission, storage, validation and rate limiting all verified, in
+      both JSON and PostgreSQL modes, including survival across a process restart
 - [x] **Fresh clone tested** — verified after the PII untracking
 - [ ] **Narration works cross-device** — it now *speaks* on any machine with a matching voice,
       but the voice differs per machine and Sanskrit cannot speak at all. Only production

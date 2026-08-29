@@ -1,0 +1,13 @@
+This directory is intentionally empty, and must stay that way.
+
+It is the deployment's "output directory". Vercel checks the output directory
+for a matching static file BEFORE it evaluates the `routes` in vercel.json, and
+serves any hit straight from the CDN. Anything placed here is therefore served
+without passing through Express — bypassing the /data and /landing-page guards,
+the admin session check and the static allow-list.
+
+Keeping it empty is what forces every request to reach the Express app, which is
+where all of Antara's routing and access control actually lives.
+
+Do not add files here. Public assets belong at the repository root (images/,
+audio/, photos sites/, *.css, *.js) and are served by Express.
